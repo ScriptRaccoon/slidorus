@@ -149,6 +149,7 @@ function setup_arrow_keys() {
 
 	document.addEventListener('keydown', (e) => {
 		if (!hovered_piece) return
+		e.preventDefault()
 		const [x, y] = get_coordinates(hovered_piece)
 		const key = e.key
 
