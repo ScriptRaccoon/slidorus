@@ -13,6 +13,7 @@ function init() {
 	setup_pieces()
 	setup_dragging()
 	setup_arrow_keys()
+	setup_menu()
 }
 
 function setup_square() {
@@ -168,4 +169,26 @@ function setup_arrow_keys() {
 			}
 		}
 	})
+}
+
+function setup_menu() {
+	const scramble_btn = document.querySelector('#scramble_btn')
+	scramble_btn?.addEventListener('click', () => scramble())
+}
+
+function scramble() {
+	const free_coordinates = []
+	for (let x = 0; x < 9; x++) {
+		for (let y = 0; y < 9; y++) {
+			free_coordinates.push([x, y])
+		}
+	}
+
+	for (const piece of pieces) {
+		if (!free_coordinates.length) return
+		const i = Math.floor(Math.random() * free_coordinates.length)
+		const [x, y] = free_coordinates[i]
+		set_coordinate(piece, x, y)
+		free_coordinates.splice(i, 1)
+	}
 }
