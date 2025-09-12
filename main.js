@@ -1,110 +1,129 @@
 // @ts-check
 
 const SQUARE_SIZE = 540
-
 const square = /** @type {HTMLDivElement} */ (document.querySelector('.square'))
+const square_rect = square.getBoundingClientRect()
+const pieces = /** @type {HTMLDivElement[]} */ ([])
+let clicked_pos = [0, 0]
 
-square.style.setProperty('--size', `${SQUARE_SIZE}px`)
+init()
 
-const pieces = []
+function init() {
+	setup_square()
+	setup_pieces()
+	setup_dragging()
+	setup_arrow_keys()
+}
 
-let hovered_piece = /** @type {HTMLDivElement | null} */ (null)
+function setup_square() {
+	square.style.setProperty('--size', `${SQUARE_SIZE}px`)
+}
 
-for (let row = 0; row < 3; row++) {
-	for (let col = 0; col < 3; col++) {
-		const piece_type = 3 * row + col
-		for (let y = 0; y < 3; y++) {
-			for (let x = 0; x < 3; x++) {
-				const piece_x = 3 * col + x
-				const piece_y = 3 * row + y
-				const piece = document.createElement('div')
-				piece.classList.add('piece', `piece-${piece_type}`)
-				piece.style.setProperty('--x', piece_x.toString())
-				piece.style.setProperty('--y', piece_y.toString())
-				square.appendChild(piece)
-				pieces.push({ element: piece, x: piece_x, y: piece_y })
-				piece.addEventListener('mouseover', () => {
-					hovered_piece = piece
-				})
+function setup_pieces() {
+	for (let row = 0; row < 3; row++) {
+		for (let col = 0; col < 3; col++) {
+			const piece_type = 3 * row + col
+			for (let y = 0; y < 3; y++) {
+				for (let x = 0; x < 3; x++) {
+					const piece_x = 3 * col + x
+					const piece_y = 3 * row + y
+					const piece = document.createElement('div')
+					piece.classList.add('piece', `piece-${piece_type}`)
+					set_coordinate(piece, piece_x, piece_y)
+					square.appendChild(piece)
+					pieces.push(piece)
+				}
 			}
 		}
 	}
 }
 
 /**
- * @param {number} y
- * @param {number} direction
- */
-function move_row(y, direction) {
-	const moving_pieces = pieces.filter((piece) => piece.y == y)
-	for (const piece of moving_pieces) {
-		if (direction === 1) {
-			piece.x = piece.x + 1 < 9 ? piece.x + 1 : 0
-		} else {
-			piece.x = piece.x - 1 >= 0 ? piece.x - 1 : 8
-		}
-		piece.element.style.setProperty('--x', piece.x.toString())
-	}
-}
-
-/**
+ * @param {HTMLDivElement} piece
  * @param {number} x
+ * @param {number} y
+ */
+function set_coordinate(piece, x, y) {
+	piece.style.setProperty('--x', x.toString())
+	piece.style.setProperty('--y', y.toString())
+	piece.setAttribute('data-x', x.toString())
+	piece.setAttribute('data-y', y.toString())
+}
+
+/**
+ * @param {HTMLDivElement} piece
+ */
+function get_coordinates(piece) {
+	return [Number(piece.getAttribute('data-x')), Number(piece.getAttribute('data-y'))]
+}
+
+function setup_dragging() {
+	square.addEventListener('mousedown', (e) => handle_drag_start(e))
+	square.addEventListener('mouseup', (e) => handle_drag_end(e))
+
+	square.addEventListener('touchstart', (e) => handle_drag_start(e))
+	square.addEventListener('touchend', (e) => handle_drag_end(e))
+}
+
+/**
+ * @param {MouseEvent | TouchEvent} e
+ */
+function handle_drag_start(e) {
+	const touch = 'touches' in e ? e.touches[0] : e
+	clicked_pos = [touch.clientX, touch.clientY]
+}
+
+/**
+ * @param {number} row
  * @param {number} direction
  */
-function move_column(x, direction) {
-	const moving_pieces = pieces.filter((piece) => piece.x == x)
-	for (const piece of moving_pieces) {
+function move_row(row, direction) {
+	for (const piece of pieces) {
+		const [x, y] = get_coordinates(piece)
+		if (row !== y) continue
+		let [x_new, y_new] = [x, y]
 		if (direction === 1) {
-			piece.y = piece.y + 1 < 9 ? piece.y + 1 : 0
+			x_new = x + 1 < 9 ? x + 1 : 0
 		} else {
-			piece.y = piece.y - 1 >= 0 ? piece.y - 1 : 8
+			x_new = x - 1 >= 0 ? x - 1 : 9 - 1
 		}
-		piece.element.style.setProperty('--y', piece.y.toString())
+		set_coordinate(piece, x_new, y_new)
 	}
 }
 
-// detection of movement on square
-let startX = 0
-let startY = 0
-
 /**
- * @param {number} dx
- * @param {number} dy
+ * @param {number} col
+ * @param {number} direction
  */
-function getDirection(dx, dy) {
-	if (Math.abs(dx) > Math.abs(dy)) {
-		return dx > 0 ? 'right' : 'left'
-	} else {
-		return dy > 0 ? 'down' : 'up'
+function move_column(col, direction) {
+	for (const piece of pieces) {
+		const [x, y] = get_coordinates(piece)
+		if (col !== x) continue
+		let [x_new, y_new] = [x, y]
+		if (direction === 1) {
+			y_new = y + 1 < 9 ? y + 1 : 0
+		} else {
+			y_new = y - 1 >= 0 ? y - 1 : 9 - 1
+		}
+		set_coordinate(piece, x_new, y_new)
 	}
 }
 
 /**
  * @param {MouseEvent | TouchEvent} e
  */
-function onStart(e) {
-	const touch = 'touches' in e ? e.touches[0] : e
-	startX = touch.clientX
-	startY = touch.clientY
-}
-
-/**
- * @param {MouseEvent | TouchEvent} e
- */
-function onEnd(e) {
+function handle_drag_end(e) {
 	const touch = 'changedTouches' in e ? e.changedTouches[0] : e
-	const dx = touch.clientX - startX
-	const dy = touch.clientY - startY
+	const dx = touch.clientX - clicked_pos[0]
+	const dy = touch.clientY - clicked_pos[1]
+
 	if (dx === 0 && dy === 0) return
 
-	const col = Math.floor(
-		(9 * (startX - square.getBoundingClientRect().left)) / SQUARE_SIZE,
-	)
-	const row = Math.floor(
-		(9 * (startY - square.getBoundingClientRect().top)) / SQUARE_SIZE,
-	)
+	const col = Math.floor((9 * (clicked_pos[0] - square_rect.left)) / SQUARE_SIZE)
+	const row = Math.floor((9 * (clicked_pos[1] - square_rect.top)) / SQUARE_SIZE)
 
 	const is_horizontal = Math.abs(dx) > Math.abs(dy)
+
 	if (is_horizontal) {
 		move_row(row, dx > 0 ? 1 : -1)
 	} else {
@@ -112,38 +131,41 @@ function onEnd(e) {
 	}
 }
 
-square.addEventListener('mousedown', (e) => onStart(e))
-square.addEventListener('mouseup', (e) => onEnd(e))
+function setup_arrow_keys() {
+	let hovered_piece = /** @type {HTMLDivElement | null} */ (null)
 
-square.addEventListener('touchstart', (e) => onStart(e))
-square.addEventListener('touchend', (e) => onEnd(e))
+	pieces.forEach((piece) =>
+		piece.addEventListener('mouseover', () => {
+			hovered_piece = piece
+		}),
+	)
 
-square.addEventListener('mouseleave', () => {
-	hovered_piece = null
-})
+	square.addEventListener('mouseleave', () => {
+		hovered_piece = null
+	})
 
-document.addEventListener('keydown', (e) => {
-	if (!hovered_piece) return
-	const x = Number(hovered_piece.style.getPropertyValue('--x'))
-	const y = Number(hovered_piece.style.getPropertyValue('--y'))
-	const key = e.key
+	document.addEventListener('keydown', (e) => {
+		if (!hovered_piece) return
+		const [x, y] = get_coordinates(hovered_piece)
+		const key = e.key
 
-	switch (key) {
-		case 'ArrowRight': {
-			move_row(y, 1)
-			break
+		switch (key) {
+			case 'ArrowRight': {
+				move_row(y, 1)
+				break
+			}
+			case 'ArrowLeft': {
+				move_row(y, -1)
+				break
+			}
+			case 'ArrowDown': {
+				move_column(x, 1)
+				break
+			}
+			case 'ArrowUp': {
+				move_column(x, -1)
+				break
+			}
 		}
-		case 'ArrowLeft': {
-			move_row(y, -1)
-			break
-		}
-		case 'ArrowDown': {
-			move_column(x, 1)
-			break
-		}
-		case 'ArrowUp': {
-			move_column(x, -1)
-			break
-		}
-	}
-})
+	})
+}
