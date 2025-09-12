@@ -21,6 +21,15 @@ h1 {
 	font-weight: 500;
 }
 
+a {
+	color: inherit;
+	text-underline-offset: 2px;
+}
+
+p {
+	margin-bottom: 1rem;
+}
+
 .square {
 	width: var(--size);
 	height: var(--size);
@@ -78,10 +87,11 @@ h1 {
 	--color: blue;
 }
 
-.help {
+.infos {
+	max-width: 600px;
+	margin-inline: auto;
 	padding-inline: 1rem;
 	margin-top: 2rem;
-	text-align: center;
 }
 
 button {
