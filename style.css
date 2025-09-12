@@ -13,6 +13,12 @@ body {
 	padding-bottom: 2rem;
 }
 
+.wrapper {
+	padding-inline: 10px;
+	max-width: 600px;
+	margin-inline: auto;
+}
+
 header {
 	margin-block: 1.5rem 2rem;
 }
@@ -38,7 +44,6 @@ summary {
 .square {
 	width: var(--size);
 	height: var(--size);
-	margin-inline: auto;
 	cursor: move;
 }
 
@@ -93,8 +98,6 @@ summary {
 }
 
 .infos {
-	max-width: 600px;
-	margin-inline: auto;
 	padding-inline: 1rem;
 	margin-top: 2rem;
 }

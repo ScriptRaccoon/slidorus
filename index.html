@@ -7,43 +7,48 @@
 		<link rel="stylesheet" href="style.css" />
 	</head>
 	<body>
-		<header>
-			<h1>Torus Slider</h1>
-		</header>
-		<main>
-			<div class="square"></div>
-		</main>
+		<div class="wrapper">
+			<header>
+				<h1>Torus Slider</h1>
+			</header>
 
-		<menu>
-			<button id="scramble_btn" class="button">Scramble</button>
-			<button id="reset_btn" class="button">Reset</button>
-		</menu>
+			<main>
+				<div class="square"></div>
+			</main>
 
-		<section class="infos">
-			<details>
-				<summary>About this puzzle</summary>
-				<p>
-					<i>Torus Slider</i> is a sliding puzzle consisting of 9 blocks of 9
-					pieces, arranged like in a Sudoku. Each row and each column can be
-					moved in both directions. When a piece is about to move out of the
-					puzzle, it comes back at the opposite side. Hence, the pieces actually
-					move on a torus.
-				</p>
+			<menu>
+				<button id="scramble_btn" class="button">Scramble</button>
+				<button id="reset_btn" class="button">Reset</button>
+			</menu>
 
-				<p>
-					The puzzle is very similar to
-					<a href="https://loopover.xyz/">Loopover</a> of size 9x9, but with a
-					different color scheme and with indistuishable pieces within each 3x3
-					block. Moreover, the puzzle is already solved when each 3x3 block is
-					single-color, i.e., the positions of the blocks do not matter.
-				</p>
-				<p>
-					<b>Usage:</b> Drag a row or column to move it. This works both on
-					touch and desktop devices. On desktop devices, you can also hover over
-					a piece and then move its row or column with the 4 arrow keys.
-				</p>
-			</details>
-		</section>
+			<section class="infos">
+				<details>
+					<summary>About this puzzle</summary>
+					<p>
+						<i>Torus Slider</i> is a sliding puzzle consisting of 9 blocks of
+						9 pieces, arranged like in a Sudoku. Each row and each column can
+						be moved in both directions. When a piece is about to move out of
+						the puzzle, it comes back at the opposite side. Hence, the pieces
+						actually move on a torus.
+					</p>
+
+					<p>
+						The puzzle is very similar to
+						<a href="https://loopover.xyz/">Loopover</a> of size 9x9, but with
+						a different color scheme and with indistuishable pieces within
+						each 3x3 block. Moreover, the puzzle is already solved when each
+						3x3 block is single-color, i.e., the positions of the blocks do
+						not matter.
+					</p>
+					<p>
+						<b>Usage:</b> Drag a row or column to move it. This works both on
+						touch and desktop devices. On desktop devices, you can also hover
+						over a piece and then move its row or column with the 4 arrow
+						keys.
+					</p>
+				</details>
+			</section>
+		</div>
 
 		<script src="main.js"></script>
 	</body>

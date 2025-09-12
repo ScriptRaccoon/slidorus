@@ -1,15 +1,18 @@
 // @ts-check
 
-const SQUARE_SIZE = 540
 const square = /** @type {HTMLDivElement} */ (document.querySelector('.square'))
+const wrapper = /** @type {HTMLDivElement} */ (document.querySelector('.wrapper'))
 const square_rect = square.getBoundingClientRect()
+
 const pieces = /** @type {HTMLDivElement[]} */ ([])
 let clicked_pos = [0, 0]
+let square_size = 0
 
 init()
 
 function init() {
 	setup_square()
+	window.addEventListener('resize', () => setup_square())
 	setup_pieces()
 	setup_dragging()
 	setup_arrow_keys()
@@ -17,7 +20,8 @@ function init() {
 }
 
 function setup_square() {
-	square.style.setProperty('--size', `${SQUARE_SIZE}px`)
+	square_size = wrapper.clientWidth - 20 // account for padding
+	square.style.setProperty('--size', `${square_size}px`)
 }
 
 function setup_pieces() {
@@ -122,8 +126,8 @@ function handle_drag_end(e) {
 
 	if (dx === 0 && dy === 0) return
 
-	const col = Math.floor((9 * (clicked_pos[0] - square_rect.left)) / SQUARE_SIZE)
-	const row = Math.floor((9 * (clicked_pos[1] - square_rect.top)) / SQUARE_SIZE)
+	const col = Math.floor((9 * (clicked_pos[0] - square_rect.left)) / square_size)
+	const row = Math.floor((9 * (clicked_pos[1] - square_rect.top)) / square_size)
 
 	const is_horizontal = Math.abs(dx) > Math.abs(dy)
 
