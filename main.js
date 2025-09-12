@@ -31,6 +31,8 @@ function setup_pieces() {
 					const piece = document.createElement('div')
 					piece.classList.add('piece', `piece-${piece_type}`)
 					set_coordinate(piece, piece_x, piece_y)
+					piece.setAttribute('data-original-x', piece_x.toString())
+					piece.setAttribute('data-original-y', piece_y.toString())
 					square.appendChild(piece)
 					pieces.push(piece)
 				}
@@ -173,7 +175,10 @@ function setup_arrow_keys() {
 
 function setup_menu() {
 	const scramble_btn = document.querySelector('#scramble_btn')
-	scramble_btn?.addEventListener('click', () => scramble())
+	scramble_btn?.addEventListener('click', scramble)
+
+	const reset_btn = document.querySelector('#reset_btn')
+	reset_btn?.addEventListener('click', reset)
 }
 
 function scramble() {
@@ -190,5 +195,13 @@ function scramble() {
 		const [x, y] = free_coordinates[i]
 		set_coordinate(piece, x, y)
 		free_coordinates.splice(i, 1)
+	}
+}
+
+function reset() {
+	for (const piece of pieces) {
+		const original_x = Number(piece.getAttribute('data-original-x'))
+		const original_y = Number(piece.getAttribute('data-original-y'))
+		set_coordinate(piece, original_x, original_y)
 	}
 }
