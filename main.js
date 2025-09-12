@@ -8,6 +8,8 @@ square.style.setProperty('--size', `${SQUARE_SIZE}px`)
 
 const pieces = []
 
+let hovered_piece = /** @type {HTMLDivElement | null} */ (null)
+
 for (let row = 0; row < 3; row++) {
 	for (let col = 0; col < 3; col++) {
 		const piece_type = 3 * row + col
@@ -21,6 +23,9 @@ for (let row = 0; row < 3; row++) {
 				piece.style.setProperty('--y', piece_y.toString())
 				square.appendChild(piece)
 				pieces.push({ element: piece, x: piece_x, y: piece_y })
+				piece.addEventListener('mouseover', () => {
+					hovered_piece = piece
+				})
 			}
 		}
 	}
@@ -112,3 +117,33 @@ square.addEventListener('mouseup', (e) => onEnd(e))
 
 square.addEventListener('touchstart', (e) => onStart(e))
 square.addEventListener('touchend', (e) => onEnd(e))
+
+square.addEventListener('mouseleave', () => {
+	hovered_piece = null
+})
+
+document.addEventListener('keydown', (e) => {
+	if (!hovered_piece) return
+	const x = Number(hovered_piece.style.getPropertyValue('--x'))
+	const y = Number(hovered_piece.style.getPropertyValue('--y'))
+	const key = e.key
+
+	switch (key) {
+		case 'ArrowRight': {
+			move_row(y, 1)
+			break
+		}
+		case 'ArrowLeft': {
+			move_row(y, -1)
+			break
+		}
+		case 'ArrowDown': {
+			move_column(x, 1)
+			break
+		}
+		case 'ArrowUp': {
+			move_column(x, -1)
+			break
+		}
+	}
+})
