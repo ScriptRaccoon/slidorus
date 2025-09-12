@@ -12,8 +12,13 @@ body {
 	line-height: 1.6;
 }
 
-main {
-	margin-top: 2rem;
+header {
+	margin-block: 1.5rem 2rem;
+}
+
+h1 {
+	text-align: center;
+	font-weight: 500;
 }
 
 .square {
