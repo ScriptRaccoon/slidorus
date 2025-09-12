@@ -68,3 +68,24 @@ main {
 .piece-8 {
 	--color: blue;
 }
+
+/* temporary styles */
+
+menu {
+	margin-top: 3rem;
+	display: flex;
+	justify-content: center;
+}
+
+button {
+	font: inherit;
+	border: none;
+	color: inherit;
+	cursor: pointer;
+}
+
+.mover {
+	background: orangered;
+	padding: 0.2rem 0.6rem;
+	border-radius: 0.25rem;
+}
