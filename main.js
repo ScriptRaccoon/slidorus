@@ -58,8 +58,57 @@ function move_column(x, direction) {
 	}
 }
 
-// temporary code
-const mover = /** @type {HTMLButtonElement} */ (document.querySelector('.mover'))
-mover.addEventListener('click', () => {
-	move_column(2, 1)
-})
+// detection of movement on square
+let startX = 0
+let startY = 0
+
+/**
+ * @param {number} dx
+ * @param {number} dy
+ */
+function getDirection(dx, dy) {
+	if (Math.abs(dx) > Math.abs(dy)) {
+		return dx > 0 ? 'right' : 'left'
+	} else {
+		return dy > 0 ? 'down' : 'up'
+	}
+}
+
+/**
+ * @param {MouseEvent | TouchEvent} e
+ */
+function onStart(e) {
+	const touch = 'touches' in e ? e.touches[0] : e
+	startX = touch.clientX
+	startY = touch.clientY
+}
+
+/**
+ * @param {MouseEvent | TouchEvent} e
+ */
+function onEnd(e) {
+	const touch = 'changedTouches' in e ? e.changedTouches[0] : e
+	const dx = touch.clientX - startX
+	const dy = touch.clientY - startY
+	if (dx === 0 && dy === 0) return
+
+	const col = Math.floor(
+		(9 * (startX - square.getBoundingClientRect().left)) / SQUARE_SIZE,
+	)
+	const row = Math.floor(
+		(9 * (startY - square.getBoundingClientRect().top)) / SQUARE_SIZE,
+	)
+
+	const is_horizontal = Math.abs(dx) > Math.abs(dy)
+	if (is_horizontal) {
+		move_row(row, dx > 0 ? 1 : -1)
+	} else {
+		move_column(col, dy > 0 ? 1 : -1)
+	}
+}
+
+square.addEventListener('mousedown', (e) => onStart(e))
+square.addEventListener('mouseup', (e) => onEnd(e))
+
+square.addEventListener('touchstart', (e) => onStart(e))
+square.addEventListener('touchend', (e) => onEnd(e))
