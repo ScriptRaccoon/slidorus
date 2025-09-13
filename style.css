@@ -44,7 +44,9 @@ summary {
 .square {
 	width: var(--size);
 	height: var(--size);
+	--border: 0.1rem;
 	cursor: move;
+	clip-path: inset(var(--border));
 }
 
 .piece {
@@ -54,11 +56,8 @@ summary {
 	background-color: var(--color, gray);
 	transform: translateX(calc(var(--x) * var(--size) / 9))
 		translateY(calc(var(--y) * var(--size) / 9));
-	border: 0.1rem solid black;
-}
-
-.piece:hover {
-	filter: brightness(0.75);
+	transition: transform 100ms ease-out;
+	border: var(--border) solid black;
 }
 
 .piece-0 {

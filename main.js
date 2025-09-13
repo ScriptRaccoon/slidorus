@@ -3,6 +3,10 @@
 const square = /** @type {HTMLDivElement} */ (document.querySelector('.square'))
 const wrapper = /** @type {HTMLDivElement} */ (document.querySelector('.wrapper'))
 const square_rect = square.getBoundingClientRect()
+const MOVE_DURATION = 100
+let is_moving = false
+
+let hovered_piece = /** @type {HTMLDivElement | null} */ (null)
 
 const pieces = /** @type {HTMLDivElement[]} */ ([])
 let clicked_pos = [0, 0]
@@ -84,36 +88,88 @@ function handle_drag_start(e) {
  * @param {number} row
  * @param {number} direction
  */
-function move_row(row, direction) {
-	for (const piece of pieces) {
-		const [x, y] = get_coordinates(piece)
-		if (row !== y) continue
-		let [x_new, y_new] = [x, y]
-		if (direction === 1) {
-			x_new = x + 1 < 9 ? x + 1 : 0
-		} else {
-			x_new = x - 1 >= 0 ? x - 1 : 9 - 1
+function animate_row(row, direction) {
+	if (is_moving) return
+	is_moving = true
+	/**
+	 * TODO: refactor this mess of a function
+	 */
+	const moving_pieces = pieces.filter((piece) => get_coordinates(piece)[1] === row)
+
+	const last_piece = moving_pieces.find(
+		(piece) => get_coordinates(piece)[0] === (direction === 1 ? 8 : 0),
+	)
+	if (!last_piece) return
+	const new_piece = /** @type {HTMLDivElement} */ (last_piece.cloneNode())
+
+	set_coordinate(new_piece, direction === 1 ? -1 : 9, row)
+
+	square.appendChild(new_piece)
+
+	new_piece.addEventListener('mouseover', () => {
+		hovered_piece = new_piece
+	})
+
+	moving_pieces.push(new_piece)
+	pieces.push(new_piece)
+
+	setTimeout(() => {
+		for (const piece of moving_pieces) {
+			const [x, y] = get_coordinates(piece)
+			set_coordinate(piece, x + direction, y)
 		}
-		set_coordinate(piece, x_new, y_new)
-	}
+	}, 0)
+
+	setTimeout(() => {
+		last_piece.remove()
+		const i = pieces.findIndex((p) => p === last_piece)
+		pieces.splice(i, 1)
+		is_moving = false
+	}, MOVE_DURATION)
 }
 
 /**
  * @param {number} col
  * @param {number} direction
  */
-function move_column(col, direction) {
-	for (const piece of pieces) {
-		const [x, y] = get_coordinates(piece)
-		if (col !== x) continue
-		let [x_new, y_new] = [x, y]
-		if (direction === 1) {
-			y_new = y + 1 < 9 ? y + 1 : 0
-		} else {
-			y_new = y - 1 >= 0 ? y - 1 : 9 - 1
+function animate_column(col, direction) {
+	if (is_moving) return
+	is_moving = true
+	/**
+	 * TODO: refactor this mess of a function
+	 */
+	const moving_pieces = pieces.filter((piece) => get_coordinates(piece)[0] === col)
+
+	const last_piece = moving_pieces.find(
+		(piece) => get_coordinates(piece)[1] === (direction === 1 ? 8 : 0),
+	)
+	if (!last_piece) return
+	const new_piece = /** @type {HTMLDivElement} */ (last_piece.cloneNode())
+
+	set_coordinate(new_piece, col, direction === 1 ? -1 : 9)
+
+	square.appendChild(new_piece)
+
+	new_piece.addEventListener('mouseover', () => {
+		hovered_piece = new_piece
+	})
+
+	moving_pieces.push(new_piece)
+	pieces.push(new_piece)
+
+	setTimeout(() => {
+		for (const piece of moving_pieces) {
+			const [x, y] = get_coordinates(piece)
+			set_coordinate(piece, x, y + direction)
 		}
-		set_coordinate(piece, x_new, y_new)
-	}
+	}, 0)
+
+	setTimeout(() => {
+		last_piece.remove()
+		const i = pieces.findIndex((p) => p === last_piece)
+		pieces.splice(i, 1)
+		is_moving = false
+	}, MOVE_DURATION)
 }
 
 /**
@@ -132,15 +188,13 @@ function handle_drag_end(e) {
 	const is_horizontal = Math.abs(dx) > Math.abs(dy)
 
 	if (is_horizontal) {
-		move_row(row, dx > 0 ? 1 : -1)
+		animate_row(row, dx > 0 ? 1 : -1)
 	} else {
-		move_column(col, dy > 0 ? 1 : -1)
+		animate_column(col, dy > 0 ? 1 : -1)
 	}
 }
 
 function setup_arrow_keys() {
-	let hovered_piece = /** @type {HTMLDivElement | null} */ (null)
-
 	pieces.forEach((piece) =>
 		piece.addEventListener('mouseover', () => {
 			hovered_piece = piece
@@ -159,19 +213,19 @@ function setup_arrow_keys() {
 
 		switch (key) {
 			case 'ArrowRight': {
-				move_row(y, 1)
+				animate_row(y, 1)
 				break
 			}
 			case 'ArrowLeft': {
-				move_row(y, -1)
+				animate_row(y, -1)
 				break
 			}
 			case 'ArrowDown': {
-				move_column(x, 1)
+				animate_column(x, 1)
 				break
 			}
 			case 'ArrowUp': {
-				move_column(x, -1)
+				animate_column(x, -1)
 				break
 			}
 		}
