@@ -15,6 +15,9 @@ let square_size = 0
 
 init()
 
+/**
+ * Initializes the application
+ */
 function init() {
 	setup_square()
 	window.addEventListener('resize', () => setup_square())
@@ -24,12 +27,18 @@ function init() {
 	setup_menu()
 }
 
+/**
+ * Sets up the size of the square
+ */
 function setup_square() {
 	const wrapper_padding = 10
 	square_size = wrapper.clientWidth - 2 * wrapper_padding
 	square.style.setProperty('--size', `${square_size}px`)
 }
 
+/**
+ * Creates all pieces and sets them up
+ */
 function setup_pieces() {
 	for (let row = 0; row < 3; row++) {
 		for (let col = 0; col < 3; col++) {
@@ -53,6 +62,7 @@ function setup_pieces() {
 }
 
 /**
+ * Utility to set / update the coordinates of a piece
  * @param {HTMLDivElement} piece
  * @param {number} x
  * @param {number} y
@@ -63,6 +73,7 @@ function set_coordinate(piece, x, y) {
 }
 
 /**
+ * Utility to retrieve the coordinates of a piece
  * @param {HTMLDivElement} piece
  */
 function get_coordinates(piece) {
@@ -72,6 +83,9 @@ function get_coordinates(piece) {
 	]
 }
 
+/**
+ * Sets up the event listeners for dragging the rows / columns
+ */
 function setup_dragging() {
 	square.addEventListener('mousedown', (e) => handle_drag_start(e))
 	square.addEventListener('mouseup', (e) => handle_drag_end(e))
@@ -81,6 +95,7 @@ function setup_dragging() {
 }
 
 /**
+ * Handles the start of the dragging
  * @param {MouseEvent | TouchEvent} e
  */
 function handle_drag_start(e) {
@@ -89,6 +104,30 @@ function handle_drag_start(e) {
 }
 
 /**
+ * Handles the end of the dragging that triggers the row / column animation
+ * @param {MouseEvent | TouchEvent} e
+ */
+function handle_drag_end(e) {
+	const touch = 'changedTouches' in e ? e.changedTouches[0] : e
+	const dx = touch.clientX - clicked_pos[0]
+	const dy = touch.clientY - clicked_pos[1]
+
+	if (dx === 0 && dy === 0) return
+
+	const col = Math.floor((9 * (clicked_pos[0] - square_rect.left)) / square_size)
+	const row = Math.floor((9 * (clicked_pos[1] - square_rect.top)) / square_size)
+
+	const is_horizontal = Math.abs(dx) > Math.abs(dy)
+
+	if (is_horizontal) {
+		animate_line(row, dx > 0 ? 1 : -1, 'row')
+	} else {
+		animate_line(col, dy > 0 ? 1 : -1, 'col')
+	}
+}
+
+/**
+ * Moves and animates a line (row or column)
  * @param {number} index
  * @param {1 | -1} direction
  * @param {"row" | "col"} type
@@ -132,6 +171,7 @@ function animate_line(index, direction, type) {
 }
 
 /**
+ * Utility to copy a piece with the same classes and attributes
  * @param {HTMLDivElement} piece
  * @param {number} x
  * @param {number} y
@@ -148,6 +188,7 @@ function copy_piece(piece, x, y) {
 }
 
 /**
+ * Moves a list of pieces to a new destination
  * @param {HTMLDivElement[]} moving_pieces
  * @param {number} dx
  * @param {number} dy
@@ -160,27 +201,8 @@ function move_pieces(moving_pieces, dx, dy) {
 }
 
 /**
- * @param {MouseEvent | TouchEvent} e
+ * Sets up the arrow keys to move the rows / columns
  */
-function handle_drag_end(e) {
-	const touch = 'changedTouches' in e ? e.changedTouches[0] : e
-	const dx = touch.clientX - clicked_pos[0]
-	const dy = touch.clientY - clicked_pos[1]
-
-	if (dx === 0 && dy === 0) return
-
-	const col = Math.floor((9 * (clicked_pos[0] - square_rect.left)) / square_size)
-	const row = Math.floor((9 * (clicked_pos[1] - square_rect.top)) / square_size)
-
-	const is_horizontal = Math.abs(dx) > Math.abs(dy)
-
-	if (is_horizontal) {
-		animate_line(row, dx > 0 ? 1 : -1, 'row')
-	} else {
-		animate_line(col, dy > 0 ? 1 : -1, 'col')
-	}
-}
-
 function setup_arrow_keys() {
 	pieces.forEach((piece) =>
 		piece.addEventListener('mouseover', () => {
@@ -220,6 +242,9 @@ function setup_arrow_keys() {
 	})
 }
 
+/**
+ * Sets up the event listeners for the buttons in the menu
+ */
 function setup_menu() {
 	const scramble_btn = document.querySelector('#scramble_btn')
 	scramble_btn?.addEventListener('click', scramble)
@@ -228,6 +253,10 @@ function setup_menu() {
 	reset_btn?.addEventListener('click', reset)
 }
 
+/**
+ * Scrambles all the pieces. Any perceived permutation is possible here,
+ * since the pieces with the same color are not distinguishable.
+ */
 function scramble() {
 	const free_coordinates = []
 	for (let x = 0; x < 9; x++) {
@@ -245,6 +274,9 @@ function scramble() {
 	}
 }
 
+/**
+ * Resets the positions of all pieces.
+ */
 function reset() {
 	for (const piece of pieces) {
 		const original_x = Number(piece.getAttribute('data-original-x'))
@@ -253,6 +285,10 @@ function reset() {
 	}
 }
 
+/**
+ * Checks if the puzzle is solved: the condition is that each
+ * 3x3-block has just one type of pieces.
+ */
 function check_solved() {
 	for (let row = 0; row < 3; row++) {
 		for (let col = 0; col < 3; col++) {
@@ -267,7 +303,7 @@ function check_solved() {
 }
 
 /**
- *
+ * Utility that checks if a piece is contained in a 3x3-block
  * @param {HTMLDivElement} piece
  * @param {number} row
  * @param {number} col
@@ -279,19 +315,23 @@ function check_block_containment(piece, row, col) {
 }
 
 /**
- *
+ * Utility that retrieves the set of types (colors) of a list of pieces
  * @param {HTMLDivElement[]} piece_list
  */
 function get_piece_types(piece_list) {
 	return new Set(piece_list.map((piece) => piece.getAttribute('data-type') ?? ''))
 }
 
+/**
+ * Updates the status text by checking if the puzzle is solved
+ */
 function update_status() {
 	const is_solved = check_solved()
 	write_status(is_solved ? 'Solved' : '')
 }
 
 /**
+ * Utility to write the status text
  * @param {string} txt
  */
 function write_status(txt) {
@@ -299,6 +339,7 @@ function write_status(txt) {
 }
 
 /**
+ * Utility to remove an element from a list without reassigning it
  * @param {any[]} list
  * @param {any} el
  */
