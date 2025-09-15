@@ -88,54 +88,38 @@ function handle_drag_start(e) {
 }
 
 /**
- * @param {number} row
- * @param {number} direction
+ * @param {number} index
+ * @param {1 | -1} direction
+ * @param {"row" | "col"} type
  */
-function animate_row(row, direction) {
+function animate_line(index, direction, type) {
 	if (is_moving) return
 	is_moving = true
 
-	const moving_pieces = pieces.filter((piece) => get_coordinates(piece)[1] === row)
+	const moving_pieces = pieces.filter(
+		(piece) => get_coordinates(piece)[type === 'col' ? 0 : 1] === index,
+	)
 
 	const last_piece = moving_pieces.find(
-		(piece) => get_coordinates(piece)[0] === (direction === 1 ? 8 : 0),
+		(piece) =>
+			get_coordinates(piece)[type === 'col' ? 1 : 0] === (direction === 1 ? 8 : 0),
 	)
+
 	if (!last_piece) return
 
-	const new_piece = copy_piece(last_piece, direction === 1 ? -1 : 9, row)
+	const new_piece =
+		type === 'col'
+			? copy_piece(last_piece, index, direction === 1 ? -1 : 9)
+			: copy_piece(last_piece, direction === 1 ? -1 : 9, index)
+
 	moving_pieces.push(new_piece)
 
 	setTimeout(() => {
-		move_pieces(moving_pieces, direction, 0)
-	}, 0)
-
-	setTimeout(() => {
-		last_piece.remove()
-		remove_element(pieces, last_piece)
-		is_moving = false
-	}, MOVE_DURATION)
-}
-
-/**
- * @param {number} col
- * @param {number} direction
- */
-function animate_column(col, direction) {
-	if (is_moving) return
-	is_moving = true
-
-	const moving_pieces = pieces.filter((piece) => get_coordinates(piece)[0] === col)
-
-	const last_piece = moving_pieces.find(
-		(piece) => get_coordinates(piece)[1] === (direction === 1 ? 8 : 0),
-	)
-	if (!last_piece) return
-
-	const new_piece = copy_piece(last_piece, col, direction === 1 ? -1 : 9)
-	moving_pieces.push(new_piece)
-
-	setTimeout(() => {
-		move_pieces(moving_pieces, 0, direction)
+		if (type === 'col') {
+			move_pieces(moving_pieces, 0, direction)
+		} else {
+			move_pieces(moving_pieces, direction, 0)
+		}
 	}, 0)
 
 	setTimeout(() => {
@@ -189,9 +173,9 @@ function handle_drag_end(e) {
 	const is_horizontal = Math.abs(dx) > Math.abs(dy)
 
 	if (is_horizontal) {
-		animate_row(row, dx > 0 ? 1 : -1)
+		animate_line(row, dx > 0 ? 1 : -1, 'row')
 	} else {
-		animate_column(col, dy > 0 ? 1 : -1)
+		animate_line(col, dy > 0 ? 1 : -1, 'col')
 	}
 }
 
@@ -209,24 +193,25 @@ function setup_arrow_keys() {
 	document.addEventListener('keydown', (e) => {
 		if (!hovered_piece) return
 		e.preventDefault()
+
 		const [x, y] = get_coordinates(hovered_piece)
 		const key = e.key
 
 		switch (key) {
 			case 'ArrowRight': {
-				animate_row(y, 1)
+				animate_line(y, 1, 'row')
 				break
 			}
 			case 'ArrowLeft': {
-				animate_row(y, -1)
+				animate_line(y, -1, 'row')
 				break
 			}
 			case 'ArrowDown': {
-				animate_column(x, 1)
+				animate_line(x, 1, 'col')
 				break
 			}
 			case 'ArrowUp': {
-				animate_column(x, -1)
+				animate_line(x, -1, 'col')
 				break
 			}
 		}
