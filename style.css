@@ -44,9 +44,13 @@ summary {
 .square {
 	width: var(--size);
 	height: var(--size);
-	--border: 0.1rem;
+	--border: 1px;
 	cursor: move;
 	clip-path: inset(var(--border));
+
+	@media (min-width: 600px) {
+		--border: 0.1rem;
+	}
 }
 
 .piece {
