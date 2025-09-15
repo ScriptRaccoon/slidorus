@@ -24,7 +24,8 @@ function init() {
 }
 
 function setup_square() {
-	square_size = wrapper.clientWidth - 20 // account for padding
+	const wrapper_padding = 10
+	square_size = wrapper.clientWidth - 2 * wrapper_padding
 	square.style.setProperty('--size', `${square_size}px`)
 }
 
@@ -38,9 +39,10 @@ function setup_pieces() {
 					const piece_y = 3 * row + y
 					const piece = document.createElement('div')
 					piece.classList.add('piece', `piece-${piece_type}`)
-					set_coordinate(piece, piece_x, piece_y)
+					piece.setAttribute('data-type', piece_type.toString())
 					piece.setAttribute('data-original-x', piece_x.toString())
 					piece.setAttribute('data-original-y', piece_y.toString())
+					set_coordinate(piece, piece_x, piece_y)
 					square.appendChild(piece)
 					pieces.push(piece)
 				}
@@ -57,15 +59,16 @@ function setup_pieces() {
 function set_coordinate(piece, x, y) {
 	piece.style.setProperty('--x', x.toString())
 	piece.style.setProperty('--y', y.toString())
-	piece.setAttribute('data-x', x.toString())
-	piece.setAttribute('data-y', y.toString())
 }
 
 /**
  * @param {HTMLDivElement} piece
  */
 function get_coordinates(piece) {
-	return [Number(piece.getAttribute('data-x')), Number(piece.getAttribute('data-y'))]
+	return [
+		Number(piece.style.getPropertyValue('--x')),
+		Number(piece.style.getPropertyValue('--y')),
+	]
 }
 
 function setup_dragging() {
