@@ -10,7 +10,7 @@ let is_moving = false
 let hovered_piece = /** @type {HTMLDivElement | null} */ (null)
 
 const pieces = /** @type {HTMLDivElement[]} */ ([])
-let clicked_pos = [0, 0]
+let clicked_pos = /** @type {null | [Number,number]} */ (null)
 let square_size = 0
 
 init()
@@ -110,6 +110,7 @@ function handle_drag_start(e) {
  */
 function handle_drag_end(e) {
 	e.preventDefault()
+	if (!clicked_pos) return
 	const touch = 'changedTouches' in e ? e.changedTouches[0] : e
 	const dx = touch.clientX - clicked_pos[0]
 	const dy = touch.clientY - clicked_pos[1]
@@ -126,6 +127,8 @@ function handle_drag_end(e) {
 	} else {
 		animate_line(col, dy > 0 ? 1 : -1, 'col')
 	}
+
+	clicked_pos = null
 }
 
 /**
