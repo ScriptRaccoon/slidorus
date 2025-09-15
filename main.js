@@ -99,6 +99,7 @@ function setup_dragging() {
  * @param {MouseEvent | TouchEvent} e
  */
 function handle_drag_start(e) {
+	e.preventDefault()
 	const touch = 'touches' in e ? e.touches[0] : e
 	clicked_pos = [touch.clientX, touch.clientY]
 }
@@ -108,6 +109,7 @@ function handle_drag_start(e) {
  * @param {MouseEvent | TouchEvent} e
  */
 function handle_drag_end(e) {
+	e.preventDefault()
 	const touch = 'changedTouches' in e ? e.changedTouches[0] : e
 	const dx = touch.clientX - clicked_pos[0]
 	const dy = touch.clientY - clicked_pos[1]
