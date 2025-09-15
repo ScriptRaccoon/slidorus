@@ -94,39 +94,24 @@ function handle_drag_start(e) {
 function animate_row(row, direction) {
 	if (is_moving) return
 	is_moving = true
-	/**
-	 * TODO: refactor this mess of a function
-	 */
+
 	const moving_pieces = pieces.filter((piece) => get_coordinates(piece)[1] === row)
 
 	const last_piece = moving_pieces.find(
 		(piece) => get_coordinates(piece)[0] === (direction === 1 ? 8 : 0),
 	)
 	if (!last_piece) return
-	const new_piece = /** @type {HTMLDivElement} */ (last_piece.cloneNode())
 
-	set_coordinate(new_piece, direction === 1 ? -1 : 9, row)
-
-	square.appendChild(new_piece)
-
-	new_piece.addEventListener('mouseover', () => {
-		hovered_piece = new_piece
-	})
-
+	const new_piece = copy_piece(last_piece, direction === 1 ? -1 : 9, row)
 	moving_pieces.push(new_piece)
-	pieces.push(new_piece)
 
 	setTimeout(() => {
-		for (const piece of moving_pieces) {
-			const [x, y] = get_coordinates(piece)
-			set_coordinate(piece, x + direction, y)
-		}
+		move_pieces(moving_pieces, direction, 0)
 	}, 0)
 
 	setTimeout(() => {
 		last_piece.remove()
-		const i = pieces.findIndex((p) => p === last_piece)
-		pieces.splice(i, 1)
+		remove_element(pieces, last_piece)
 		is_moving = false
 	}, MOVE_DURATION)
 }
@@ -138,41 +123,54 @@ function animate_row(row, direction) {
 function animate_column(col, direction) {
 	if (is_moving) return
 	is_moving = true
-	/**
-	 * TODO: refactor this mess of a function
-	 */
+
 	const moving_pieces = pieces.filter((piece) => get_coordinates(piece)[0] === col)
 
 	const last_piece = moving_pieces.find(
 		(piece) => get_coordinates(piece)[1] === (direction === 1 ? 8 : 0),
 	)
 	if (!last_piece) return
-	const new_piece = /** @type {HTMLDivElement} */ (last_piece.cloneNode())
 
-	set_coordinate(new_piece, col, direction === 1 ? -1 : 9)
-
-	square.appendChild(new_piece)
-
-	new_piece.addEventListener('mouseover', () => {
-		hovered_piece = new_piece
-	})
-
+	const new_piece = copy_piece(last_piece, col, direction === 1 ? -1 : 9)
 	moving_pieces.push(new_piece)
-	pieces.push(new_piece)
 
 	setTimeout(() => {
-		for (const piece of moving_pieces) {
-			const [x, y] = get_coordinates(piece)
-			set_coordinate(piece, x, y + direction)
-		}
+		move_pieces(moving_pieces, 0, direction)
 	}, 0)
 
 	setTimeout(() => {
 		last_piece.remove()
-		const i = pieces.findIndex((p) => p === last_piece)
-		pieces.splice(i, 1)
+		remove_element(pieces, last_piece)
 		is_moving = false
 	}, MOVE_DURATION)
+}
+
+/**
+ * @param {HTMLDivElement} piece
+ * @param {number} x
+ * @param {number} y
+ */
+function copy_piece(piece, x, y) {
+	const new_piece = /** @type {HTMLDivElement} */ (piece.cloneNode())
+	set_coordinate(new_piece, x, y)
+	square.appendChild(new_piece)
+	new_piece.addEventListener('mouseover', () => {
+		hovered_piece = new_piece
+	})
+	pieces.push(new_piece)
+	return new_piece
+}
+
+/**
+ * @param {HTMLDivElement[]} moving_pieces
+ * @param {number} dx
+ * @param {number} dy
+ */
+function move_pieces(moving_pieces, dx, dy) {
+	for (const piece of moving_pieces) {
+		const [x, y] = get_coordinates(piece)
+		set_coordinate(piece, x + dx, y + dy)
+	}
 }
 
 /**
@@ -266,4 +264,13 @@ function reset() {
 		const original_y = Number(piece.getAttribute('data-original-y'))
 		set_coordinate(piece, original_x, original_y)
 	}
+}
+
+/**
+ * @param {any[]} list
+ * @param {any} el
+ */
+function remove_element(list, el) {
+	const i = list.indexOf(el)
+	list.splice(i, 1)
 }
