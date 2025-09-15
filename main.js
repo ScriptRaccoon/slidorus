@@ -2,6 +2,7 @@
 
 const square = /** @type {HTMLDivElement} */ (document.querySelector('.square'))
 const wrapper = /** @type {HTMLDivElement} */ (document.querySelector('.wrapper'))
+const status_div = /** @type {HTMLDivElement} */ (document.querySelector('#status'))
 const square_rect = square.getBoundingClientRect()
 const MOVE_DURATION = 100
 let is_moving = false
@@ -126,6 +127,7 @@ function animate_line(index, direction, type) {
 		last_piece.remove()
 		remove_element(pieces, last_piece)
 		is_moving = false
+		update_status()
 	}, MOVE_DURATION)
 }
 
@@ -249,6 +251,51 @@ function reset() {
 		const original_y = Number(piece.getAttribute('data-original-y'))
 		set_coordinate(piece, original_x, original_y)
 	}
+}
+
+function check_solved() {
+	for (let row = 0; row < 3; row++) {
+		for (let col = 0; col < 3; col++) {
+			const block_pieces = pieces.filter((piece) =>
+				check_block_containment(piece, row, col),
+			)
+			const piece_types = get_piece_types(block_pieces)
+			if (piece_types.size > 1) return false
+		}
+	}
+	return true
+}
+
+/**
+ *
+ * @param {HTMLDivElement} piece
+ * @param {number} row
+ * @param {number} col
+ */
+
+function check_block_containment(piece, row, col) {
+	const [x, y] = get_coordinates(piece)
+	return x >= 3 * col && x < 3 * (col + 1) && y >= 3 * row && y < 3 * (row + 1)
+}
+
+/**
+ *
+ * @param {HTMLDivElement[]} piece_list
+ */
+function get_piece_types(piece_list) {
+	return new Set(piece_list.map((piece) => piece.getAttribute('data-type') ?? ''))
+}
+
+function update_status() {
+	const is_solved = check_solved()
+	write_status(is_solved ? 'Solved' : '')
+}
+
+/**
+ * @param {string} txt
+ */
+function write_status(txt) {
+	status_div.innerText = txt
 }
 
 /**
