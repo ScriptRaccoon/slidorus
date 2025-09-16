@@ -106,11 +106,38 @@ function setup_dragging() {
 	let moving_pieces = /** @type {HTMLDivElement[]} */ ([])
 
 	square.addEventListener('mousedown', (e) => {
+		/**
+		 * TODO: refactor me
+		 */
 		e.preventDefault()
 		initial_pos = [e.clientX, e.clientY]
 		move_direction = null
 		dragged_row = Math.floor((e.clientY - square_rect.top) * (9 / square_size))
 		dragged_col = Math.floor((e.clientX - square_rect.left) * (9 / square_size))
+
+		for (let i = 0; i < 9; i++) {
+			const piece_in_row = pieces.find(
+				(piece) =>
+					get_coordinates(piece).toString() === [i, dragged_row].toString(),
+			)
+			if (!piece_in_row) return
+
+			copy_piece(piece_in_row, i + 9, dragged_row)
+			copy_piece(piece_in_row, i + 2 * 9, dragged_row)
+			copy_piece(piece_in_row, i - 9, dragged_row)
+			copy_piece(piece_in_row, i - 2 * 9, dragged_row)
+
+			const piece_in_col = pieces.find(
+				(piece) =>
+					get_coordinates(piece).toString() === [dragged_col, i].toString(),
+			)
+			if (!piece_in_col) return
+
+			copy_piece(piece_in_col, dragged_col, i + 9)
+			copy_piece(piece_in_col, dragged_col, i + 2 + 9)
+			copy_piece(piece_in_col, dragged_col, i - 9)
+			copy_piece(piece_in_col, dragged_col, i - 2 * 9)
+		}
 	})
 
 	square.addEventListener('mousemove', (e) => {
@@ -156,6 +183,9 @@ function setup_dragging() {
 	)
 
 	square.addEventListener('mouseup', (e) => {
+		/**
+		 * TODO: refactor me
+		 */
 		e.preventDefault()
 		if (!initial_pos) return
 
@@ -177,10 +207,21 @@ function setup_dragging() {
 			set_offset(piece, 0, 0)
 		}
 
+		const pieces_outside = pieces.filter((piece) => {
+			const [x, y] = get_coordinates(piece)
+			return x < 0 || x >= 9 || y < 0 || y >= 9
+		})
+
+		for (const piece of pieces_outside) {
+			piece.remove()
+			remove_element(pieces, piece)
+		}
+
 		initial_pos = null
 		move_direction = null
 		dragged_row = null
 		dragged_col = null
+		moving_pieces = []
 		update_status()
 	})
 }
