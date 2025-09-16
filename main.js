@@ -10,7 +10,7 @@ let is_moving = false
 let hovered_piece = /** @type {HTMLDivElement | null} */ (null)
 
 const pieces = /** @type {HTMLDivElement[]} */ ([])
-let clicked_pos = /** @type {null | [Number,number]} */ (null)
+
 let square_size = 0
 
 init()
@@ -73,8 +73,20 @@ function set_coordinate(piece, x, y) {
 }
 
 /**
+ * Utility to set / update the offset of a piece
+ * @param {HTMLDivElement} piece
+ * @param {number} dx
+ * @param {number} dy
+ */
+function set_offset(piece, dx, dy) {
+	piece.style.setProperty('--dx', dx.toString())
+	piece.style.setProperty('--dy', dy.toString())
+}
+
+/**
  * Utility to retrieve the coordinates of a piece
  * @param {HTMLDivElement} piece
+ * @return {[number,number]}
  */
 function get_coordinates(piece) {
 	return [
@@ -87,48 +99,90 @@ function get_coordinates(piece) {
  * Sets up the event listeners for dragging the rows / columns
  */
 function setup_dragging() {
-	square.addEventListener('mousedown', (e) => handle_drag_start(e))
-	square.addEventListener('mouseup', (e) => handle_drag_end(e))
+	let initial_pos = /** @type {null | [number, number]} */ (null)
+	let move_direction = /** @type {"horizontal" | "vertical" | null} */ (null)
+	let dragged_row = /** @type {null | number} */ (null)
+	let dragged_col = /** @type {null | number} */ (null)
+	let moving_pieces = /** @type {HTMLDivElement[]} */ ([])
 
-	square.addEventListener('touchstart', (e) => handle_drag_start(e))
-	square.addEventListener('touchend', (e) => handle_drag_end(e))
-}
+	square.addEventListener('mousedown', (e) => {
+		e.preventDefault()
+		initial_pos = [e.clientX, e.clientY]
+		move_direction = null
+		dragged_row = Math.floor((e.clientY - square_rect.top) * (9 / square_size))
+		dragged_col = Math.floor((e.clientX - square_rect.left) * (9 / square_size))
+	})
 
-/**
- * Handles the start of the dragging
- * @param {MouseEvent | TouchEvent} e
- */
-function handle_drag_start(e) {
-	e.preventDefault()
-	const touch = 'touches' in e ? e.touches[0] : e
-	clicked_pos = [touch.clientX, touch.clientY]
-}
+	square.addEventListener('mousemove', (e) => {
+		if (!initial_pos) return
+		if (move_direction) return
 
-/**
- * Handles the end of the dragging that triggers the row / column animation
- * @param {MouseEvent | TouchEvent} e
- */
-function handle_drag_end(e) {
-	e.preventDefault()
-	if (!clicked_pos) return
-	const touch = 'changedTouches' in e ? e.changedTouches[0] : e
-	const dx = touch.clientX - clicked_pos[0]
-	const dy = touch.clientY - clicked_pos[1]
+		const current_pos = [e.clientX, e.clientY]
 
-	if (dx === 0 && dy === 0) return
+		const dx = current_pos[0] - initial_pos[0]
+		const dy = current_pos[1] - initial_pos[1]
 
-	const col = Math.floor((9 * (clicked_pos[0] - square_rect.left)) / square_size)
-	const row = Math.floor((9 * (clicked_pos[1] - square_rect.top)) / square_size)
+		const too_early = Math.abs(dx) + Math.abs(dy) < 10
 
-	const is_horizontal = Math.abs(dx) > Math.abs(dy)
+		if (too_early) return
 
-	if (is_horizontal) {
-		animate_line(row, dx > 0 ? 1 : -1, 'row')
-	} else {
-		animate_line(col, dy > 0 ? 1 : -1, 'col')
-	}
+		move_direction = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical'
 
-	clicked_pos = null
+		moving_pieces =
+			move_direction === 'horizontal'
+				? pieces.filter((piece) => get_coordinates(piece)[1] === dragged_row)
+				: pieces.filter((piece) => get_coordinates(piece)[0] === dragged_col)
+	})
+
+	square.addEventListener(
+		'mousemove',
+		throttle((/** @type {MouseEvent} */ e) => {
+			e.preventDefault()
+			if (!initial_pos || !move_direction || !dragged_row || !dragged_col) return
+
+			const current_pos = [e.clientX, e.clientY]
+
+			const dx = current_pos[0] - initial_pos[0]
+			const dy = current_pos[1] - initial_pos[1]
+
+			for (const piece of moving_pieces) {
+				if (move_direction === 'horizontal') {
+					set_offset(piece, dx, 0)
+				} else {
+					set_offset(piece, 0, dy)
+				}
+			}
+		}, 1000 / 60),
+	)
+
+	square.addEventListener('mouseup', (e) => {
+		e.preventDefault()
+		if (!initial_pos) return
+
+		const current_pos = [e.clientX, e.clientY]
+
+		const dx = current_pos[0] - initial_pos[0]
+		const dy = current_pos[1] - initial_pos[1]
+
+		const dx_int = Math.round(dx * (9 / square_size))
+		const dy_int = Math.round(dy * (9 / square_size))
+
+		for (const piece of moving_pieces) {
+			const [x, y] = get_coordinates(piece)
+			if (move_direction === 'horizontal') {
+				set_coordinate(piece, x + dx_int, y)
+			} else {
+				set_coordinate(piece, x, y + dy_int)
+			}
+			set_offset(piece, 0, 0)
+		}
+
+		initial_pos = null
+		move_direction = null
+		dragged_row = null
+		dragged_col = null
+		update_status()
+	})
 }
 
 /**
@@ -287,6 +341,7 @@ function reset() {
 		const original_x = Number(piece.getAttribute('data-original-x'))
 		const original_y = Number(piece.getAttribute('data-original-y'))
 		set_coordinate(piece, original_x, original_y)
+		set_offset(piece, 0, 0)
 	}
 }
 
@@ -351,4 +406,21 @@ function write_status(txt) {
 function remove_element(list, el) {
 	const i = list.indexOf(el)
 	list.splice(i, 1)
+}
+
+/**
+ *
+ * @param {Function} fn
+ * @param {number} delay
+ */
+function throttle(fn, delay) {
+	let last = 0
+	// @ts-ignore
+	return (...args) => {
+		const now = Date.now()
+		if (now - last >= delay) {
+			last = now
+			fn(...args)
+		}
+	}
 }

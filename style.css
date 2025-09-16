@@ -57,10 +57,12 @@ summary {
 	position: absolute;
 	width: calc(var(--size) / 9);
 	height: calc(var(--size) / 9);
+	--dx: 0;
+	--dy: 0;
 	background-color: var(--color, gray);
-	transform: translateX(calc(var(--x) * var(--size) / 9))
-		translateY(calc(var(--y) * var(--size) / 9));
-	transition: transform 75ms ease-out;
+	transform: translateX(calc(var(--x) * var(--size) / 9 + var(--dx) * 1px))
+		translateY(calc(var(--y) * var(--size) / 9 + var(--dy) * 1px));
+	transition: transform 120ms ease-out;
 	border: var(--border) solid black;
 }
 
