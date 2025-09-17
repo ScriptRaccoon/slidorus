@@ -93,6 +93,9 @@ function get_coordinates(piece) {
  * Sets up the event listeners for dragging the rows / columns
  */
 function setup_dragging() {
+	/**
+	 * TODO: refactor me
+	 */
 	let initial_pos = /** @type {null | [number, number]} */ (null)
 	let move_direction = /** @type {"horizontal" | "vertical" | null} */ (null)
 	let dragged_row = /** @type {null | number} */ (null)
@@ -117,6 +120,8 @@ function setup_dragging() {
 
 	square.addEventListener('mouseup', handle_mouse_up)
 	square.addEventListener('touchend', handle_mouse_up)
+
+	square.addEventListener('mouseleave', handle_mouse_up)
 
 	/**
 	 * @param {MouseEvent | TouchEvent} e
