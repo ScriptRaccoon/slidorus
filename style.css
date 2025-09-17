@@ -62,7 +62,7 @@ summary {
 	background-color: var(--color, gray);
 	transform: translateX(calc(var(--x) * var(--size) / 9 + var(--dx) * 1px))
 		translateY(calc(var(--y) * var(--size) / 9 + var(--dy) * 1px));
-	transition: transform 120ms ease-out;
+	transition: transform 80ms ease-out;
 	border: var(--border) solid black;
 }
 
