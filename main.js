@@ -99,15 +99,38 @@ function setup_dragging() {
 	let dragged_col = /** @type {null | number} */ (null)
 	let moving_pieces = /** @type {HTMLDivElement[]} */ ([])
 
-	square.addEventListener('mousedown', (e) => {
+	square.addEventListener('mousedown', handle_mouse_down)
+	square.addEventListener('touchstart', handle_mouse_down)
+
+	square.addEventListener('mousemove', detect_direction)
+	square.addEventListener('touchmove', detect_direction)
+
+	square.addEventListener(
+		'mousemove',
+		throttle((/** @type {MouseEvent} */ e) => handle_mouse_move(e), 1000 / 60),
+	)
+
+	square.addEventListener(
+		'touchmove',
+		throttle((/** @type {TouchEvent} */ e) => handle_mouse_move(e), 1000 / 60),
+	)
+
+	square.addEventListener('mouseup', handle_mouse_up)
+	square.addEventListener('touchend', handle_mouse_up)
+
+	/**
+	 * @param {MouseEvent | TouchEvent} e
+	 */
+	function handle_mouse_down(e) {
 		/**
 		 * TODO: refactor me
 		 */
 		e.preventDefault()
-		initial_pos = [e.clientX, e.clientY]
+		const touch = 'touches' in e ? e.touches[0] : e
+		initial_pos = [touch.clientX, touch.clientY]
 		move_direction = null
-		dragged_row = Math.floor((e.clientY - square_rect.top) * (9 / square_size))
-		dragged_col = Math.floor((e.clientX - square_rect.left) * (9 / square_size))
+		dragged_row = Math.floor((touch.clientY - square_rect.top) * (9 / square_size))
+		dragged_col = Math.floor((touch.clientX - square_rect.left) * (9 / square_size))
 		moving_pieces = []
 
 		for (let i = 0; i < 9; i++) {
@@ -133,13 +156,19 @@ function setup_dragging() {
 			copy_piece(piece_in_col, dragged_col, i - 9)
 			copy_piece(piece_in_col, dragged_col, i - 2 * 9)
 		}
-	})
+	}
 
-	square.addEventListener('mousemove', (e) => {
+	/**
+	 * @param {MouseEvent | TouchEvent} e
+	 */
+	function detect_direction(e) {
+		e.preventDefault()
+		const touch = 'touches' in e ? e.touches[0] : e
+
 		if (!initial_pos) return
 		if (move_direction) return
 
-		const current_pos = [e.clientX, e.clientY]
+		const current_pos = [touch.clientX, touch.clientY]
 
 		const dx = current_pos[0] - initial_pos[0]
 		const dy = current_pos[1] - initial_pos[1]
@@ -154,37 +183,41 @@ function setup_dragging() {
 			move_direction === 'horizontal'
 				? pieces.filter((piece) => get_coordinates(piece)[1] === dragged_row)
 				: pieces.filter((piece) => get_coordinates(piece)[0] === dragged_col)
-	})
+	}
 
-	square.addEventListener(
-		'mousemove',
-		throttle((/** @type {MouseEvent} */ e) => {
-			e.preventDefault()
-			if (!initial_pos || !move_direction || !dragged_row || !dragged_col) return
-
-			const current_pos = [e.clientX, e.clientY]
-
-			const dx = current_pos[0] - initial_pos[0]
-			const dy = current_pos[1] - initial_pos[1]
-
-			for (const piece of moving_pieces) {
-				if (move_direction === 'horizontal') {
-					set_offset(piece, dx, 0)
-				} else {
-					set_offset(piece, 0, dy)
-				}
-			}
-		}, 1000 / 60),
-	)
-
-	square.addEventListener('mouseup', (e) => {
-		/**
-		 * TODO: refactor me
-		 */
+	/**
+	 * @param {MouseEvent | TouchEvent} e
+	 */
+	function handle_mouse_move(e) {
 		e.preventDefault()
+		const touch = 'touches' in e ? e.touches[0] : e
+
+		if (!initial_pos || !move_direction) return
+
+		const current_pos = [touch.clientX, touch.clientY]
+
+		const dx = current_pos[0] - initial_pos[0]
+		const dy = current_pos[1] - initial_pos[1]
+
+		for (const piece of moving_pieces) {
+			if (move_direction === 'horizontal') {
+				set_offset(piece, dx, 0)
+			} else {
+				set_offset(piece, 0, dy)
+			}
+		}
+	}
+
+	/**
+	 * @param {MouseEvent | TouchEvent} e
+	 */
+	function handle_mouse_up(e) {
+		e.preventDefault()
+		const touch = 'changedTouches' in e ? e.changedTouches[0] : e
+
 		if (!initial_pos) return
 
-		const current_pos = [e.clientX, e.clientY]
+		const current_pos = [touch.clientX, touch.clientY]
 
 		const dx = current_pos[0] - initial_pos[0]
 		const dy = current_pos[1] - initial_pos[1]
@@ -218,7 +251,7 @@ function setup_dragging() {
 		dragged_col = null
 		moving_pieces = []
 		update_status()
-	})
+	}
 }
 
 /**
