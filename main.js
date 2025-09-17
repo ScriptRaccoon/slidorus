@@ -108,6 +108,7 @@ function setup_dragging() {
 		move_direction = null
 		dragged_row = Math.floor((e.clientY - square_rect.top) * (9 / square_size))
 		dragged_col = Math.floor((e.clientX - square_rect.left) * (9 / square_size))
+		moving_pieces = []
 
 		for (let i = 0; i < 9; i++) {
 			const piece_in_row = pieces.find(
@@ -128,7 +129,7 @@ function setup_dragging() {
 			if (!piece_in_col) return
 
 			copy_piece(piece_in_col, dragged_col, i + 9)
-			copy_piece(piece_in_col, dragged_col, i + 2 + 9)
+			copy_piece(piece_in_col, dragged_col, i + 2 * 9)
 			copy_piece(piece_in_col, dragged_col, i - 9)
 			copy_piece(piece_in_col, dragged_col, i - 2 * 9)
 		}
