@@ -104,7 +104,7 @@ p {
 }
 
 summary {
-	width: fit-content;
+	width: max-content;
 	cursor: pointer;
 
 	&:focus-visible {
