@@ -4,11 +4,6 @@ const square = /** @type {HTMLDivElement} */ (document.querySelector('.square'))
 const wrapper = /** @type {HTMLDivElement} */ (document.querySelector('.wrapper'))
 const status_div = /** @type {HTMLDivElement} */ (document.querySelector('#status'))
 const square_rect = square.getBoundingClientRect()
-const MOVE_DURATION = 100
-let is_moving = false
-
-let hovered_piece = /** @type {HTMLDivElement | null} */ (null)
-
 const pieces = /** @type {HTMLDivElement[]} */ ([])
 
 let square_size = 0
@@ -23,7 +18,6 @@ function init() {
 	window.addEventListener('resize', () => setup_square())
 	setup_pieces()
 	setup_dragging()
-	setup_arrow_keys()
 	setup_menu()
 }
 
@@ -227,50 +221,6 @@ function setup_dragging() {
 }
 
 /**
- * Moves and animates a line (row or column)
- * @param {number} index
- * @param {1 | -1} direction
- * @param {"row" | "col"} type
- */
-function animate_line(index, direction, type) {
-	if (is_moving) return
-	is_moving = true
-
-	const moving_pieces = pieces.filter(
-		(piece) => get_coordinates(piece)[type === 'col' ? 0 : 1] === index,
-	)
-
-	const last_piece = moving_pieces.find(
-		(piece) =>
-			get_coordinates(piece)[type === 'col' ? 1 : 0] === (direction === 1 ? 8 : 0),
-	)
-
-	if (!last_piece) return
-
-	const new_piece =
-		type === 'col'
-			? copy_piece(last_piece, index, direction === 1 ? -1 : 9)
-			: copy_piece(last_piece, direction === 1 ? -1 : 9, index)
-
-	moving_pieces.push(new_piece)
-
-	setTimeout(() => {
-		if (type === 'col') {
-			move_pieces(moving_pieces, 0, direction)
-		} else {
-			move_pieces(moving_pieces, direction, 0)
-		}
-	}, 0)
-
-	setTimeout(() => {
-		last_piece.remove()
-		remove_element(pieces, last_piece)
-		is_moving = false
-		update_status()
-	}, MOVE_DURATION)
-}
-
-/**
  * Utility to copy a piece with the same classes and attributes
  * @param {HTMLDivElement} piece
  * @param {number} x
@@ -280,66 +230,8 @@ function copy_piece(piece, x, y) {
 	const new_piece = /** @type {HTMLDivElement} */ (piece.cloneNode())
 	set_coordinate(new_piece, x, y)
 	square.appendChild(new_piece)
-	new_piece.addEventListener('mouseover', () => {
-		hovered_piece = new_piece
-	})
 	pieces.push(new_piece)
 	return new_piece
-}
-
-/**
- * Moves a list of pieces to a new destination
- * @param {HTMLDivElement[]} moving_pieces
- * @param {number} dx
- * @param {number} dy
- */
-function move_pieces(moving_pieces, dx, dy) {
-	for (const piece of moving_pieces) {
-		const [x, y] = get_coordinates(piece)
-		set_coordinate(piece, x + dx, y + dy)
-	}
-}
-
-/**
- * Sets up the arrow keys to move the rows / columns
- */
-function setup_arrow_keys() {
-	pieces.forEach((piece) =>
-		piece.addEventListener('mouseover', () => {
-			hovered_piece = piece
-		}),
-	)
-
-	square.addEventListener('mouseleave', () => {
-		hovered_piece = null
-	})
-
-	document.addEventListener('keydown', (e) => {
-		if (!hovered_piece) return
-		e.preventDefault()
-
-		const [x, y] = get_coordinates(hovered_piece)
-		const key = e.key
-
-		switch (key) {
-			case 'ArrowRight': {
-				animate_line(y, 1, 'row')
-				break
-			}
-			case 'ArrowLeft': {
-				animate_line(y, -1, 'row')
-				break
-			}
-			case 'ArrowDown': {
-				animate_line(x, 1, 'col')
-				break
-			}
-			case 'ArrowUp': {
-				animate_line(x, -1, 'col')
-				break
-			}
-		}
-	})
 }
 
 /**
@@ -450,7 +342,6 @@ function remove_element(list, el) {
 }
 
 /**
- *
  * @param {Function} fn
  * @param {number} delay
  */
