@@ -140,7 +140,7 @@ details[open] summary {
 		translateY(calc(var(--y) * var(--size) / 9 + var(--dy) * 1px));
 	transition: transform 80ms ease-out;
 	border: var(--border) solid black;
-	box-shadow: 0.1rem 0.1rem calc(0.15 * var(--size) / 9) inset #00000029;
+	box-shadow: 0.1rem 0.1rem calc(0.1 * var(--size) / 9) inset #00000030;
 	border-radius: 15%;
 }
 
