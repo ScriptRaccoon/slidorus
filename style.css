@@ -230,6 +230,7 @@ menu {
 	aspect-ratio: 2.4/3;
 	border-radius: 0.25rem;
 	background-color: var(--color, white);
+	transition: background-color 140ms ease-in-out;
 	transform: rotateX(90deg) rotateY(calc(var(--index, 0) * 360deg / var(--tile-amount)))
 		translateZ(var(--slice-radius));
 	opacity: 0.95;
