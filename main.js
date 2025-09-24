@@ -285,6 +285,9 @@ function setup_menu() {
 
 	const reset_btn = document.querySelector('#reset_btn')
 	reset_btn?.addEventListener('click', reset)
+
+	const viz_btn = document.querySelector('#viz_btn')
+	viz_btn?.addEventListener('click', toggle_visualization)
 }
 
 /**
@@ -378,6 +381,12 @@ function update_tile_colors() {
 		if (!tile) return
 		tile.setAttribute('data-type', piece_type ?? '')
 	}
+}
+
+function toggle_visualization() {
+	const scene = document.querySelector('.scene')
+	if (!scene) return
+	scene.classList.toggle('visible')
 }
 
 /**
