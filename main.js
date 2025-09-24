@@ -19,6 +19,8 @@ function init() {
 	setup_pieces()
 	setup_dragging()
 	setup_menu()
+	create_torus()
+	update_tile_colors()
 }
 
 /**
@@ -256,6 +258,7 @@ function setup_dragging() {
 		dragged_col = null
 		moving_pieces = []
 		update_status()
+		update_tile_colors()
 	}
 }
 
@@ -303,6 +306,8 @@ function scramble() {
 		set_coordinate(piece, x, y)
 		free_coordinates.splice(i, 1)
 	}
+
+	update_tile_colors()
 }
 
 /**
@@ -314,6 +319,7 @@ function reset() {
 		const original_y = Number(piece.getAttribute('data-original-y'))
 		set_coordinate(piece, original_x, original_y)
 		set_offset(piece, 0, 0)
+		update_tile_colors()
 	}
 }
 
@@ -332,6 +338,46 @@ function check_solved() {
 		}
 	}
 	return true
+}
+
+/**
+ * Creates the 3d torus and its tiles
+ */
+function create_torus() {
+	const scene = document.querySelector('.scene')
+	if (!scene) return
+	const torus = document.createElement('div')
+	torus.className = 'torus'
+	for (let i = 0; i < 9; i++) {
+		const slice = document.createElement('div')
+		slice.className = 'slice'
+		slice.style.setProperty('--num', i.toString())
+		for (let j = 0; j < 9; j++) {
+			const tile = document.createElement('div')
+			tile.className = 'tile'
+			tile.style.setProperty('--index', j.toString())
+			slice.appendChild(tile)
+		}
+		torus.appendChild(slice)
+	}
+	scene.appendChild(torus)
+}
+
+/**
+ * Sets the tile colors from the torus to the current piece colors
+ */
+function update_tile_colors() {
+	const torus = document.querySelector('.torus')
+	if (!torus) return
+	for (const piece of pieces) {
+		const [x, y] = get_coordinates(piece)
+		const piece_type = piece.getAttribute('data-type')
+		const slice = torus.children[y]
+		if (!slice) return
+		const tile = slice.children[x]
+		if (!tile) return
+		tile.setAttribute('data-type', piece_type ?? '')
+	}
 }
 
 /**

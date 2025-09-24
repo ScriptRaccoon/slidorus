@@ -226,3 +226,95 @@ menu {
 	white-space: nowrap;
 	border: 0;
 }
+
+.scene {
+	background-color: var(--bg-color);
+	border: 1px solid #555;
+	border-radius: 0.5rem;
+	width: 30rem;
+	height: 24rem;
+	perspective: 1200px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	top: 1rem;
+	left: 1rem;
+	z-index: 10;
+
+	* {
+		position: absolute;
+		transform-style: preserve-3d;
+	}
+}
+
+.torus {
+	--elevation: -2rem;
+	--tilt: -35deg;
+	--inner-radius: 4rem;
+	--outer-radius: 8rem;
+	--tile-amount: 9;
+	transform: translateY(var(--elevation)) rotateX(var(--tilt));
+	animation: rotatearound 60s linear infinite;
+}
+
+@keyframes rotatearound {
+	from {
+		rotate: translateY(var(--elevation)) rotateX(var(--tilt)) rotateY(0deg);
+	}
+	to {
+		transform: translateY(var(--elevation)) rotateX(var(--tilt)) rotateY(1turn);
+	}
+}
+
+.tile {
+	width: 2.8rem;
+	height: 3.5rem;
+	border-radius: 0.25rem;
+	background-color: var(--color, white);
+	transform: rotateX(90deg) rotateY(calc(var(--index, 0) * 360deg / var(--tile-amount)))
+		translateZ(var(--inner-radius));
+	opacity: 0.95;
+	box-shadow: 0rem 0rem 1rem inset #0006;
+}
+
+.slice {
+	transform: rotateY(calc(var(--num, 0) * 360deg / var(--tile-amount)))
+		translateX(var(--outer-radius));
+}
+
+.tile[data-type='0'] {
+	--color: var(--color-0);
+}
+
+.tile[data-type='1'] {
+	--color: var(--color-1);
+}
+
+.tile[data-type='2'] {
+	--color: var(--color-2);
+}
+
+.tile[data-type='3'] {
+	--color: var(--color-3);
+}
+
+.tile[data-type='4'] {
+	--color: var(--color-4);
+}
+
+.tile[data-type='5'] {
+	--color: var(--color-5);
+}
+
+.tile[data-type='6'] {
+	--color: var(--color-6);
+}
+
+.tile[data-type='7'] {
+	--color: var(--color-7);
+}
+
+.tile[data-type='8'] {
+	--color: var(--color-8);
+}
