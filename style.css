@@ -17,6 +17,7 @@
 	--bg-color: #111;
 	--font-color: #fff;
 	--btn-color: #333;
+	--line-color: #333;
 	--outline-color: #aaa;
 	--highlight-color: yellow;
 }
@@ -183,13 +184,13 @@ menu {
 }
 
 .scene {
-	margin-block: 2rem;
+	margin-top: 2rem;
 	margin-inline: auto;
 	background-color: var(--bg-color);
-	border: 1px solid #555;
+	border: 1px solid var(--line-color);
 	border-radius: 0.5rem;
-	width: 30rem;
-	height: 24rem;
+	width: 100%;
+	aspect-ratio: 4 / 3;
 	perspective: 1200px;
 	display: none;
 
@@ -206,10 +207,10 @@ menu {
 }
 
 .torus {
-	--elevation: -2rem;
+	--elevation: -5vw;
 	--tilt: -35deg;
-	--inner-radius: 4rem;
-	--outer-radius: 8rem;
+	--slice-radius: 12vw;
+	--outer-radius: 24vw;
 	--tile-amount: 9;
 	transform: translateY(var(--elevation)) rotateX(var(--tilt));
 	animation: rotatearound 60s linear infinite;
@@ -225,12 +226,12 @@ menu {
 }
 
 .tile {
-	width: 2.8rem;
-	height: 3.5rem;
+	height: 10vw;
+	aspect-ratio: 2.4/3;
 	border-radius: 0.25rem;
 	background-color: var(--color, white);
 	transform: rotateX(90deg) rotateY(calc(var(--index, 0) * 360deg / var(--tile-amount)))
-		translateZ(var(--inner-radius));
+		translateZ(var(--slice-radius));
 	opacity: 0.95;
 	box-shadow: 0rem 0rem 1rem inset #0006;
 }
