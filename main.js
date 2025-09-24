@@ -2,6 +2,7 @@
 
 const square = /** @type {HTMLDivElement} */ (document.querySelector('.square'))
 const wrapper = /** @type {HTMLDivElement} */ (document.querySelector('.wrapper'))
+const viz_btn = /** @type {HTMLButtonElement} */ (document.querySelector('#viz_btn'))
 const status_div = /** @type {HTMLDivElement} */ (document.querySelector('#status'))
 const square_rect = square.getBoundingClientRect()
 const pieces = /** @type {HTMLDivElement[]} */ ([])
@@ -286,7 +287,6 @@ function setup_menu() {
 	const reset_btn = document.querySelector('#reset_btn')
 	reset_btn?.addEventListener('click', reset)
 
-	const viz_btn = document.querySelector('#viz_btn')
 	viz_btn?.addEventListener('click', toggle_visualization)
 }
 
@@ -386,7 +386,13 @@ function update_tile_colors() {
 function toggle_visualization() {
 	const scene = document.querySelector('.scene')
 	if (!scene) return
-	scene.classList.toggle('visible')
+	if (scene.classList.contains('visible')) {
+		scene.classList.remove('visible')
+		viz_btn.innerText = 'View Torus'
+	} else {
+		scene.classList.add('visible')
+		viz_btn.innerText = 'Hide Torus'
+	}
 }
 
 /**
