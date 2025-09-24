@@ -46,46 +46,12 @@ h1 {
 		Arial, sans-serif;
 	text-transform: uppercase;
 	font-weight: 600;
-
-	display: flex;
-	justify-content: center;
-	gap: 0.15rem;
+	color: yellow;
+	text-align: center;
+	letter-spacing: 2px;
 
 	@media (min-width: 600px) {
 		font-size: 2.75rem;
-	}
-
-	span:nth-child(1) {
-		color: var(--color-0);
-	}
-
-	span:nth-child(2) {
-		color: var(--color-1);
-	}
-
-	span:nth-child(3) {
-		color: var(--color-2);
-	}
-
-	span:nth-child(4) {
-		color: var(--color-5);
-	}
-
-	span:nth-child(5) {
-		color: var(--color-8);
-		filter: brightness(1.5);
-	}
-
-	span:nth-child(6) {
-		color: var(--color-7);
-		filter: brightness(1.5);
-	}
-
-	span:nth-child(7) {
-		color: var(--color-6);
-	}
-	span:nth-child(8) {
-		color: var(--color-3);
 	}
 }
 
@@ -213,18 +179,6 @@ menu {
 	margin-block: 0.25rem;
 	text-align: right;
 	font-size: 0.875rem;
-}
-
-.sr-only {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	margin: -1px;
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-	white-space: nowrap;
-	border: 0;
 }
 
 .scene {
