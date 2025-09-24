@@ -207,10 +207,11 @@ menu {
 }
 
 .torus {
-	--elevation: -5vw;
+	--unit: min(10vw, 4rem);
+	--elevation: calc(-0.5 * var(--unit));
 	--tilt: -35deg;
-	--slice-radius: 12vw;
-	--outer-radius: 24vw;
+	--slice-radius: calc(1.2 * var(--unit));
+	--outer-radius: calc(2.4 * var(--unit));
 	--tile-amount: 9;
 	transform: translateY(var(--elevation)) rotateX(var(--tilt));
 	animation: rotatearound 60s linear infinite;
@@ -226,7 +227,7 @@ menu {
 }
 
 .tile {
-	height: 10vw;
+	height: var(--unit);
 	aspect-ratio: 2.4/3;
 	border-radius: 0.25rem;
 	background-color: var(--color, white);
