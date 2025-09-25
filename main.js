@@ -1,13 +1,12 @@
 // @ts-check
 
 const square = /** @type {HTMLDivElement} */ (document.querySelector('.square'))
-const wrapper = /** @type {HTMLDivElement} */ (document.querySelector('.wrapper'))
 const viz_btn = /** @type {HTMLButtonElement} */ (document.querySelector('#viz_btn'))
 const status_div = /** @type {HTMLDivElement} */ (document.querySelector('#status'))
-const square_rect = square.getBoundingClientRect()
 const pieces = /** @type {HTMLDivElement[]} */ ([])
 
 let square_size = 0
+const MAX_WIDTH = 600
 
 init()
 
@@ -28,8 +27,8 @@ function init() {
  * Sets up the size of the square
  */
 function setup_square() {
-	const wrapper_padding = 10
-	square_size = wrapper.clientWidth - 2 * wrapper_padding
+	const padding = 16
+	square_size = Math.min(window.innerWidth, MAX_WIDTH) - 2 * padding
 	square.style.setProperty('--size', `${square_size}px`)
 }
 
@@ -134,6 +133,7 @@ function setup_dragging() {
 		 * TODO: refactor me
 		 */
 		e.preventDefault()
+		const square_rect = square.getBoundingClientRect()
 		const touch = 'touches' in e ? e.touches[0] : e
 		initial_pos = [touch.clientX, touch.clientY]
 		move_direction = null

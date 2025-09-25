@@ -17,9 +17,9 @@
 	--bg-color: #111;
 	--font-color: #fff;
 	--btn-color: #333;
-	--line-color: #333;
 	--outline-color: #aaa;
 	--highlight-color: yellow;
+	--max-width: 600px;
 }
 
 body {
@@ -29,12 +29,6 @@ body {
 		Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 	line-height: 1.6;
 	padding-bottom: 2rem;
-}
-
-.wrapper {
-	padding-inline: 10px;
-	max-width: 600px;
-	margin-inline: auto;
 }
 
 header {
@@ -91,6 +85,7 @@ details[open] summary {
 .square {
 	width: var(--size);
 	height: var(--size);
+	margin-inline: auto;
 	--border: 1px;
 	cursor: move;
 	clip-path: inset(var(--border));
@@ -144,6 +139,8 @@ details[open] summary {
 }
 
 .infos {
+	max-width: var(--max-width);
+	margin-inline: auto;
 	padding-inline: 1rem;
 	margin-top: 2rem;
 }
@@ -184,12 +181,10 @@ menu {
 }
 
 .scene {
-	margin-top: 2.5rem;
 	margin-inline: auto;
 	background-color: var(--bg-color);
-	border: 1px solid var(--line-color);
 	border-radius: 0.5rem;
-	width: 100%;
+	max-width: var(--max-width);
 	aspect-ratio: 4 / 3;
 	perspective: 1200px;
 	display: none;
