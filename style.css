@@ -78,10 +78,6 @@ h1 {
 	}
 }
 
-details[open] summary {
-	color: var(--highlight-color);
-}
-
 /* SQUARE AND PIECES */
 
 .square {
@@ -150,6 +146,10 @@ summary {
 		outline: 1px solid var(--outline-color);
 		outline-offset: 2px;
 	}
+}
+
+details[open] summary {
+	color: var(--highlight-color);
 }
 
 .infos {
