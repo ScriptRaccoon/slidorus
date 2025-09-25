@@ -78,6 +78,22 @@ h1 {
 	}
 }
 
+/* GRID */
+
+@media (min-width: 1200px) {
+	.grid:has(.scene.visible) {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		align-items: center;
+		max-width: 1300px;
+		margin-inline: auto;
+
+		.infos {
+			margin-inline: 1.5rem;
+		}
+	}
+}
+
 /* SQUARE AND PIECES */
 
 .square {
@@ -153,6 +169,7 @@ details[open] summary {
 }
 
 .infos {
+	grid-column: 1;
 	max-width: var(--max-width);
 	margin-inline: auto;
 	padding-inline: 1rem;
