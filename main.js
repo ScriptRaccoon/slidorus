@@ -2,7 +2,6 @@
 
 const square = /** @type {HTMLDivElement} */ (document.querySelector('.square'))
 const viz_btn = /** @type {HTMLButtonElement} */ (document.querySelector('#viz_btn'))
-const status_div = /** @type {HTMLDivElement} */ (document.querySelector('#status'))
 const pieces = /** @type {HTMLDivElement[]} */ ([])
 
 let square_size = 0
@@ -258,7 +257,6 @@ function setup_dragging() {
 		dragged_row = null
 		dragged_col = null
 		moving_pieces = []
-		update_status()
 		update_tile_colors()
 	}
 }
@@ -413,22 +411,6 @@ function check_block_containment(piece, row, col) {
  */
 function get_piece_types(piece_list) {
 	return new Set(piece_list.map((piece) => piece.getAttribute('data-type') ?? ''))
-}
-
-/**
- * Updates the status text by checking if the puzzle is solved
- */
-function update_status() {
-	const is_solved = check_solved()
-	write_status(is_solved ? 'Solved' : '')
-}
-
-/**
- * Utility to write the status text
- * @param {string} txt
- */
-function write_status(txt) {
-	status_div.innerText = txt
 }
 
 /**
