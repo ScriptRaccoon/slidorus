@@ -104,10 +104,10 @@ function setup_dragging() {
 	let moving_pieces = /** @type {HTMLDivElement[]} */ ([])
 
 	square.addEventListener('mousedown', handle_mouse_down)
-	square.addEventListener('touchstart', handle_mouse_down)
+	square.addEventListener('touchstart', handle_mouse_down, { passive: true })
 
 	square.addEventListener('mousemove', detect_direction)
-	square.addEventListener('touchmove', detect_direction)
+	square.addEventListener('touchmove', detect_direction, { passive: true })
 
 	square.addEventListener(
 		'mousemove',
@@ -117,6 +117,7 @@ function setup_dragging() {
 	square.addEventListener(
 		'touchmove',
 		throttle((/** @type {TouchEvent} */ e) => handle_mouse_move(e), 1000 / 60),
+		{ passive: true },
 	)
 
 	square.addEventListener('mouseup', handle_mouse_up)
