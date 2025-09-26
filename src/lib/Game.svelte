@@ -216,7 +216,6 @@
 			translateY(calc(var(--y) * var(--dim) + var(--dy) * 1px));
 		transition: transform 80ms ease-out;
 		border: var(--border) solid var(--bg-color);
-		box-shadow: 0.1rem 0.1rem calc(0.1 * var(--dim)) inset #00000025;
 		border-radius: 15%;
 	}
 </style>
