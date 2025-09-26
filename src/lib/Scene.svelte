@@ -76,24 +76,44 @@
 			--multiplier: 2.7;
 		}
 
-		&[data-index='1'],
+		&[data-index='1'] {
+			--multiplier: 2.7;
+			clip-path: polygon(7% 0%, 93% 0%, 100% 100%, 0% 100%);
+		}
+
 		&[data-index='8'] {
-			--multiplier: 2.35;
+			--multiplier: 2.7;
+			clip-path: polygon(0% 0%, 100% 0%, 93% 100%, 7% 100%);
 		}
 
-		&[data-index='2'],
+		&[data-index='2'] {
+			--multiplier: 2.25;
+			clip-path: polygon(14% 0%, 90% 0%, 100% 100%, 0% 100%);
+		}
+
 		&[data-index='7'] {
-			--multiplier: 1.75;
+			clip-path: polygon(0% 0%, 100% 0%, 88% 100%, 12% 100%);
+			--multiplier: 2.25;
 		}
 
-		&[data-index='3'],
+		&[data-index='3'] {
+			--multiplier: 1.65;
+			clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);
+		}
+
 		&[data-index='6'] {
-			--multiplier: 1.2;
+			--multiplier: 1.65;
+			clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
 		}
 
-		&[data-index='4'],
+		&[data-index='4'] {
+			--multiplier: 1.1;
+			clip-path: polygon(9% 0%, 91% 0%, 100% 100%, 0% 100%);
+		}
+
 		&[data-index='5'] {
-			--multiplier: 1;
+			--multiplier: 1.1;
+			clip-path: polygon(0% 0%, 100% 0%, 91% 100%, 9% 100%);
 		}
 	}
 
