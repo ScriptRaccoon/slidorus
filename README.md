@@ -9,3 +9,5 @@ Every row and column can be shifted in both directions. When a piece moves out o
 ![screenshot](/public/screenshot-with-torus.png)
 
 The puzzle is similar to 9×9 [Loopover](https://loopover.xyz/), but with a different color scheme and indistinguishable pieces within each 3×3 block. The puzzle is considered solved when each 3×3 block is uniformly colored; the exact positions of the blocks do not matter.
+
+Contributions and comments are welcome.

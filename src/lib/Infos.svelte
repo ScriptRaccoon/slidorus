@@ -15,6 +15,13 @@
 		considered solved when each 3×3 block is uniformly colored; the exact positions of
 		the blocks do not matter.
 	</p>
+
+	<p>
+		The code for this application can be found on <a
+			href="https://github.com/ScriptRaccoon/slidorus"
+			target="_blank">GitHub</a
+		>. Contributions and comments are welcome.
+	</p>
 </details>
 
 <style>
