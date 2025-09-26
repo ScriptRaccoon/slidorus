@@ -110,6 +110,7 @@ h1 {
 	margin-inline: auto;
 	--border: 1px;
 	cursor: move;
+	touch-action: none;
 	clip-path: inset(var(--border));
 
 	@media (min-width: 600px) {
@@ -213,7 +214,6 @@ menu {
 /* TORUS */
 
 .scene {
-	/* outline: 2px solid lime; */
 	background-color: var(--bg-color);
 	border-radius: 0.5rem;
 	aspect-ratio: 4.25 / 3;
