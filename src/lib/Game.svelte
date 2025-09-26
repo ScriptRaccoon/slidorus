@@ -7,6 +7,8 @@
 		pieces: Piece[]
 	}
 
+	let animate_square = $state(false)
+
 	let { pieces = $bindable() }: Props = $props()
 
 	let square_element = $state<HTMLDivElement | null>(null)
@@ -121,6 +123,11 @@
 				title: 'Puzzle solved!',
 				variant: 'success',
 			})
+
+			animate_square = true
+			setTimeout(() => {
+				animate_square = false
+			}, 500)
 		}
 	}
 
@@ -147,6 +154,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
 	class="square"
+	class:animate_square
 	bind:this={square_element}
 	onmousedown={handle_mouse_down}
 	onmousemove={throttle(handle_mouse_move, 1000 / 60)}
@@ -181,6 +189,12 @@
 		cursor: move;
 		touch-action: none;
 		clip-path: inset(var(--border));
+
+		transition: scale 200ms ease-in-out;
+
+		&.animate_square {
+			scale: 1.03;
+		}
 
 		@media (min-width: 600px) {
 			--border: 0.1rem;
