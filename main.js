@@ -43,7 +43,7 @@ function setup_pieces() {
 					const piece_x = 3 * col + x
 					const piece_y = 3 * row + y
 					const piece = document.createElement('div')
-					piece.classList.add('piece', `piece-${piece_type}`)
+					piece.className = 'piece'
 					piece.setAttribute('data-type', piece_type.toString())
 					piece.setAttribute('data-original-x', piece_x.toString())
 					piece.setAttribute('data-original-y', piece_y.toString())

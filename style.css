@@ -128,32 +128,36 @@ h1 {
 	border-radius: 15%;
 }
 
-.piece-0 {
-	--color: var(--color-0);
-}
-.piece-1 {
-	--color: var(--color-1);
-}
-.piece-2 {
-	--color: var(--color-2);
-}
-.piece-3 {
-	--color: var(--color-3);
-}
-.piece-4 {
-	--color: var(--color-4);
-}
-.piece-5 {
-	--color: var(--color-5);
-}
-.piece-6 {
-	--color: var(--color-6);
-}
-.piece-7 {
-	--color: var(--color-7);
-}
-.piece-8 {
-	--color: var(--color-8);
+/* PIECE AND TILE COLORS */
+
+:is(.piece, .tile) {
+	&[data-type='0'] {
+		--color: var(--color-0);
+	}
+	&[data-type='1'] {
+		--color: var(--color-1);
+	}
+	&[data-type='2'] {
+		--color: var(--color-2);
+	}
+	&[data-type='3'] {
+		--color: var(--color-3);
+	}
+	&[data-type='4'] {
+		--color: var(--color-4);
+	}
+	&[data-type='5'] {
+		--color: var(--color-5);
+	}
+	&[data-type='6'] {
+		--color: var(--color-6);
+	}
+	&[data-type='7'] {
+		--color: var(--color-7);
+	}
+	&[data-type='8'] {
+		--color: var(--color-8);
+	}
 }
 
 /* INFOS */
@@ -254,40 +258,4 @@ menu {
 .slice {
 	transform: rotateY(calc(var(--num, 0) * 360deg / var(--tile-amount)))
 		translateX(var(--outer-radius));
-}
-
-.tile[data-type='0'] {
-	--color: var(--color-0);
-}
-
-.tile[data-type='1'] {
-	--color: var(--color-1);
-}
-
-.tile[data-type='2'] {
-	--color: var(--color-2);
-}
-
-.tile[data-type='3'] {
-	--color: var(--color-3);
-}
-
-.tile[data-type='4'] {
-	--color: var(--color-4);
-}
-
-.tile[data-type='5'] {
-	--color: var(--color-5);
-}
-
-.tile[data-type='6'] {
-	--color: var(--color-6);
-}
-
-.tile[data-type='7'] {
-	--color: var(--color-7);
-}
-
-.tile[data-type='8'] {
-	--color: var(--color-8);
 }
