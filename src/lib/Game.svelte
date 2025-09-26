@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { get_changed_position, get_position, throttle } from '../utils'
-	import { get_copy, type Piece } from './pieces'
+	import { check_solved, get_copy, type Piece } from './pieces'
+	import { send_toast } from './Toast.svelte'
 
 	type Props = {
 		pieces: Piece[]
@@ -109,6 +110,18 @@
 		moving_row = null
 		moving_col = null
 		moving_pieces = []
+
+		handle_solved_state()
+	}
+
+	function handle_solved_state() {
+		const is_solved = check_solved(pieces)
+		if (is_solved) {
+			send_toast({
+				title: 'Puzzle solved!',
+				variant: 'success',
+			})
+		}
 	}
 
 	function copy_piece(piece: Piece, x: number, y: number) {

@@ -60,7 +60,6 @@ export function create_type_array(pieces: Piece[]): number[][] {
 	return result
 }
 
-// TODO: use that function, display when game is solved
 export function check_solved(pieces: Piece[]): boolean {
 	for (let row = 0; row < 3; row++) {
 		for (let col = 0; col < 3; col++) {

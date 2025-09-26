@@ -5,6 +5,7 @@
 	import Menu from './lib/Menu.svelte'
 	import { get_pieces, type Piece } from './lib/pieces'
 	import Scene from './lib/Scene.svelte'
+	import Toast from './lib/Toast.svelte'
 
 	let pieces = $state<Piece[]>(get_pieces())
 
@@ -56,6 +57,8 @@
 
 	<Infos />
 </div>
+
+<Toast position="bottom-center" />
 
 <style>
 	.grid {

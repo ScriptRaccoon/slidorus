@@ -19,6 +19,8 @@
 	--btn-color: #333;
 	--outline-color: #aaa;
 	--highlight-color: yellow;
+	--error-color: red;
+	--success-color: green;
 }
 
 body {
