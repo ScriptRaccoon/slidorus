@@ -29,7 +29,7 @@
 
 <style>
 	.scene {
-		aspect-ratio: 4.25 / 3;
+		aspect-ratio: 5 / 4;
 		perspective: 1200px;
 		display: flex;
 		align-items: center;
@@ -44,20 +44,24 @@
 	.torus {
 		--unit: min(10vw, 4rem);
 		--elevation: calc(-0.25 * var(--unit));
-		--tilt: -35deg;
+		--tilt: -70deg;
 		--slice-radius: calc(1.2 * var(--unit));
 		--outer-radius: calc(2.65 * var(--unit));
 		--tile-amount: 9;
-		transform: translateY(var(--elevation)) rotateX(var(--tilt));
-		animation: rotatearound 60s linear infinite;
+		transform: translateY(var(--elevation)) rotateX(var(--tilt)) rotateY(0deg);
+		animation: rotatearound 180s linear infinite;
 	}
 
 	@keyframes rotatearound {
-		from {
+		0% {
 			rotate: translateY(var(--elevation)) rotateX(var(--tilt)) rotateY(0deg);
 		}
-		to {
-			transform: translateY(var(--elevation)) rotateX(var(--tilt)) rotateY(1turn);
+		50% {
+			transform: translateY(var(--elevation)) rotateX(calc(-1 * var(--tilt)))
+				rotateY(1turn);
+		}
+		100% {
+			transform: translateY(var(--elevation)) rotateX(var(--tilt)) rotateY(2turn);
 		}
 	}
 
