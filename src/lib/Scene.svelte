@@ -42,10 +42,10 @@
 
 	.torus {
 		--unit: min(10vw, 4rem);
-		--elevation: calc(-0.5 * var(--unit));
+		--elevation: calc(-0.25 * var(--unit));
 		--tilt: -35deg;
 		--slice-radius: calc(1.2 * var(--unit));
-		--outer-radius: calc(2.4 * var(--unit));
+		--outer-radius: calc(2.65 * var(--unit));
 		--tile-amount: 9;
 		transform: translateY(var(--elevation)) rotateX(var(--tilt));
 		animation: rotatearound 60s linear infinite;
@@ -61,20 +61,22 @@
 	}
 
 	.tile {
-		height: var(--unit);
-		aspect-ratio: 2.4/3;
+		height: calc(2.4 / 3 * var(--unit));
+		width: var(--unit);
 		border-radius: 0.25rem;
 		background-color: var(--color, white);
 		transition: background-color 140ms ease-in-out;
-		transform: rotateX(90deg)
-			rotateY(calc(var(--index, 0) * 360deg / var(--tile-amount)))
+		transform: rotateX(calc(var(--index, 0) * 360deg / var(--tile-amount)))
 			translateZ(var(--slice-radius));
 		opacity: 0.95;
 		box-shadow: 0rem 0rem 1rem inset #0006;
 	}
 
 	.slice {
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		transform: rotateY(calc(var(--num, 0) * 360deg / var(--tile-amount)))
-			translateX(var(--outer-radius));
+			translateZ(var(--outer-radius));
 	}
 </style>
