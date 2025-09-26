@@ -22,17 +22,6 @@
 </menu>
 
 <style>
-	button {
-		padding: 0.25rem 0.8rem;
-		background-color: var(--btn-color);
-		border-radius: 0.25rem;
-
-		&:focus-visible,
-		&:hover {
-			outline: 1px solid var(--outline-color);
-		}
-	}
-
 	menu {
 		margin-top: 1rem;
 		display: flex;
@@ -42,6 +31,17 @@
 
 		@media (min-width: 600px) {
 			margin-top: 2rem;
+		}
+	}
+
+	button {
+		padding: 0.25rem 0.8rem;
+		background-color: var(--btn-color);
+		border-radius: 0.25rem;
+
+		&:focus-visible,
+		&:hover {
+			outline: 1px solid var(--outline-color);
 		}
 	}
 </style>

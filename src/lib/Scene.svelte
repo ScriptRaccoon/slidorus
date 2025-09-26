@@ -28,8 +28,6 @@
 
 <style>
 	.scene {
-		background-color: var(--bg-color);
-		border-radius: 0.5rem;
 		aspect-ratio: 4.25 / 3;
 		perspective: 1200px;
 		display: flex;

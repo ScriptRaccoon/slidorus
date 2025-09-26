@@ -1,4 +1,4 @@
-<details class="infos">
+<details>
 	<summary>About this puzzle</summary>
 	<p>
 		<i>Slidorus</i> is a sliding puzzle made up of 9 blocks, each containing 9 pieces,
@@ -17,10 +17,9 @@
 	</p>
 
 	<p>
-		The code for this application can be found on <a
-			href="https://github.com/ScriptRaccoon/slidorus"
-			target="_blank">GitHub</a
-		>. Contributions and comments are welcome.
+		The code for this application can be found on
+		<a href="https://github.com/ScriptRaccoon/slidorus" target="_blank">GitHub</a>.
+		Contributions and comments are welcome.
 	</p>
 </details>
 
@@ -28,6 +27,7 @@
 	details {
 		padding-inline: 1rem;
 		margin-top: 2rem;
+		grid-column: 1;
 	}
 
 	summary {
