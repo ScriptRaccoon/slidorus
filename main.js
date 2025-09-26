@@ -26,7 +26,7 @@ function init() {
  * Sets up the size of the square
  */
 function setup_square() {
-	const padding = 16
+	const padding = 10
 	square_size = Math.min(window.innerWidth, MAX_WIDTH) - 2 * padding
 	square.style.setProperty('--size', `${square_size}px`)
 }
