@@ -29,3 +29,7 @@ export function get_changed_position(e: MouseEvent | TouchEvent): {
 	}
 	throw new Error('No position found')
 }
+
+export function clamp(value: number, min: number, max: number): number {
+	return Math.min(Math.max(value, min), max)
+}

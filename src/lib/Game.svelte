@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { get_changed_position, get_position, throttle } from '../utils'
+	import { clamp, get_changed_position, get_position, throttle } from '../utils'
 	import { check_solved, get_copy, type Piece } from './pieces'
 	import { send_toast } from './Toast.svelte'
 
@@ -33,6 +33,10 @@
 		moving_col = Math.floor(
 			(clicked_pos.x - square_rect.left) * (9 / square_element.clientWidth),
 		)
+
+		const is_valid =
+			moving_row >= 0 && moving_row < 9 && moving_col >= 0 && moving_col < 9
+		if (!is_valid) return
 
 		const copies: Piece[] = []
 		const offsets = [1, 2, -1, -2]
@@ -87,18 +91,19 @@
 
 		const current_pos = get_changed_position(e)
 
-		const dx = current_pos.x - clicked_pos.x
-		const dy = current_pos.y - clicked_pos.y
-
-		const dx_int = Math.round(dx * (9 / square_element.clientWidth))
-		const dy_int = Math.round(dy * (9 / square_element.clientHeight))
-
 		for (const piece of moving_pieces) {
 			if (move_direction === 'horizontal') {
-				piece.x += dx_int
+				const dx = current_pos.x - clicked_pos.x
+				const dx_int = Math.round(dx * (9 / square_element.clientWidth))
+				const valid_dx = clamp(dx_int, -10, 10)
+				piece.x += valid_dx
 			} else {
-				piece.y += dy_int
+				const dy = current_pos.y - clicked_pos.y
+				const dy_int = Math.round(dy * (9 / square_element.clientHeight))
+				const valid_dy = clamp(dy_int, -10, 10)
+				piece.y += valid_dy
 			}
+
 			piece.dx = 0
 			piece.dy = 0
 		}
