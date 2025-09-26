@@ -19,6 +19,7 @@
 						class="tile"
 						style:--index={j}
 						data-type={piece_type_array[i][j]}
+						data-index={j}
 					></div>
 				{/each}
 			</div>
@@ -62,7 +63,7 @@
 
 	.tile {
 		height: calc(2.4 / 3 * var(--unit));
-		width: var(--unit);
+		width: calc(var(--multiplier, 1) * var(--unit));
 		border-radius: 0.25rem;
 		background-color: var(--color, white);
 		transition: background-color 140ms ease-in-out;
@@ -70,6 +71,30 @@
 			translateZ(var(--slice-radius));
 		opacity: 0.95;
 		box-shadow: 0rem 0rem 1rem inset #0006;
+
+		&[data-index='0'] {
+			--multiplier: 2.7;
+		}
+
+		&[data-index='1'],
+		&[data-index='8'] {
+			--multiplier: 2.35;
+		}
+
+		&[data-index='2'],
+		&[data-index='7'] {
+			--multiplier: 1.75;
+		}
+
+		&[data-index='3'],
+		&[data-index='6'] {
+			--multiplier: 1.2;
+		}
+
+		&[data-index='4'],
+		&[data-index='5'] {
+			--multiplier: 1;
+		}
 	}
 
 	.slice {
