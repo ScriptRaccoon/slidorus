@@ -17,6 +17,7 @@
 				{#each { length: 9 } as _, j}
 					<div
 						class="tile"
+						class:flipped={j >= 5}
 						style:--index={j}
 						data-type={piece_type_array[i][j]}
 						data-index={j}
@@ -29,8 +30,13 @@
 
 <style>
 	.scene {
+		margin: 1rem 10px;
 		aspect-ratio: 5 / 4;
 		perspective: 1200px;
+		background-color: #202020;
+		border-radius: 0.5rem;
+		overflow: hidden;
+
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -44,7 +50,7 @@
 	.torus {
 		--unit: min(10vw, 4rem);
 		--elevation: calc(-0.25 * var(--unit));
-		--tilt: -70deg;
+		--tilt: -60deg;
 		--slice-radius: calc(1.2 * var(--unit));
 		--outer-radius: calc(2.65 * var(--unit));
 		--tile-amount: 9;
@@ -66,58 +72,73 @@
 	}
 
 	.tile {
-		height: calc(2.4 / 3 * var(--unit));
-		width: calc(var(--multiplier, 1) * var(--unit));
-		border-radius: 0.25rem;
-		background-color: var(--color, white);
-		transition: background-color 140ms ease-in-out;
+		height: calc(2.64 / 3 * var(--unit));
+		width: calc(var(--scaler, 1) * var(--unit));
 		transform: rotateX(calc(var(--index, 0) * 360deg / var(--tile-amount)))
 			translateZ(var(--slice-radius));
-		opacity: 0.95;
-		box-shadow: 0rem 0rem 1rem inset #0006;
+
+		background-color: black;
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+
+		opacity: 0.94;
+
+		&:not(.flipped) {
+			clip-path: polygon(
+				var(--cut, 0%) 0%,
+				calc(100% - var(--cut, 0%)) 0%,
+				100% 100%,
+				0% 100%
+			);
+		}
+
+		&.flipped {
+			clip-path: polygon(
+				0% 0%,
+				100% 0%,
+				calc(100% - var(--cut, 0%)) 100%,
+				var(--cut, 0%) 100%
+			);
+		}
+
+		&::before {
+			content: '';
+			width: 90%;
+			height: 90%;
+			transition: background-color 140ms ease-in-out;
+			background-color: var(--color, gray);
+			clip-path: inherit;
+			box-shadow: 0rem 0rem 1rem inset #0005;
+		}
 
 		&[data-index='0'] {
-			--multiplier: 2.7;
+			--scaler: 2.81;
+			--cut: 0%;
 		}
 
-		&[data-index='1'] {
-			--multiplier: 2.7;
-			clip-path: polygon(7% 0%, 93% 0%, 100% 100%, 0% 100%);
-		}
-
+		&[data-index='1'],
 		&[data-index='8'] {
-			--multiplier: 2.7;
-			clip-path: polygon(0% 0%, 100% 0%, 93% 100%, 7% 100%);
+			--scaler: 2.81;
+			--cut: 6.5%;
 		}
 
-		&[data-index='2'] {
-			--multiplier: 2.25;
-			clip-path: polygon(14% 0%, 90% 0%, 100% 100%, 0% 100%);
-		}
-
+		&[data-index='2'],
 		&[data-index='7'] {
-			clip-path: polygon(0% 0%, 100% 0%, 88% 100%, 12% 100%);
-			--multiplier: 2.25;
+			--scaler: 2.4;
+			--cut: 13%;
 		}
 
-		&[data-index='3'] {
-			--multiplier: 1.65;
-			clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);
-		}
-
+		&[data-index='3'],
 		&[data-index='6'] {
-			--multiplier: 1.65;
-			clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
+			--scaler: 1.77;
+			--cut: 15.5%;
 		}
 
-		&[data-index='4'] {
-			--multiplier: 1.1;
-			clip-path: polygon(9% 0%, 91% 0%, 100% 100%, 0% 100%);
-		}
-
+		&[data-index='4'],
 		&[data-index='5'] {
-			--multiplier: 1.1;
-			clip-path: polygon(0% 0%, 100% 0%, 91% 100%, 9% 100%);
+			--scaler: 1.22;
+			--cut: 9%;
 		}
 	}
 
