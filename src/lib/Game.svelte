@@ -194,6 +194,7 @@
 		cursor: move;
 		touch-action: none;
 		clip-path: inset(var(--border));
+		overflow: hidden;
 
 		transition: scale 200ms ease-in-out;
 
