@@ -144,7 +144,7 @@
 	}
 
 	function detect_direction(dx: number, dy: number) {
-		const too_early = Math.abs(dx) + Math.abs(dy) < 10
+		const too_early = Math.abs(dx) + Math.abs(dy) < 3
 		if (too_early) return
 
 		move_direction = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical'
