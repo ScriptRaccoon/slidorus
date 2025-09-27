@@ -3,11 +3,14 @@
 	import Header from './lib/Header.svelte'
 	import Infos from './lib/Infos.svelte'
 	import Menu from './lib/Menu.svelte'
-	import { get_pieces, type Piece } from './lib/pieces'
+	import { create_piece_array, get_pieces, type Piece } from './lib/pieces'
 	import Torus from './lib/Torus.svelte'
 	import Toast from './lib/Toast.svelte'
 
-	let pieces = $state<Piece[]>(get_pieces())
+	const initial_pieces = get_pieces()
+
+	let pieces = $state<Piece[]>(initial_pieces)
+	let pieces_array = $state<Piece[][]>(create_piece_array(initial_pieces))
 
 	let show_torus = $state(false)
 
@@ -18,6 +21,8 @@
 			piece.dx = 0
 			piece.dy = 0
 		}
+
+		update_pieces_array()
 	}
 
 	function scramble() {
@@ -37,20 +42,26 @@
 			piece.y = y
 			free_coordinates.splice(i, 1)
 		}
+
+		update_pieces_array()
 	}
 
 	function toggle_torus() {
 		show_torus = !show_torus
+	}
+
+	function update_pieces_array() {
+		pieces_array = create_piece_array(pieces)
 	}
 </script>
 
 <Header />
 
 <div class="grid" class:show_torus>
-	<Game bind:pieces />
+	<Game bind:pieces {update_pieces_array} />
 
 	{#if show_torus}
-		<Torus {pieces} />
+		<Torus {pieces_array} />
 	{/if}
 
 	<Menu {scramble} {reset} {toggle_torus} {show_torus} />

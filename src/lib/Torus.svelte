@@ -1,13 +1,11 @@
 <script lang="ts">
-	import { create_type_array, type Piece } from './pieces'
+	import { type Piece } from './pieces'
 
 	type Props = {
-		pieces: Piece[]
+		pieces_array: Piece[][]
 	}
 
-	let { pieces }: Props = $props()
-
-	let piece_type_array = $derived(create_type_array(pieces))
+	let { pieces_array }: Props = $props()
 </script>
 
 <div class="scene">
@@ -19,7 +17,7 @@
 						class="tile"
 						class:flipped={j >= 5}
 						style:--index={j}
-						data-type={piece_type_array[i][j]}
+						data-type={pieces_array[i][j].type}
 						data-index={j}
 					></div>
 				{/each}

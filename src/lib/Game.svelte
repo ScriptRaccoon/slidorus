@@ -5,11 +5,12 @@
 
 	type Props = {
 		pieces: Piece[]
+		update_pieces_array: () => void
 	}
 
 	let animate_square = $state(false)
 
-	let { pieces = $bindable() }: Props = $props()
+	let { pieces = $bindable(), update_pieces_array }: Props = $props()
 
 	let square_element = $state<HTMLDivElement | null>(null)
 
@@ -118,6 +119,7 @@
 		moving_col = null
 		moving_pieces = []
 
+		update_pieces_array()
 		handle_solved_state()
 	}
 

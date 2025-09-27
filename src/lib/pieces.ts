@@ -51,11 +51,11 @@ export function get_copy(piece: Piece): Piece {
 	}
 }
 
-export function create_type_array(pieces: Piece[]): number[][] {
-	const result: number[][] = []
+export function create_piece_array(pieces: Piece[]): Piece[][] {
+	const result: Piece[][] = []
 	for (const piece of pieces) {
 		if (!result[piece.y]) result[piece.y] = []
-		result[piece.y][piece.x] = piece.type
+		result[piece.y][piece.x] = piece
 	}
 	return result
 }
