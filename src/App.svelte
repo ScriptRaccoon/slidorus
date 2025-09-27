@@ -4,12 +4,12 @@
 	import Infos from './lib/Infos.svelte'
 	import Menu from './lib/Menu.svelte'
 	import { get_pieces, type Piece } from './lib/pieces'
-	import Scene from './lib/Scene.svelte'
+	import Torus from './lib/Torus.svelte'
 	import Toast from './lib/Toast.svelte'
 
 	let pieces = $state<Piece[]>(get_pieces())
 
-	let show_viz = $state(false)
+	let show_torus = $state(false)
 
 	function reset() {
 		for (const piece of pieces) {
@@ -39,21 +39,21 @@
 		}
 	}
 
-	function toggle_viz() {
-		show_viz = !show_viz
+	function toggle_torus() {
+		show_torus = !show_torus
 	}
 </script>
 
 <Header />
 
-<div class="grid" class:show_viz>
+<div class="grid" class:show_torus>
 	<Game bind:pieces />
 
-	{#if show_viz}
-		<Scene {pieces} />
+	{#if show_torus}
+		<Torus {pieces} />
 	{/if}
 
-	<Menu {scramble} {reset} {toggle_viz} {show_viz} />
+	<Menu {scramble} {reset} {toggle_torus} {show_torus} />
 
 	<Infos />
 </div>
@@ -68,7 +68,7 @@
 	}
 
 	@media (min-width: 1200px) {
-		.grid.show_viz {
+		.grid.show_torus {
 			display: grid;
 			grid-template-columns: 1fr 1fr;
 			align-items: center;

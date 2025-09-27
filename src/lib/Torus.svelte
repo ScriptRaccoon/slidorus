@@ -53,7 +53,6 @@
 		--tilt: -60deg;
 		--slice-radius: calc(1.2 * var(--unit));
 		--outer-radius: calc(2.65 * var(--unit));
-		--tile-amount: 9;
 		transform: translateY(var(--elevation)) rotateX(var(--tilt)) rotateY(0deg);
 		animation: rotatearound 180s linear infinite;
 	}
@@ -74,7 +73,7 @@
 	.tile {
 		height: calc(2.64 / 3 * var(--unit));
 		width: calc(var(--scaler, 1) * var(--unit));
-		transform: rotateX(calc(var(--index, 0) * 360deg / var(--tile-amount)))
+		transform: rotateX(calc(var(--index, 0) * 360deg / 9))
 			translateZ(var(--slice-radius));
 
 		background-color: black;
@@ -146,7 +145,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		transform: rotateY(calc(var(--num, 0) * 360deg / var(--tile-amount)))
+		transform: rotateY(calc(var(--num, 0) * 360deg / 9))
 			translateZ(var(--outer-radius));
 	}
 </style>

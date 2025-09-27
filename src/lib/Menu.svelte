@@ -2,18 +2,18 @@
 	type Props = {
 		scramble: () => void
 		reset: () => void
-		toggle_viz: () => void
-		show_viz: boolean
+		toggle_torus: () => void
+		show_torus: boolean
 	}
 
-	let { scramble, reset, toggle_viz, show_viz }: Props = $props()
+	let { scramble, reset, toggle_torus, show_torus }: Props = $props()
 </script>
 
 <menu>
 	<button onclick={scramble}>Scramble</button>
 	<button onclick={reset}>Reset</button>
-	<button onclick={toggle_viz}>
-		{#if show_viz}
+	<button onclick={toggle_torus}>
+		{#if show_torus}
 			Hide Torus
 		{:else}
 			Show Torus
