@@ -33,7 +33,7 @@
 		margin: 1rem 10px;
 		aspect-ratio: 5 / 4;
 		perspective: 1200px;
-		background-color: #202020;
+		background-image: radial-gradient(#383820 0%, #111 70%, #111 100%);
 		border-radius: 0.5rem;
 		overflow: hidden;
 
