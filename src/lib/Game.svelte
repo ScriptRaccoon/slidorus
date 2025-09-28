@@ -1,6 +1,12 @@
 <script lang="ts">
 	import { clamp, get_changed_position, get_position, throttle } from '../utils'
-	import { check_solved, get_copy, type Piece } from './pieces'
+	import {
+		check_solved,
+		get_connected_cols,
+		get_connected_rows,
+		get_copy,
+		type Piece,
+	} from './pieces'
 	import { send_toast } from './Toast.svelte'
 
 	type Props = {
@@ -23,9 +29,9 @@
 
 	let clicked_pos: { x: number; y: number } | null = null
 	let move_direction: 'horizontal' | 'vertical' | null = null
-	let moving_row: number | null = null
-	let moving_col: number | null = null
 	let moving_pieces: Piece[] = []
+	let moving_rows: number[] = []
+	let moving_cols: number[] = []
 
 	function handle_mouse_down(e: MouseEvent | TouchEvent) {
 		if (is_moving || is_bandaging || !square_element) return
@@ -36,10 +42,11 @@
 		moving_pieces = []
 
 		const square_rect = square_element.getBoundingClientRect()
-		moving_row = Math.floor(
+		const moving_row = Math.floor(
 			(clicked_pos.y - square_rect.top) * (9 / square_element.clientHeight),
 		)
-		moving_col = Math.floor(
+
+		const moving_col = Math.floor(
 			(clicked_pos.x - square_rect.left) * (9 / square_element.clientWidth),
 		)
 
@@ -47,30 +54,37 @@
 			moving_row >= 0 && moving_row < 9 && moving_col >= 0 && moving_col < 9
 		if (!is_valid) return
 
+		moving_rows = get_connected_rows(pieces, moving_row)
+		moving_cols = get_connected_cols(pieces, moving_col)
+
 		is_moving = true
 
 		const copies: Piece[] = []
 		const offsets = [1, 2, -1, -2]
 
 		for (let i = 0; i < 9; i++) {
-			const piece_in_row = pieces.find(
-				(piece) => piece.x === i && piece.y === moving_row,
-			)
-			if (piece_in_row) {
-				for (const offset of offsets) {
-					const copy = copy_piece(piece_in_row, i + offset * 9, moving_row)
-					copies.push(copy)
+			for (const moving_row of moving_rows) {
+				const piece_in_row = pieces.find(
+					(piece) => piece.x === i && piece.y === moving_row,
+				)
+				if (piece_in_row) {
+					for (const offset of offsets) {
+						const copy = copy_piece(piece_in_row, i + offset * 9, moving_row)
+						copies.push(copy)
+					}
 				}
 			}
 
-			const piece_in_col = pieces.find(
-				(piece) => piece.x === moving_col && piece.y === i,
-			)
+			for (const moving_col of moving_cols) {
+				const piece_in_col = pieces.find(
+					(piece) => piece.x === moving_col && piece.y === i,
+				)
 
-			if (piece_in_col) {
-				for (const offset of offsets) {
-					const copy = copy_piece(piece_in_col, moving_col, i + offset * 9)
-					copies.push(copy)
+				if (piece_in_col) {
+					for (const offset of offsets) {
+						const copy = copy_piece(piece_in_col, moving_col, i + offset * 9)
+						copies.push(copy)
+					}
 				}
 			}
 		}
@@ -125,10 +139,10 @@
 
 		clicked_pos = null
 		move_direction = null
-		moving_row = null
-		moving_col = null
 		moving_pieces = []
 		is_moving = false
+		moving_rows = []
+		moving_cols = []
 
 		update_pieces_array()
 		handle_solved_state()
@@ -164,8 +178,8 @@
 
 		moving_pieces =
 			move_direction === 'horizontal'
-				? pieces.filter((piece) => piece.y === moving_row)
-				: pieces.filter((piece) => piece.x === moving_col)
+				? pieces.filter((piece) => moving_rows.includes(piece.y))
+				: pieces.filter((piece) => moving_cols.includes(piece.x))
 	}
 
 	function toggle_bandage(piece: Piece, direction: 'right' | 'down') {

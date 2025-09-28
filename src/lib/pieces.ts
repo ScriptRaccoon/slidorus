@@ -98,3 +98,55 @@ export function unbandage_pieces(pieces: Piece[]) {
 		piece.bandaged_up = false
 	}
 }
+
+export function get_connected_rows(pieces: Piece[], row: number): number[] {
+	const connected_rows: number[] = [row]
+
+	for (let y = row; y < 9; y++) {
+		const row_pieces = pieces.filter((piece) => piece.y === y)
+		const is_bandaged = row_pieces.some((piece) => piece.bandaged_down)
+		if (is_bandaged) {
+			connected_rows.push((y + 1) % 9)
+		} else {
+			break
+		}
+	}
+
+	for (let y = row; y >= 0; y--) {
+		const row_pieces = pieces.filter((piece) => piece.y === y)
+		const is_bandaged = row_pieces.some((piece) => piece.bandaged_up)
+		if (is_bandaged) {
+			connected_rows.push((y - 1 + 9) % 9)
+		} else {
+			break
+		}
+	}
+
+	return connected_rows
+}
+
+export function get_connected_cols(pieces: Piece[], col: number): number[] {
+	const connected_cols: number[] = [col]
+
+	for (let x = col; x < 9; x++) {
+		const col_pieces = pieces.filter((piece) => piece.x === x)
+		const is_bandaged = col_pieces.some((piece) => piece.bandaged_right)
+		if (is_bandaged) {
+			connected_cols.push((x + 1) % 9)
+		} else {
+			break
+		}
+	}
+
+	for (let x = col; x >= 0; x--) {
+		const col_pieces = pieces.filter((piece) => piece.x === x)
+		const is_bandaged = col_pieces.some((piece) => piece.bandaged_left)
+		if (is_bandaged) {
+			connected_cols.push((x - 1 + 9) % 9)
+		} else {
+			break
+		}
+	}
+
+	return connected_cols
+}
