@@ -33,35 +33,11 @@
 
 	function handle_mouse_down(e: MouseEvent | TouchEvent) {
 		if (app_state !== 'idle' || !square_element) return
-
 		clicked_pos = get_position(e)
-
-		move_direction = null
-		moving_pieces = []
-
-		const square_rect = square_element.getBoundingClientRect()
-		const moving_row = Math.floor(
-			(clicked_pos.y - square_rect.top) * (9 / square_element.clientHeight),
-		)
-
-		const moving_col = Math.floor(
-			(clicked_pos.x - square_rect.left) * (9 / square_element.clientWidth),
-		)
-
-		const is_valid =
-			moving_row >= 0 && moving_row < 9 && moving_col >= 0 && moving_col < 9
-		if (!is_valid) return
-
-		moving_rows = get_connected_rows(pieces, moving_row)
-		moving_cols = get_connected_cols(pieces, moving_col)
-
 		app_state = 'moving'
-
-		const copies = create_copies(moving_rows, moving_cols)
-		pieces = pieces.concat(copies)
 	}
 
-	function create_copies(moving_rows: number[], moving_cols: number[]): Piece[] {
+	function create_copies_horizontal(moving_rows: number[]): Piece[] {
 		const copies: Piece[] = []
 		const offsets = [1, 2, -1, -2]
 
@@ -78,7 +54,16 @@
 					}
 				}
 			}
+		}
 
+		return copies
+	}
+
+	function create_copies_vertical(moving_cols: number[]): Piece[] {
+		const copies: Piece[] = []
+		const offsets = [1, 2, -1, -2]
+
+		for (let i = 0; i < 9; i++) {
 			for (const moving_col of moving_cols) {
 				const piece_in_col = pieces.find(
 					(piece) => piece.x === moving_col && piece.y === i,
@@ -104,7 +89,7 @@
 		const dx = current_pos.x - clicked_pos.x
 		const dy = current_pos.y - clicked_pos.y
 
-		if (!move_direction) detect_direction(dx, dy)
+		if (!move_direction) detect_movement(dx, dy)
 		if (!move_direction) return
 
 		for (const piece of moving_pieces) {
@@ -121,36 +106,45 @@
 
 		const current_pos = get_changed_position(e)
 
-		for (const piece of moving_pieces) {
-			if (move_direction === 'horizontal') {
-				const dx = current_pos.x - clicked_pos.x
-				const dx_int = Math.round(dx * (9 / square_element.clientWidth))
-				const valid_dx = clamp(dx_int, -10, 10)
-				piece.x += valid_dx
-			} else {
-				const dy = current_pos.y - clicked_pos.y
-				const dy_int = Math.round(dy * (9 / square_element.clientHeight))
-				const valid_dy = clamp(dy_int, -10, 10)
-				piece.y += valid_dy
-			}
-
-			piece.dx = 0
-			piece.dy = 0
+		switch (move_direction) {
+			case 'horizontal':
+				for (const piece of moving_pieces) {
+					const dx = current_pos.x - clicked_pos.x
+					const dx_int = Math.round(dx * (9 / square_element.clientWidth))
+					const valid_dx = clamp(dx_int, -10, 10)
+					piece.x += valid_dx
+					piece.dx = 0
+					piece.dy = 0
+				}
+				break
+			case 'vertical':
+				for (const piece of moving_pieces) {
+					const dy = current_pos.y - clicked_pos.y
+					const dy_int = Math.round(dy * (9 / square_element.clientHeight))
+					const valid_dy = clamp(dy_int, -10, 10)
+					piece.y += valid_dy
+					piece.dx = 0
+					piece.dy = 0
+				}
+				break
 		}
 
 		pieces = pieces.filter(
 			(piece) => piece.x >= 0 && piece.x < 9 && piece.y >= 0 && piece.y < 9,
 		)
 
+		reset_movement()
+		update_pieces_array()
+		handle_solved_state()
+	}
+
+	function reset_movement() {
 		clicked_pos = null
 		move_direction = null
 		moving_pieces = []
 		moving_rows = []
 		moving_cols = []
 		app_state = 'idle'
-
-		update_pieces_array()
-		handle_solved_state()
 	}
 
 	function handle_solved_state() {
@@ -168,16 +162,41 @@
 		}, 500)
 	}
 
-	function detect_direction(dx: number, dy: number) {
+	function detect_movement(dx: number, dy: number) {
 		const too_early = Math.abs(dx) + Math.abs(dy) < 3
 		if (too_early) return
 
 		move_direction = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical'
 
-		moving_pieces =
-			move_direction === 'horizontal'
-				? pieces.filter((piece) => moving_rows.includes(piece.y))
-				: pieces.filter((piece) => moving_cols.includes(piece.x))
+		if (!square_element || !clicked_pos) return
+
+		const square_rect = square_element.getBoundingClientRect()
+
+		switch (move_direction) {
+			case 'horizontal':
+				const moving_row = Math.floor(
+					(clicked_pos.y - square_rect.top) * (9 / square_element.clientHeight),
+				)
+				const is_valid_row = moving_row >= 0 && moving_row < 9
+				if (!is_valid_row) return
+
+				moving_rows = get_connected_rows(pieces, moving_row)
+				const copies_in_rows = create_copies_horizontal(moving_rows)
+				pieces = pieces.concat(copies_in_rows)
+				moving_pieces = pieces.filter((piece) => moving_rows.includes(piece.y))
+				break
+			case 'vertical':
+				const moving_col = Math.floor(
+					(clicked_pos.x - square_rect.left) * (9 / square_element.clientWidth),
+				)
+				const is_valid_col = moving_col >= 0 && moving_col < 9
+				if (!is_valid_col) return
+				moving_cols = get_connected_cols(pieces, moving_col)
+				const copies_in_cols = create_copies_vertical(moving_cols)
+				pieces = pieces.concat(copies_in_cols)
+				moving_pieces = pieces.filter((piece) => moving_cols.includes(piece.x))
+				break
+		}
 	}
 </script>
 
