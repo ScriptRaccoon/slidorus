@@ -33,3 +33,7 @@ export function get_changed_position(e: MouseEvent | TouchEvent): {
 export function clamp(value: number, min: number, max: number): number {
 	return Math.min(Math.max(value, min), max)
 }
+
+export function sleep(delay: number): Promise<void> {
+	return new Promise((res) => setTimeout(res, delay))
+}

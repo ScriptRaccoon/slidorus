@@ -8,6 +8,7 @@
 		is_bandaging: boolean
 		reset_bandaging: () => void
 		is_moving: boolean
+		is_scrambling: boolean
 	}
 
 	let {
@@ -19,13 +20,14 @@
 		is_bandaging,
 		reset_bandaging,
 		is_moving,
+		is_scrambling,
 	}: Props = $props()
 </script>
 
 <menu>
 	{#if !is_bandaging}
-		<button onclick={scramble} disabled={is_moving}>Scramble</button>
-		<button onclick={reset} disabled={is_moving}>Reset</button>
+		<button onclick={scramble} disabled={is_moving || is_scrambling}>Scramble</button>
+		<button onclick={reset} disabled={is_moving || is_scrambling}>Reset</button>
 		<button onclick={toggle_torus}>
 			{#if show_torus}
 				Hide Torus
@@ -37,7 +39,7 @@
 		<button onclick={reset_bandaging}>Reset bandaging</button>
 	{/if}
 
-	<button onclick={toggle_bandaging} disabled={is_moving}>
+	<button onclick={toggle_bandaging} disabled={is_moving || is_scrambling}>
 		{#if is_bandaging}
 			Done
 		{:else}

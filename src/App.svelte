@@ -6,6 +6,7 @@
 	import {
 		create_piece_array,
 		get_pieces,
+		scramble_pieces,
 		unbandage_pieces,
 		type Piece,
 	} from './lib/pieces'
@@ -20,6 +21,7 @@
 	let show_torus = $state(false)
 	let is_bandaging = $state(false)
 	let is_moving = $state(false)
+	let is_scrambling = $state(false)
 
 	function reset() {
 		if (is_bandaging || is_moving) return
@@ -33,26 +35,12 @@
 		update_pieces_array()
 	}
 
-	function scramble() {
-		if (is_bandaging || is_moving) return
-		const free_coordinates: [number, number][] = []
-
-		for (let x = 0; x < 9; x++) {
-			for (let y = 0; y < 9; y++) {
-				free_coordinates.push([x, y])
-			}
-		}
-
-		for (const piece of pieces) {
-			if (!free_coordinates.length) return
-			const i = Math.floor(Math.random() * free_coordinates.length)
-			const [x, y] = free_coordinates[i]
-			piece.x = x
-			piece.y = y
-			free_coordinates.splice(i, 1)
-		}
-
+	async function scramble() {
+		if (is_scrambling) return
+		is_scrambling = true
+		await scramble_pieces(pieces, 10)
 		update_pieces_array()
+		is_scrambling = false
 	}
 
 	function toggle_torus() {
@@ -78,7 +66,13 @@
 <Header />
 
 <div class="grid" class:show_torus>
-	<Game bind:pieces bind:is_moving {update_pieces_array} {is_bandaging} />
+	<Game
+		bind:pieces
+		bind:is_moving
+		{update_pieces_array}
+		{is_bandaging}
+		{is_scrambling}
+	/>
 
 	{#if show_torus}
 		<Torus {pieces_array} />
@@ -93,6 +87,7 @@
 		{is_bandaging}
 		{reset_bandaging}
 		{is_moving}
+		{is_scrambling}
 	/>
 
 	<Infos />

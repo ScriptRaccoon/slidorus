@@ -14,6 +14,7 @@
 		is_moving: boolean
 		update_pieces_array: () => void
 		is_bandaging: boolean
+		is_scrambling: boolean
 	}
 
 	let animate_square = $state(false)
@@ -23,6 +24,7 @@
 		is_moving = $bindable(),
 		update_pieces_array,
 		is_bandaging,
+		is_scrambling,
 	}: Props = $props()
 
 	let square_element = $state<HTMLDivElement | null>(null)
@@ -34,7 +36,7 @@
 	let moving_cols: number[] = []
 
 	function handle_mouse_down(e: MouseEvent | TouchEvent) {
-		if (is_moving || is_bandaging || !square_element) return
+		if (is_moving || is_bandaging || is_scrambling || !square_element) return
 
 		clicked_pos = get_position(e)
 
@@ -98,7 +100,7 @@
 	}
 
 	function handle_mouse_move(e: MouseEvent | TouchEvent) {
-		if (is_bandaging || !clicked_pos || !is_moving) return
+		if (is_bandaging || is_scrambling || !clicked_pos || !is_moving) return
 
 		const current_pos = get_position(e)
 		const dx = current_pos.x - clicked_pos.x
@@ -117,7 +119,14 @@
 	}
 
 	function handle_mouse_up(e: MouseEvent | TouchEvent) {
-		if (is_bandaging || !clicked_pos || !square_element || !move_direction) return
+		if (
+			is_bandaging ||
+			is_scrambling ||
+			!clicked_pos ||
+			!square_element ||
+			!move_direction
+		)
+			return
 
 		const current_pos = get_changed_position(e)
 
@@ -223,6 +232,7 @@
 	ontouchmove={throttle(handle_mouse_move, 1000 / 60)}
 	ontouchend={handle_mouse_up}
 	class:is_bandaging
+	class:is_scrambling
 >
 	{#each pieces as piece (piece.id)}
 		<div
@@ -298,6 +308,10 @@
 			overflow: visible;
 			clip-path: none;
 		}
+
+		&.is_scrambling .piece {
+			transition: none;
+		}
 	}
 
 	.piece {
@@ -308,6 +322,7 @@
 		background-color: var(--color, gray);
 		transform: translateX(calc(var(--x) * var(--dim) + var(--dx) * 1px))
 			translateY(calc(var(--y) * var(--dim) + var(--dy) * 1px));
+		/* TODO: disable transition during scramble */
 		transition: transform 80ms ease-out;
 		border: var(--border) solid var(--bg-color);
 		border-radius: 15%;

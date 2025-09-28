@@ -1,3 +1,5 @@
+import { sleep } from '../utils'
+
 export type Piece = {
 	id: string
 	x: number
@@ -149,4 +151,43 @@ export function get_connected_cols(pieces: Piece[], col: number): number[] {
 	}
 
 	return connected_cols
+}
+
+function execute_row_move(pieces: Piece[], row: number, delta: number) {
+	if (delta === 0 || delta != Math.floor(delta)) return
+	const affected_rows = get_connected_rows(pieces, row)
+	for (const piece of pieces) {
+		if (affected_rows.includes(piece.y)) {
+			piece.x = (piece.x + delta + 9) % 9
+		}
+	}
+}
+
+function execute_col_move(pieces: Piece[], col: number, delta: number) {
+	if (delta === 0 || delta != Math.floor(delta)) return
+	const affected_cols = get_connected_cols(pieces, col)
+	for (const piece of pieces) {
+		if (affected_cols.includes(piece.x)) {
+			piece.y = (piece.y + delta + 9) % 9
+		}
+	}
+}
+
+export function execute_random_move(pieces: Piece[]) {
+	const is_row = Math.random() < 0.5
+	const index = Math.floor(Math.random() * 9)
+	let delta = Math.floor(Math.random() * 17) - 8
+	if (delta === 0) delta = 1
+	if (is_row) {
+		execute_row_move(pieces, index, delta)
+	} else {
+		execute_col_move(pieces, index, delta)
+	}
+}
+
+export async function scramble_pieces(pieces: Piece[], wait = 0, moves = 100) {
+	for (let i = 0; i < moves; i++) {
+		await sleep(wait)
+		execute_random_move(pieces)
+	}
 }
