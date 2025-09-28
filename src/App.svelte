@@ -12,19 +12,19 @@
 	} from './lib/pieces'
 	import Torus from './lib/Torus.svelte'
 	import Toast from './lib/Toast.svelte'
+	import type { APP_STATE } from './lib/types'
 
 	const initial_pieces = get_pieces()
 
 	let pieces = $state<Piece[]>(initial_pieces)
 	let pieces_array = $state<Piece[][]>(create_piece_array(initial_pieces))
 
+	let app_state = $state<APP_STATE>('idle')
+
 	let show_torus = $state(false)
-	let is_bandaging = $state(false)
-	let is_moving = $state(false)
-	let is_scrambling = $state(false)
 
 	function reset() {
-		if (is_bandaging || is_moving) return
+		if (app_state !== 'idle') return
 		for (const piece of pieces) {
 			piece.x = piece.original_x
 			piece.y = piece.original_y
@@ -36,15 +36,14 @@
 	}
 
 	async function scramble() {
-		if (is_scrambling) return
-		is_scrambling = true
+		if (app_state !== 'idle') return
+		app_state = 'scrambling'
 		await scramble_pieces(pieces, 10)
 		update_pieces_array()
-		is_scrambling = false
+		app_state = 'idle'
 	}
 
 	function toggle_torus() {
-		if (is_bandaging) return
 		show_torus = !show_torus
 	}
 
@@ -53,26 +52,22 @@
 	}
 
 	function toggle_bandaging() {
-		if (is_moving) return
-		is_bandaging = !is_bandaging
+		if (app_state === 'bandaging') {
+			app_state = 'idle'
+		} else if (app_state === 'idle') {
+			app_state = 'bandaging'
+		}
 	}
 
 	function reset_bandaging() {
-		if (!is_bandaging || is_moving) return
-		unbandage_pieces(pieces)
+		if (app_state === 'bandaging') unbandage_pieces(pieces)
 	}
 </script>
 
 <Header />
 
 <div class="grid" class:show_torus>
-	<Game
-		bind:pieces
-		bind:is_moving
-		{update_pieces_array}
-		{is_bandaging}
-		{is_scrambling}
-	/>
+	<Game bind:pieces {update_pieces_array} bind:app_state />
 
 	{#if show_torus}
 		<Torus {pieces_array} />
@@ -84,10 +79,8 @@
 		{toggle_torus}
 		{show_torus}
 		{toggle_bandaging}
-		{is_bandaging}
 		{reset_bandaging}
-		{is_moving}
-		{is_scrambling}
+		{app_state}
 	/>
 
 	<Infos />

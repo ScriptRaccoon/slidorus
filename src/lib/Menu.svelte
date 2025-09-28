@@ -1,14 +1,14 @@
 <script lang="ts">
+	import type { APP_STATE } from './types'
+
 	type Props = {
 		scramble: () => void
 		reset: () => void
 		toggle_torus: () => void
 		show_torus: boolean
 		toggle_bandaging: () => void
-		is_bandaging: boolean
 		reset_bandaging: () => void
-		is_moving: boolean
-		is_scrambling: boolean
+		app_state: APP_STATE
 	}
 
 	let {
@@ -17,17 +17,15 @@
 		toggle_torus,
 		show_torus,
 		toggle_bandaging,
-		is_bandaging,
 		reset_bandaging,
-		is_moving,
-		is_scrambling,
+		app_state,
 	}: Props = $props()
 </script>
 
 <menu>
-	{#if !is_bandaging}
-		<button onclick={scramble} disabled={is_moving || is_scrambling}>Scramble</button>
-		<button onclick={reset} disabled={is_moving || is_scrambling}>Reset</button>
+	{#if app_state !== 'bandaging'}
+		<button onclick={scramble} disabled={app_state !== 'idle'}>Scramble</button>
+		<button onclick={reset} disabled={app_state !== 'idle'}>Reset</button>
 		<button onclick={toggle_torus}>
 			{#if show_torus}
 				Hide Torus
@@ -39,8 +37,11 @@
 		<button onclick={reset_bandaging}>Reset bandaging</button>
 	{/if}
 
-	<button onclick={toggle_bandaging} disabled={is_moving || is_scrambling}>
-		{#if is_bandaging}
+	<button
+		onclick={toggle_bandaging}
+		disabled={app_state !== 'idle' && app_state !== 'bandaging'}
+	>
+		{#if app_state == 'bandaging'}
 			Done
 		{:else}
 			Bandage

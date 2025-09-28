@@ -9,23 +9,18 @@
 		type Piece,
 	} from './pieces'
 	import { send_toast } from './Toast.svelte'
+	import type { APP_STATE } from './types'
 
 	type Props = {
 		pieces: Piece[]
-		is_moving: boolean
 		update_pieces_array: () => void
-		is_bandaging: boolean
-		is_scrambling: boolean
+		app_state: APP_STATE
 	}
-
-	let animate_square = $state(false)
 
 	let {
 		pieces = $bindable(),
-		is_moving = $bindable(),
 		update_pieces_array,
-		is_bandaging,
-		is_scrambling,
+		app_state = $bindable(),
 	}: Props = $props()
 
 	let square_element = $state<HTMLDivElement | null>(null)
@@ -37,7 +32,7 @@
 	let moving_cols: number[] = []
 
 	function handle_mouse_down(e: MouseEvent | TouchEvent) {
-		if (is_moving || is_bandaging || is_scrambling || !square_element) return
+		if (app_state !== 'idle' || !square_element) return
 
 		clicked_pos = get_position(e)
 
@@ -60,7 +55,7 @@
 		moving_rows = get_connected_rows(pieces, moving_row)
 		moving_cols = get_connected_cols(pieces, moving_col)
 
-		is_moving = true
+		app_state = 'moving'
 
 		const copies = create_copies(moving_rows, moving_cols)
 		pieces = pieces.concat(copies)
@@ -103,7 +98,7 @@
 	}
 
 	function handle_mouse_move(e: MouseEvent | TouchEvent) {
-		if (is_bandaging || is_scrambling || !clicked_pos || !is_moving) return
+		if (app_state !== 'moving' || !clicked_pos) return
 
 		const current_pos = get_position(e)
 		const dx = current_pos.x - clicked_pos.x
@@ -122,14 +117,7 @@
 	}
 
 	function handle_mouse_up(e: MouseEvent | TouchEvent) {
-		if (
-			is_bandaging ||
-			is_scrambling ||
-			!clicked_pos ||
-			!square_element ||
-			!move_direction
-		)
-			return
+		if (app_state !== 'moving' || !clicked_pos || !square_element) return
 
 		const current_pos = get_changed_position(e)
 
@@ -157,9 +145,9 @@
 		clicked_pos = null
 		move_direction = null
 		moving_pieces = []
-		is_moving = false
 		moving_rows = []
 		moving_cols = []
+		app_state = 'idle'
 
 		update_pieces_array()
 		handle_solved_state()
@@ -167,17 +155,17 @@
 
 	function handle_solved_state() {
 		const is_solved = check_solved(pieces)
-		if (is_solved) {
-			send_toast({
-				title: 'Puzzle solved!',
-				variant: 'success',
-			})
+		if (!is_solved) return
 
-			animate_square = true
-			setTimeout(() => {
-				animate_square = false
-			}, 500)
-		}
+		send_toast({
+			title: 'Puzzle solved!',
+			variant: 'success',
+		})
+
+		app_state = 'solved'
+		setTimeout(() => {
+			app_state = 'idle'
+		}, 500)
 	}
 
 	function detect_direction(dx: number, dy: number) {
@@ -195,8 +183,7 @@
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
-	class="square"
-	class:animate_square
+	class="square {app_state}"
 	bind:this={square_element}
 	onmousedown={handle_mouse_down}
 	onmousemove={throttle(handle_mouse_move, 1000 / 60)}
@@ -205,8 +192,6 @@
 	ontouchstart={handle_mouse_down}
 	ontouchmove={throttle(handle_mouse_move, 1000 / 60)}
 	ontouchend={handle_mouse_up}
-	class:is_bandaging
-	class:is_scrambling
 >
 	{#each pieces as piece (piece.id)}
 		<div
@@ -225,7 +210,7 @@
 		></div>
 	{/each}
 
-	{#if is_bandaging}
+	{#if app_state === 'bandaging'}
 		{#each pieces as piece (piece.id)}
 			<button
 				class="bandager"
@@ -269,22 +254,22 @@
 
 		transition: scale 200ms ease-in-out;
 
-		&.animate_square {
-			scale: 1.03;
-		}
-
 		@media (min-width: 600px) {
 			--border: 0.1rem;
 		}
 
-		&.is_bandaging {
+		&.bandaging {
 			cursor: default;
 			overflow: visible;
 			clip-path: none;
 		}
 
-		&.is_scrambling .piece {
+		&.scrambling .piece {
 			transition: none;
+		}
+
+		&.solved {
+			scale: 1.03;
 		}
 	}
 
@@ -296,7 +281,6 @@
 		background-color: var(--color, gray);
 		transform: translateX(calc(var(--x) * var(--dim) + var(--dx) * 1px))
 			translateY(calc(var(--y) * var(--dim) + var(--dy) * 1px));
-		/* TODO: disable transition during scramble */
 		transition: transform 80ms ease-out;
 		border: var(--border) solid var(--bg-color);
 		border-radius: 15%;
