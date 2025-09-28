@@ -5,12 +5,19 @@
 
 	type Props = {
 		pieces: Piece[]
+		is_moving: boolean
 		update_pieces_array: () => void
+		is_bandaging: boolean
 	}
 
 	let animate_square = $state(false)
 
-	let { pieces = $bindable(), update_pieces_array }: Props = $props()
+	let {
+		pieces = $bindable(),
+		is_moving = $bindable(),
+		update_pieces_array,
+		is_bandaging,
+	}: Props = $props()
 
 	let square_element = $state<HTMLDivElement | null>(null)
 
@@ -21,9 +28,10 @@
 	let moving_pieces: Piece[] = []
 
 	function handle_mouse_down(e: MouseEvent | TouchEvent) {
-		if (!square_element) return
+		if (is_moving || is_bandaging || !square_element) return
 
 		clicked_pos = get_position(e)
+
 		move_direction = null
 		moving_pieces = []
 
@@ -38,6 +46,8 @@
 		const is_valid =
 			moving_row >= 0 && moving_row < 9 && moving_col >= 0 && moving_col < 9
 		if (!is_valid) return
+
+		is_moving = true
 
 		const copies: Piece[] = []
 		const offsets = [1, 2, -1, -2]
@@ -69,7 +79,7 @@
 	}
 
 	function handle_mouse_move(e: MouseEvent | TouchEvent) {
-		if (!clicked_pos) return
+		if (is_bandaging || !clicked_pos || !is_moving) return
 
 		const current_pos = get_position(e)
 		const dx = current_pos.x - clicked_pos.x
@@ -88,7 +98,7 @@
 	}
 
 	function handle_mouse_up(e: MouseEvent | TouchEvent) {
-		if (!clicked_pos || !square_element || !move_direction) return
+		if (is_bandaging || !clicked_pos || !square_element || !move_direction) return
 
 		const current_pos = get_changed_position(e)
 
@@ -118,6 +128,7 @@
 		moving_row = null
 		moving_col = null
 		moving_pieces = []
+		is_moving = false
 
 		update_pieces_array()
 		handle_solved_state()
@@ -156,6 +167,28 @@
 				? pieces.filter((piece) => piece.y === moving_row)
 				: pieces.filter((piece) => piece.x === moving_col)
 	}
+
+	function toggle_bandage(piece: Piece, direction: 'right' | 'down') {
+		switch (direction) {
+			case 'right':
+				piece.bandaged_right = !piece.bandaged_right
+				const adjacent_piece_right = pieces.find(
+					(p) => p.x === (piece.x + 1) % 9 && p.y === piece.y,
+				)
+				if (adjacent_piece_right)
+					adjacent_piece_right.bandaged_left =
+						!adjacent_piece_right.bandaged_left
+				break
+			case 'down':
+				piece.bandaged_down = !piece.bandaged_down
+				const adjacent_piece_down = pieces.find(
+					(p) => p.x === piece.x && p.y === (piece.y + 1) % 9,
+				)
+				if (adjacent_piece_down)
+					adjacent_piece_down.bandaged_up = !adjacent_piece_down.bandaged_up
+				break
+		}
+	}
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -170,6 +203,7 @@
 	ontouchstart={handle_mouse_down}
 	ontouchmove={throttle(handle_mouse_move, 1000 / 60)}
 	ontouchend={handle_mouse_up}
+	class:is_bandaging
 >
 	{#each pieces as piece (piece.id)}
 		<div
@@ -177,12 +211,44 @@
 			data-type={piece.type}
 			data-original-x={piece.original_x}
 			data-original-y={piece.original_y}
+			class:bandaged_right={piece.bandaged_right}
+			class:bandaged_down={piece.bandaged_down}
+			class:bandaged_left={piece.bandaged_left}
+			class:bandaged_up={piece.bandaged_up}
 			style:--x={piece.x}
 			style:--y={piece.y}
 			style:--dx={piece.dx}
 			style:--dy={piece.dy}
 		></div>
 	{/each}
+
+	{#if is_bandaging}
+		{#each pieces as piece (piece.id)}
+			<button
+				class="bandager"
+				data-direction="right"
+				aria-label="bandage rightwards"
+				onclick={() => toggle_bandage(piece, 'right')}
+				role="switch"
+				aria-checked={piece.bandaged_right}
+				style:--x={piece.x}
+				style:--y={piece.y}
+			>
+			</button>
+
+			<button
+				class="bandager"
+				data-direction="down"
+				aria-label="bandage downwards"
+				onclick={() => toggle_bandage(piece, 'down')}
+				role="switch"
+				aria-checked={piece.bandaged_down}
+				style:--x={piece.x}
+				style:--y={piece.y}
+			>
+			</button>
+		{/each}
+	{/if}
 </div>
 
 <style>
@@ -207,6 +273,12 @@
 		@media (min-width: 600px) {
 			--border: 0.1rem;
 		}
+
+		&.is_bandaging {
+			cursor: default;
+			overflow: visible;
+			clip-path: none;
+		}
 	}
 
 	.piece {
@@ -220,5 +292,69 @@
 		transition: transform 80ms ease-out;
 		border: var(--border) solid var(--bg-color);
 		border-radius: 15%;
+
+		&.bandaged_right {
+			border-right: none;
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+
+		&.bandaged_down {
+			border-bottom: none;
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+
+		&.bandaged_left {
+			border-left: none;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+		}
+
+		&.bandaged_up {
+			border-top: none;
+			border-top-left-radius: 0;
+			border-top-right-radius: 0;
+		}
+	}
+
+	.bandager {
+		--dim: calc(var(--size) / 9);
+		position: absolute;
+		background-color: var(--bg-color);
+		transform: translate(-50%, -50%);
+		border-radius: 10%;
+		opacity: 0.15;
+		transition: opacity 120ms;
+
+		&[aria-checked='true'] {
+			opacity: 1;
+		}
+
+		&:hover,
+		&:focus-visible {
+			opacity: 1;
+			outline: 1px solid var(--font-color);
+		}
+
+		&::before {
+			content: '';
+			position: absolute;
+			inset: -2px;
+		}
+	}
+
+	.bandager[data-direction='right'] {
+		width: 3.75%;
+		height: 1.75%;
+		left: calc(var(--x) * var(--dim) + var(--dim));
+		top: calc(var(--y) * var(--dim) + var(--dim) / 2);
+	}
+
+	.bandager[data-direction='down'] {
+		width: 1.75%;
+		height: 3.75%;
+		left: calc(var(--x) * var(--dim) + var(--dim) / 2);
+		top: calc(var(--y) * var(--dim) + var(--dim));
 	}
 </style>

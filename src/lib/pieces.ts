@@ -7,6 +7,10 @@ export type Piece = {
 	original_x: number
 	original_y: number
 	type: number
+	bandaged_right: boolean
+	bandaged_down: boolean
+	bandaged_left: boolean
+	bandaged_up: boolean
 }
 
 export function get_pieces() {
@@ -19,6 +23,7 @@ export function get_pieces() {
 				for (let x = 0; x < 3; x++) {
 					const piece_x = 3 * col + x
 					const piece_y = 3 * row + y
+
 					const piece = {
 						id: crypto.randomUUID(),
 						x: piece_x,
@@ -28,6 +33,10 @@ export function get_pieces() {
 						original_x: piece_x,
 						original_y: piece_y,
 						type: piece_type,
+						bandaged_right: false,
+						bandaged_down: false,
+						bandaged_left: false,
+						bandaged_up: false,
 					}
 					pieces.push(piece)
 				}
@@ -48,6 +57,10 @@ export function get_copy(piece: Piece): Piece {
 		original_x: piece.original_x,
 		original_y: piece.original_y,
 		type: piece.type,
+		bandaged_right: piece.bandaged_right,
+		bandaged_down: piece.bandaged_down,
+		bandaged_left: piece.bandaged_left,
+		bandaged_up: piece.bandaged_up,
 	}
 }
 
@@ -75,4 +88,13 @@ export function check_solved(pieces: Piece[]): boolean {
 		}
 	}
 	return true
+}
+
+export function unbandage_pieces(pieces: Piece[]) {
+	for (const piece of pieces) {
+		piece.bandaged_right = false
+		piece.bandaged_down = false
+		piece.bandaged_left = false
+		piece.bandaged_up = false
+	}
 }
