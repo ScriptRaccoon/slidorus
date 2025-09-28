@@ -59,6 +59,11 @@
 
 		is_moving = true
 
+		const copies = create_copies(moving_rows, moving_cols)
+		pieces = pieces.concat(copies)
+	}
+
+	function create_copies(moving_rows: number[], moving_cols: number[]): Piece[] {
 		const copies: Piece[] = []
 		const offsets = [1, 2, -1, -2]
 
@@ -89,7 +94,7 @@
 			}
 		}
 
-		pieces = pieces.concat(copies)
+		return copies
 	}
 
 	function handle_mouse_move(e: MouseEvent | TouchEvent) {
