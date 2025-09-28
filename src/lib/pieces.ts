@@ -101,6 +101,31 @@ export function unbandage_pieces(pieces: Piece[]) {
 	}
 }
 
+export function toggle_bandage(
+	piece: Piece,
+	pieces: Piece[],
+	direction: 'right' | 'down',
+) {
+	switch (direction) {
+		case 'right':
+			piece.bandaged_right = !piece.bandaged_right
+			const adjacent_piece_right = pieces.find(
+				(p) => p.x === (piece.x + 1) % 9 && p.y === piece.y,
+			)
+			if (adjacent_piece_right)
+				adjacent_piece_right.bandaged_left = !adjacent_piece_right.bandaged_left
+			break
+		case 'down':
+			piece.bandaged_down = !piece.bandaged_down
+			const adjacent_piece_down = pieces.find(
+				(p) => p.x === piece.x && p.y === (piece.y + 1) % 9,
+			)
+			if (adjacent_piece_down)
+				adjacent_piece_down.bandaged_up = !adjacent_piece_down.bandaged_up
+			break
+	}
+}
+
 export function get_connected_rows(pieces: Piece[], row: number): number[] {
 	const connected_rows: number[] = [row]
 

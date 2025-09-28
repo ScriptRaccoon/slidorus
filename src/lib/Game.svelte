@@ -5,6 +5,7 @@
 		get_connected_cols,
 		get_connected_rows,
 		get_copy,
+		toggle_bandage,
 		type Piece,
 	} from './pieces'
 	import { send_toast } from './Toast.svelte'
@@ -76,7 +77,8 @@
 				)
 				if (piece_in_row) {
 					for (const offset of offsets) {
-						const copy = copy_piece(piece_in_row, i + offset * 9, moving_row)
+						const copy = get_copy(piece_in_row)
+						copy.x += offset * 9
 						copies.push(copy)
 					}
 				}
@@ -89,7 +91,8 @@
 
 				if (piece_in_col) {
 					for (const offset of offsets) {
-						const copy = copy_piece(piece_in_col, moving_col, i + offset * 9)
+						const copy = get_copy(piece_in_col)
+						copy.y += offset * 9
 						copies.push(copy)
 					}
 				}
@@ -177,13 +180,6 @@
 		}
 	}
 
-	function copy_piece(piece: Piece, x: number, y: number) {
-		const copy = get_copy(piece)
-		copy.x = x
-		copy.y = y
-		return copy
-	}
-
 	function detect_direction(dx: number, dy: number) {
 		const too_early = Math.abs(dx) + Math.abs(dy) < 3
 		if (too_early) return
@@ -194,28 +190,6 @@
 			move_direction === 'horizontal'
 				? pieces.filter((piece) => moving_rows.includes(piece.y))
 				: pieces.filter((piece) => moving_cols.includes(piece.x))
-	}
-
-	function toggle_bandage(piece: Piece, direction: 'right' | 'down') {
-		switch (direction) {
-			case 'right':
-				piece.bandaged_right = !piece.bandaged_right
-				const adjacent_piece_right = pieces.find(
-					(p) => p.x === (piece.x + 1) % 9 && p.y === piece.y,
-				)
-				if (adjacent_piece_right)
-					adjacent_piece_right.bandaged_left =
-						!adjacent_piece_right.bandaged_left
-				break
-			case 'down':
-				piece.bandaged_down = !piece.bandaged_down
-				const adjacent_piece_down = pieces.find(
-					(p) => p.x === piece.x && p.y === (piece.y + 1) % 9,
-				)
-				if (adjacent_piece_down)
-					adjacent_piece_down.bandaged_up = !adjacent_piece_down.bandaged_up
-				break
-		}
 	}
 </script>
 
@@ -257,7 +231,7 @@
 				class="bandager"
 				data-direction="right"
 				aria-label="bandage rightwards"
-				onclick={() => toggle_bandage(piece, 'right')}
+				onclick={() => toggle_bandage(piece, pieces, 'right')}
 				role="switch"
 				aria-checked={piece.bandaged_right}
 				style:--x={piece.x}
@@ -269,7 +243,7 @@
 				class="bandager"
 				data-direction="down"
 				aria-label="bandage downwards"
-				onclick={() => toggle_bandage(piece, 'down')}
+				onclick={() => toggle_bandage(piece, pieces, 'down')}
 				role="switch"
 				aria-checked={piece.bandaged_down}
 				style:--x={piece.x}
