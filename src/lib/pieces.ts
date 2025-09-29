@@ -121,16 +121,18 @@ export function toggle_bandage(
 			const adjacent_piece_right = pieces.find(
 				(p) => p.x === (piece.x + 1) % 9 && p.y === piece.y,
 			)
-			if (adjacent_piece_right)
+			if (adjacent_piece_right) {
 				adjacent_piece_right.bandaged_left = !adjacent_piece_right.bandaged_left
+			}
 			break
 		case 'down':
 			piece.bandaged_down = !piece.bandaged_down
 			const adjacent_piece_down = pieces.find(
 				(p) => p.x === piece.x && p.y === (piece.y + 1) % 9,
 			)
-			if (adjacent_piece_down)
+			if (adjacent_piece_down) {
 				adjacent_piece_down.bandaged_up = !adjacent_piece_down.bandaged_up
+			}
 			break
 	}
 }
@@ -141,21 +143,15 @@ export function get_connected_rows(pieces: Piece[], row: number): number[] {
 	for (let y = row; y < 9; y++) {
 		const row_pieces = pieces.filter((piece) => piece.y === y)
 		const is_bandaged = row_pieces.some((piece) => piece.bandaged_down)
-		if (is_bandaged) {
-			connected_rows.push((y + 1) % 9)
-		} else {
-			break
-		}
+		if (!is_bandaged) break
+		connected_rows.push((y + 1) % 9)
 	}
 
 	for (let y = row; y >= 0; y--) {
 		const row_pieces = pieces.filter((piece) => piece.y === y)
 		const is_bandaged = row_pieces.some((piece) => piece.bandaged_up)
-		if (is_bandaged) {
-			connected_rows.push((y - 1 + 9) % 9)
-		} else {
-			break
-		}
+		if (!is_bandaged) break
+		connected_rows.push((y - 1 + 9) % 9)
 	}
 
 	return connected_rows
@@ -167,21 +163,15 @@ export function get_connected_cols(pieces: Piece[], col: number): number[] {
 	for (let x = col; x < 9; x++) {
 		const col_pieces = pieces.filter((piece) => piece.x === x)
 		const is_bandaged = col_pieces.some((piece) => piece.bandaged_right)
-		if (is_bandaged) {
-			connected_cols.push((x + 1) % 9)
-		} else {
-			break
-		}
+		if (!is_bandaged) break
+		connected_cols.push((x + 1) % 9)
 	}
 
 	for (let x = col; x >= 0; x--) {
 		const col_pieces = pieces.filter((piece) => piece.x === x)
 		const is_bandaged = col_pieces.some((piece) => piece.bandaged_left)
-		if (is_bandaged) {
-			connected_cols.push((x - 1 + 9) % 9)
-		} else {
-			break
-		}
+		if (!is_bandaged) break
+		connected_cols.push((x - 1 + 9) % 9)
 	}
 
 	return connected_cols
@@ -194,10 +184,10 @@ export function create_copies_horizontal(
 	const copies: Piece[] = []
 	const offsets = [1, 2, -1, -2]
 
-	for (let i = 0; i < 9; i++) {
+	for (let x = 0; x < 9; x++) {
 		for (const moving_row of moving_rows) {
 			const piece_in_row = pieces.find(
-				(piece) => piece.x === i && piece.y === moving_row,
+				(piece) => piece.x === x && piece.y === moving_row,
 			)
 			if (piece_in_row) {
 				for (const offset of offsets) {
@@ -216,10 +206,10 @@ export function create_copies_vertical(pieces: Piece[], moving_cols: number[]): 
 	const copies: Piece[] = []
 	const offsets = [1, 2, -1, -2]
 
-	for (let i = 0; i < 9; i++) {
+	for (let y = 0; y < 9; y++) {
 		for (const moving_col of moving_cols) {
 			const piece_in_col = pieces.find(
-				(piece) => piece.x === moving_col && piece.y === i,
+				(piece) => piece.x === moving_col && piece.y === y,
 			)
 
 			if (piece_in_col) {
@@ -262,11 +252,11 @@ function execute_col_move(pieces: Piece[], col: number, delta: number) {
 }
 
 function execute_random_move(pieces: Piece[]) {
-	const is_row = Math.random() < 0.5
+	const is_horizontal = Math.random() < 0.5
 	const index = Math.floor(Math.random() * 9)
 	let delta = Math.floor(Math.random() * 17) - 8
 	if (delta === 0) delta = 1
-	if (is_row) {
+	if (is_horizontal) {
 		execute_row_move(pieces, index, delta)
 	} else {
 		execute_col_move(pieces, index, delta)
