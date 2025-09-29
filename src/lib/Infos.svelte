@@ -36,8 +36,6 @@
 
 <style>
 	details {
-		padding-inline: 1rem;
-		margin-top: 2rem;
 		grid-column: 1;
 	}
 

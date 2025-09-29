@@ -29,6 +29,7 @@
 	}: Props = $props()
 
 	let square_element = $state<HTMLDivElement | null>(null)
+	let square_size = $state(0)
 	let clicked_pos: { x: number; y: number } | null = null
 	let move_direction: 'horizontal' | 'vertical' | null = null
 	let moving_pieces: Piece[] = []
@@ -36,7 +37,7 @@
 	let moving_cols: number[] = []
 
 	function handle_mouse_down(e: MouseEvent | TouchEvent) {
-		if (app_state !== 'idle' || !square_element) return
+		if (app_state !== 'idle') return
 		clicked_pos = get_position(e)
 		app_state = 'moving'
 	}
@@ -61,7 +62,7 @@
 	}
 
 	function handle_mouse_up(e: MouseEvent | TouchEvent) {
-		if (app_state !== 'moving' || !clicked_pos || !square_element) return
+		if (app_state !== 'moving' || !clicked_pos) return
 
 		const current_pos = get_changed_position(e)
 
@@ -69,7 +70,7 @@
 			case 'horizontal':
 				for (const piece of moving_pieces) {
 					const dx = current_pos.x - clicked_pos.x
-					const dx_int = Math.round(dx * (9 / square_element.clientWidth))
+					const dx_int = Math.round(dx * (9 / square_size))
 					const valid_dx = clamp(dx_int, -10, 10)
 					piece.x += valid_dx
 					piece.dx = 0
@@ -79,7 +80,7 @@
 			case 'vertical':
 				for (const piece of moving_pieces) {
 					const dy = current_pos.y - clicked_pos.y
-					const dy_int = Math.round(dy * (9 / square_element.clientHeight))
+					const dy_int = Math.round(dy * (9 / square_size))
 					const valid_dy = clamp(dy_int, -10, 10)
 					piece.y += valid_dy
 					piece.dx = 0
@@ -132,7 +133,7 @@
 		switch (move_direction) {
 			case 'horizontal':
 				const moving_row = Math.floor(
-					(clicked_pos.y - square_rect.top) * (9 / square_element.clientHeight),
+					(clicked_pos.y - square_rect.top) * (9 / square_size),
 				)
 				const is_valid_row = moving_row >= 0 && moving_row < 9
 				if (!is_valid_row) return
@@ -157,7 +158,7 @@
 				break
 			case 'vertical':
 				const moving_col = Math.floor(
-					(clicked_pos.x - square_rect.left) * (9 / square_element.clientWidth),
+					(clicked_pos.x - square_rect.left) * (9 / square_size),
 				)
 				const is_valid_col = moving_col >= 0 && moving_col < 9
 				if (!is_valid_col) return
@@ -188,6 +189,8 @@
 <div
 	class="square {app_state}"
 	bind:this={square_element}
+	bind:clientWidth={square_size}
+	style:--size="{square_size}px"
 	onmousedown={handle_mouse_down}
 	onmousemove={throttle(handle_mouse_move, 1000 / 60)}
 	onmouseup={handle_mouse_up}
@@ -260,8 +263,7 @@
 <style>
 	.square {
 		position: relative;
-		--size: calc(min(100vw, var(--maxwidth)) - 20px);
-		width: var(--size);
+		width: 100%;
 		aspect-ratio: 1;
 		margin-inline: auto;
 		--border: 1px;

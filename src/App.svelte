@@ -83,6 +83,15 @@
 		{app_state}
 	/>
 
+	{#if app_state === 'bandaging'}
+		<div class="instructions">
+			<strong>Instructions.</strong>
+			Click between two pieces to bandage them. You can bandage as many pieces as you
+			like. When one piece moves, all pieces connected to it also move. Click on the
+			middle of a piece to make it fixed. It won't be able to move anymore.
+		</div>
+	{/if}
+
 	<Infos />
 </div>
 
@@ -90,25 +99,30 @@
 
 <style>
 	.grid {
-		--maxwidth: 600px;
-		max-width: var(--maxwidth);
+		max-width: 600px;
 		margin-inline: auto;
-	}
+		display: grid;
+		row-gap: 1rem;
 
-	@media (min-width: 1200px) {
-		.grid.show_torus {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			align-items: center;
-			max-width: 1300px;
-			margin-inline: auto;
+		@media (min-width: 600px) {
+			row-gap: 1.5rem;
+		}
+
+		@media (min-width: 1200px) {
+			&.show_torus {
+				max-width: 1200px;
+				grid-template-columns: 1fr 1fr;
+			}
 		}
 	}
 
 	.move_count {
 		color: var(--secondary-font-color);
-		text-align: right;
-		padding-inline: 1rem;
 		font-size: 0.875rem;
+	}
+
+	.instructions {
+		color: var(--secondary-font-color);
+		grid-column: 1;
 	}
 </style>

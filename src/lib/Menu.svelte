@@ -59,19 +59,8 @@
 	</button>
 </menu>
 
-{#if app_state === 'bandaging'}
-	<p class="instructions">
-		<strong>Instructions.</strong>
-		Click between two pieces to bandage them. You can bandage as many pieces as you like.
-		When one piece moves, all pieces connected to it also move. Click on the middle of
-		a piece to make it fixed. It won't be able to move anymore.
-	</p>
-{/if}
-
 <style>
 	menu {
-		margin-top: 2rem;
-		padding-inline: 1rem;
 		display: flex;
 		justify-content: center;
 		flex-wrap: wrap;
@@ -98,7 +87,6 @@
 
 	@media (max-width: 540px) {
 		menu {
-			margin-top: 1rem;
 			gap: 0.5rem;
 			display: grid;
 			grid-template-columns: repeat(2, 1fr);
@@ -107,10 +95,5 @@
 			font-size: 0.875rem;
 			padding: 0.3rem 0.6rem;
 		}
-	}
-
-	.instructions {
-		padding-inline: 1rem;
-		color: var(--secondary-font-color);
 	}
 </style>
