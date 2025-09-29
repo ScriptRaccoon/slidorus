@@ -146,43 +146,43 @@ export function toggle_bandage(
 }
 
 export function get_connected_rows(pieces: Piece[], row: number): number[] {
-	const connected_rows: number[] = [row]
+	const connected_rows = new Set([row])
 
-	for (let y = row; y < 9; y++) {
-		const row_pieces = pieces.filter((piece) => piece.y === y)
+	for (let y = row; y < row + 9; y++) {
+		const row_pieces = pieces.filter((piece) => piece.y === y % 9)
 		const is_bandaged = row_pieces.some((piece) => piece.bandaged_down)
 		if (!is_bandaged) break
-		connected_rows.push((y + 1) % 9)
+		connected_rows.add((y + 1) % 9)
 	}
 
-	for (let y = row; y >= 0; y--) {
-		const row_pieces = pieces.filter((piece) => piece.y === y)
+	for (let y = row; y >= row - 9; y--) {
+		const row_pieces = pieces.filter((piece) => piece.y === (y + 9) % 9)
 		const is_bandaged = row_pieces.some((piece) => piece.bandaged_up)
 		if (!is_bandaged) break
-		connected_rows.push((y - 1 + 9) % 9)
+		connected_rows.add((y - 1 + 9) % 9)
 	}
 
-	return connected_rows
+	return Array.from(connected_rows)
 }
 
 export function get_connected_cols(pieces: Piece[], col: number): number[] {
-	const connected_cols: number[] = [col]
+	const connected_cols = new Set([col])
 
-	for (let x = col; x < 9; x++) {
-		const col_pieces = pieces.filter((piece) => piece.x === x)
+	for (let x = col; x < col + 9; x++) {
+		const col_pieces = pieces.filter((piece) => piece.x === x % 9)
 		const is_bandaged = col_pieces.some((piece) => piece.bandaged_right)
 		if (!is_bandaged) break
-		connected_cols.push((x + 1) % 9)
+		connected_cols.add((x + 1) % 9)
 	}
 
-	for (let x = col; x >= 0; x--) {
-		const col_pieces = pieces.filter((piece) => piece.x === x)
+	for (let x = col; x >= col - 9; x--) {
+		const col_pieces = pieces.filter((piece) => piece.x === (x + 9) % 9)
 		const is_bandaged = col_pieces.some((piece) => piece.bandaged_left)
 		if (!is_bandaged) break
-		connected_cols.push((x - 1 + 9) % 9)
+		connected_cols.add((x - 1 + 9) % 9)
 	}
 
-	return connected_cols
+	return Array.from(connected_cols)
 }
 
 export function create_copies_horizontal(
