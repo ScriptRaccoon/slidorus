@@ -35,10 +35,6 @@
 </details>
 
 <style>
-	details {
-		grid-column: 1;
-	}
-
 	summary {
 		width: max-content;
 		cursor: pointer;

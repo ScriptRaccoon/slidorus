@@ -69,10 +69,6 @@
 		<Game bind:pieces {update_pieces_array} bind:app_state bind:move_count />
 	</div>
 
-	{#if show_torus}
-		<Torus {pieces_array} />
-	{/if}
-
 	<Menu
 		{scramble}
 		{reset}
@@ -92,6 +88,10 @@
 		</div>
 	{/if}
 
+	{#if show_torus}
+		<Torus {pieces_array} />
+	{/if}
+
 	<Infos />
 </div>
 
@@ -102,7 +102,12 @@
 		max-width: 600px;
 		margin-inline: auto;
 		display: grid;
+		grid-auto-flow: dense;
 		row-gap: 1rem;
+
+		> :global(:not(.scene)) {
+			grid-column: 1;
+		}
 
 		@media (min-width: 600px) {
 			row-gap: 1.5rem;
@@ -110,8 +115,13 @@
 
 		@media (min-width: 1200px) {
 			&.show_torus {
-				max-width: 1200px;
+				max-width: 1220px;
+				column-gap: 20px;
 				grid-template-columns: 1fr 1fr;
+
+				> :global(:not(.scene)) {
+					grid-column: 1;
+				}
 			}
 		}
 	}
@@ -123,6 +133,5 @@
 
 	.instructions {
 		color: var(--secondary-font-color);
-		grid-column: 1;
 	}
 </style>

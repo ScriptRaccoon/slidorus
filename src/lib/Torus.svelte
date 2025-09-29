@@ -28,8 +28,7 @@
 
 <style>
 	.scene {
-		margin: 1rem 10px;
-		aspect-ratio: 5 / 4;
+		aspect-ratio: 1;
 		perspective: 1200px;
 		background-image: radial-gradient(#383820 0%, transparent 70%, transparent 100%);
 		border-radius: 0.5rem;
@@ -48,24 +47,22 @@
 
 	.torus {
 		--unit: min(10vw, 4rem);
-		--elevation: calc(-0.25 * var(--unit));
 		--tilt: -60deg;
 		--slice-radius: calc(1.2 * var(--unit));
 		--outer-radius: calc(2.65 * var(--unit));
-		transform: translateY(var(--elevation)) rotateX(var(--tilt)) rotateY(0deg);
+		transform: rotateX(var(--tilt)) rotateY(0deg);
 		animation: rotatearound 180s linear infinite;
 	}
 
 	@keyframes rotatearound {
 		0% {
-			rotate: translateY(var(--elevation)) rotateX(var(--tilt)) rotateY(0deg);
+			rotate: rotateX(var(--tilt)) rotateY(0deg);
 		}
 		50% {
-			transform: translateY(var(--elevation)) rotateX(calc(-1 * var(--tilt)))
-				rotateY(1turn);
+			transform: rotateX(calc(-1 * var(--tilt))) rotateY(1turn);
 		}
 		100% {
-			transform: translateY(var(--elevation)) rotateX(var(--tilt)) rotateY(2turn);
+			transform: rotateX(var(--tilt)) rotateY(2turn);
 		}
 	}
 
