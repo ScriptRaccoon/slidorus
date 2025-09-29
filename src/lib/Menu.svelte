@@ -51,15 +51,12 @@
 
 <style>
 	menu {
-		margin-top: 1rem;
+		margin-top: 2rem;
+		padding-inline: 1rem;
 		display: flex;
 		justify-content: center;
 		flex-wrap: wrap;
 		gap: 1rem;
-
-		@media (min-width: 600px) {
-			margin-top: 2rem;
-		}
 	}
 
 	button {
@@ -74,6 +71,17 @@
 
 		&:disabled {
 			cursor: not-allowed;
+		}
+	}
+
+	@media (max-width: 540px) {
+		menu {
+			margin-top: 1rem;
+			gap: 0.5rem 0.75rem;
+		}
+		button {
+			font-size: 0.825rem;
+			padding: 0.2rem 0.6rem;
 		}
 	}
 </style>
