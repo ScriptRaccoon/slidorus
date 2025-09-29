@@ -143,7 +143,7 @@
 					reset_movement()
 					send_toast({
 						title: 'Row is blocked',
-						variant: 'info',
+						variant: 'error',
 					})
 					return
 				}
@@ -168,7 +168,7 @@
 					reset_movement()
 					send_toast({
 						title: 'Column is blocked',
-						variant: 'info',
+						variant: 'error',
 					})
 					return
 				}
