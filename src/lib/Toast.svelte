@@ -45,6 +45,8 @@
 </script>
 
 <script lang="ts">
+	import { Ban, Info, PartyPopper } from '@lucide/svelte'
+
 	import { fly } from 'svelte/transition'
 
 	type Props = {
@@ -63,6 +65,13 @@
 			transition:fly={{ y: offset_y, duration: 200 }}
 			onclick={() => delete_toast(toast)}
 		>
+			{#if toast.variant === 'info'}
+				<Info />
+			{:else if toast.variant === 'success'}
+				<PartyPopper />
+			{:else if toast.variant === 'error'}
+				<Ban />
+			{/if}
 			{toast.title}
 		</button>
 	{/each}
@@ -105,8 +114,9 @@
 	}
 
 	.toast {
-		display: block;
+		display: flex;
 		width: fit-content;
+		align-items: center;
 		max-width: 20rem;
 		border-radius: 0.25rem;
 		box-shadow: 0.1rem 0.1rem 0.4rem #0003;
@@ -114,6 +124,7 @@
 		pointer-events: initial;
 		font-size: 1.125rem;
 		font-weight: bold;
+		gap: 0.5rem;
 
 		&.info {
 			background-color: white;

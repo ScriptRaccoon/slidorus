@@ -1,5 +1,9 @@
+<script lang="ts">
+	import { Info } from '@lucide/svelte'
+</script>
+
 <details>
-	<summary>About this puzzle</summary>
+	<summary><Info /> About this puzzle</summary>
 	<p>
 		<i>Slidorus</i> is a sliding puzzle made of 9 blocks, each containing 9 pieces,
 		arranged in a 9×9 grid. Every row and column can be shifted in either direction;
@@ -40,6 +44,10 @@
 	summary {
 		width: max-content;
 		cursor: pointer;
+		list-style: none;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
 
 		&:focus-visible {
 			outline: 1px solid var(--outline-color);

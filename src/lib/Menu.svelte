@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Bandage, CircleCheck, Eye, EyeOff, RotateCcw, Shuffle } from '@lucide/svelte'
 	import type { APP_STATE } from './types'
 
 	type Props = {
@@ -24,17 +25,26 @@
 
 <menu>
 	{#if app_state !== 'bandaging'}
-		<button onclick={scramble} disabled={app_state !== 'idle'}>Scramble</button>
-		<button onclick={reset} disabled={app_state !== 'idle'}>Reset</button>
+		<button onclick={scramble} disabled={app_state !== 'idle'}>
+			<Shuffle />
+			Scramble
+		</button>
+		<button onclick={reset} disabled={app_state !== 'idle'}>
+			<RotateCcw />
+			Reset
+		</button>
 		<button onclick={toggle_torus}>
 			{#if show_torus}
-				Hide Torus
+				<EyeOff /> Hide Torus
 			{:else}
-				Show Torus
+				<Eye /> Show Torus
 			{/if}
 		</button>
 	{:else}
-		<button onclick={reset_bandaging}>Reset bandaging</button>
+		<button onclick={reset_bandaging}>
+			<RotateCcw />
+			Reset bandaging
+		</button>
 	{/if}
 
 	<button
@@ -42,9 +52,9 @@
 		disabled={app_state !== 'idle' && app_state !== 'bandaging'}
 	>
 		{#if app_state == 'bandaging'}
-			Done
+			<CircleCheck /> Done
 		{:else}
-			Bandage
+			<Bandage /> Bandage
 		{/if}
 	</button>
 </menu>
@@ -72,6 +82,9 @@
 		padding: 0.25rem 0.8rem;
 		background-color: var(--btn-color);
 		border-radius: 0.25rem;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
 
 		&:focus-visible,
 		&:hover {

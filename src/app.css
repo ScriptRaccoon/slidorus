@@ -84,3 +84,8 @@ button {
 		--color: var(--color-8);
 	}
 }
+
+.lucide {
+	width: 1.125rem;
+	height: 1.125rem;
+}
