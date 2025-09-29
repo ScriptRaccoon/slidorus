@@ -133,5 +133,6 @@
 
 	.instructions {
 		color: var(--secondary-font-color);
+		line-height: 1.4;
 	}
 </style>
