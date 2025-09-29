@@ -12,7 +12,7 @@
 		type Piece,
 	} from './lib/pieces'
 	import Torus from './lib/Torus.svelte'
-	import Toast from './lib/Toast.svelte'
+	import Toast, { send_toast } from './lib/Toast.svelte'
 	import type { APP_STATE } from './lib/types'
 
 	const initial_pieces = get_initial_pieces()
@@ -52,6 +52,7 @@
 		if (app_state === 'bandaging') {
 			app_state = 'idle'
 		} else if (app_state === 'idle') {
+			reset()
 			app_state = 'bandaging'
 		}
 	}
