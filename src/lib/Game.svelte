@@ -18,12 +18,14 @@
 		pieces: Piece[]
 		update_pieces_array: () => void
 		app_state: APP_STATE
+		move_count: number
 	}
 
 	let {
 		pieces = $bindable(),
 		update_pieces_array,
 		app_state = $bindable(),
+		move_count = $bindable(),
 	}: Props = $props()
 
 	let square_element = $state<HTMLDivElement | null>(null)
@@ -90,6 +92,7 @@
 		reset_movement()
 		update_pieces_array()
 		handle_solved_state()
+		move_count++
 	}
 
 	function reset_movement() {

@@ -22,11 +22,13 @@
 
 	let app_state = $state<APP_STATE>('idle')
 	let show_torus = $state(false)
+	let move_count = $state(0)
 
 	function reset() {
 		if (app_state !== 'idle') return
 		reset_pieces(pieces)
 		update_pieces_array()
+		move_count = 0
 	}
 
 	async function scramble() {
@@ -35,6 +37,7 @@
 		await scramble_pieces(pieces, 10)
 		update_pieces_array()
 		app_state = 'idle'
+		move_count = 0
 	}
 
 	function toggle_torus() {
@@ -61,7 +64,10 @@
 <Header />
 
 <div class="grid" class:show_torus>
-	<Game bind:pieces {update_pieces_array} bind:app_state />
+	<div>
+		<div class="move_count">{move_count} moves</div>
+		<Game bind:pieces {update_pieces_array} bind:app_state bind:move_count />
+	</div>
 
 	{#if show_torus}
 		<Torus {pieces_array} />
@@ -97,5 +103,12 @@
 			max-width: 1300px;
 			margin-inline: auto;
 		}
+	}
+
+	.move_count {
+		color: var(--secondary-font-color);
+		text-align: right;
+		padding-inline: 1rem;
+		font-size: 0.875rem;
 	}
 </style>
