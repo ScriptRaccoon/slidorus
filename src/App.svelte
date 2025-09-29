@@ -5,7 +5,8 @@
 	import Menu from './lib/Menu.svelte'
 	import {
 		create_piece_array,
-		get_pieces,
+		get_initial_pieces,
+		reset_pieces,
 		scramble_pieces,
 		unbandage_pieces,
 		type Piece,
@@ -14,24 +15,17 @@
 	import Toast from './lib/Toast.svelte'
 	import type { APP_STATE } from './lib/types'
 
-	const initial_pieces = get_pieces()
+	const initial_pieces = get_initial_pieces()
 
 	let pieces = $state<Piece[]>(initial_pieces)
 	let pieces_array = $state<Piece[][]>(create_piece_array(initial_pieces))
 
 	let app_state = $state<APP_STATE>('idle')
-
 	let show_torus = $state(false)
 
 	function reset() {
 		if (app_state !== 'idle') return
-		for (const piece of pieces) {
-			piece.x = piece.original_x
-			piece.y = piece.original_y
-			piece.dx = 0
-			piece.dy = 0
-		}
-
+		reset_pieces(pieces)
 		update_pieces_array()
 	}
 

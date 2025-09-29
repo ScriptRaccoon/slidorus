@@ -15,7 +15,7 @@ export type Piece = {
 	bandaged_up: boolean
 }
 
-export function get_pieces() {
+export function get_initial_pieces() {
 	const pieces: Piece[] = []
 
 	for (let row = 0; row < 3; row++) {
@@ -49,7 +49,16 @@ export function get_pieces() {
 	return pieces
 }
 
-export function get_copy(piece: Piece): Piece {
+export function reset_pieces(pieces: Piece[]) {
+	for (const piece of pieces) {
+		piece.x = piece.original_x
+		piece.y = piece.original_y
+		piece.dx = 0
+		piece.dy = 0
+	}
+}
+
+function get_copy(piece: Piece): Piece {
 	return {
 		id: crypto.randomUUID(),
 		x: piece.x,
@@ -178,6 +187,60 @@ export function get_connected_cols(pieces: Piece[], col: number): number[] {
 	return connected_cols
 }
 
+export function create_copies_horizontal(
+	pieces: Piece[],
+	moving_rows: number[],
+): Piece[] {
+	const copies: Piece[] = []
+	const offsets = [1, 2, -1, -2]
+
+	for (let i = 0; i < 9; i++) {
+		for (const moving_row of moving_rows) {
+			const piece_in_row = pieces.find(
+				(piece) => piece.x === i && piece.y === moving_row,
+			)
+			if (piece_in_row) {
+				for (const offset of offsets) {
+					const copy = get_copy(piece_in_row)
+					copy.x += offset * 9
+					copies.push(copy)
+				}
+			}
+		}
+	}
+
+	return copies
+}
+
+export function create_copies_vertical(pieces: Piece[], moving_cols: number[]): Piece[] {
+	const copies: Piece[] = []
+	const offsets = [1, 2, -1, -2]
+
+	for (let i = 0; i < 9; i++) {
+		for (const moving_col of moving_cols) {
+			const piece_in_col = pieces.find(
+				(piece) => piece.x === moving_col && piece.y === i,
+			)
+
+			if (piece_in_col) {
+				for (const offset of offsets) {
+					const copy = get_copy(piece_in_col)
+					copy.y += offset * 9
+					copies.push(copy)
+				}
+			}
+		}
+	}
+
+	return copies
+}
+
+export function get_visible_pieces(pieces: Piece[]): Piece[] {
+	return pieces.filter(
+		(piece) => piece.x >= 0 && piece.x < 9 && piece.y >= 0 && piece.y < 9,
+	)
+}
+
 function execute_row_move(pieces: Piece[], row: number, delta: number) {
 	if (delta === 0 || delta != Math.floor(delta)) return
 	const affected_rows = get_connected_rows(pieces, row)
@@ -198,7 +261,7 @@ function execute_col_move(pieces: Piece[], col: number, delta: number) {
 	}
 }
 
-export function execute_random_move(pieces: Piece[]) {
+function execute_random_move(pieces: Piece[]) {
 	const is_row = Math.random() < 0.5
 	const index = Math.floor(Math.random() * 9)
 	let delta = Math.floor(Math.random() * 17) - 8

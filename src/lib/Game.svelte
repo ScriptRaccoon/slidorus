@@ -2,9 +2,11 @@
 	import { clamp, get_changed_position, get_position, throttle } from '../utils'
 	import {
 		check_solved,
+		create_copies_horizontal,
+		create_copies_vertical,
 		get_connected_cols,
 		get_connected_rows,
-		get_copy,
+		get_visible_pieces,
 		toggle_bandage,
 		type Piece,
 	} from './pieces'
@@ -24,7 +26,6 @@
 	}: Props = $props()
 
 	let square_element = $state<HTMLDivElement | null>(null)
-
 	let clicked_pos: { x: number; y: number } | null = null
 	let move_direction: 'horizontal' | 'vertical' | null = null
 	let moving_pieces: Piece[] = []
@@ -35,51 +36,6 @@
 		if (app_state !== 'idle' || !square_element) return
 		clicked_pos = get_position(e)
 		app_state = 'moving'
-	}
-
-	function create_copies_horizontal(moving_rows: number[]): Piece[] {
-		const copies: Piece[] = []
-		const offsets = [1, 2, -1, -2]
-
-		for (let i = 0; i < 9; i++) {
-			for (const moving_row of moving_rows) {
-				const piece_in_row = pieces.find(
-					(piece) => piece.x === i && piece.y === moving_row,
-				)
-				if (piece_in_row) {
-					for (const offset of offsets) {
-						const copy = get_copy(piece_in_row)
-						copy.x += offset * 9
-						copies.push(copy)
-					}
-				}
-			}
-		}
-
-		return copies
-	}
-
-	function create_copies_vertical(moving_cols: number[]): Piece[] {
-		const copies: Piece[] = []
-		const offsets = [1, 2, -1, -2]
-
-		for (let i = 0; i < 9; i++) {
-			for (const moving_col of moving_cols) {
-				const piece_in_col = pieces.find(
-					(piece) => piece.x === moving_col && piece.y === i,
-				)
-
-				if (piece_in_col) {
-					for (const offset of offsets) {
-						const copy = get_copy(piece_in_col)
-						copy.y += offset * 9
-						copies.push(copy)
-					}
-				}
-			}
-		}
-
-		return copies
 	}
 
 	function handle_mouse_move(e: MouseEvent | TouchEvent) {
@@ -129,10 +85,7 @@
 				break
 		}
 
-		pieces = pieces.filter(
-			(piece) => piece.x >= 0 && piece.x < 9 && piece.y >= 0 && piece.y < 9,
-		)
-
+		pieces = get_visible_pieces(pieces)
 		reset_movement()
 		update_pieces_array()
 		handle_solved_state()
@@ -181,7 +134,7 @@
 				if (!is_valid_row) return
 
 				moving_rows = get_connected_rows(pieces, moving_row)
-				const copies_in_rows = create_copies_horizontal(moving_rows)
+				const copies_in_rows = create_copies_horizontal(pieces, moving_rows)
 				pieces = pieces.concat(copies_in_rows)
 				moving_pieces = pieces.filter((piece) => moving_rows.includes(piece.y))
 				break
@@ -192,7 +145,7 @@
 				const is_valid_col = moving_col >= 0 && moving_col < 9
 				if (!is_valid_col) return
 				moving_cols = get_connected_cols(pieces, moving_col)
-				const copies_in_cols = create_copies_vertical(moving_cols)
+				const copies_in_cols = create_copies_vertical(pieces, moving_cols)
 				pieces = pieces.concat(copies_in_cols)
 				moving_pieces = pieces.filter((piece) => moving_cols.includes(piece.x))
 				break
