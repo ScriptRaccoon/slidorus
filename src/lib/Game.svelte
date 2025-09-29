@@ -297,7 +297,7 @@
 		position: absolute;
 		--dim: calc(var(--size) / 9);
 		width: var(--dim);
-		aspect-ratio: 1;
+		height: var(--dim);
 		background-color: var(--color, gray);
 		transform: translateX(calc(var(--x) * var(--dim) + var(--dx) * 1px))
 			translateY(calc(var(--y) * var(--dim) + var(--dy) * 1px));
@@ -312,12 +312,14 @@
 			border-right: none;
 			border-top-right-radius: 0;
 			border-bottom-right-radius: 0;
+			width: calc(var(--dim) + 1px);
 		}
 
 		&.bandaged_down {
 			border-bottom: none;
 			border-bottom-left-radius: 0;
 			border-bottom-right-radius: 0;
+			height: calc(var(--dim) + 1px);
 		}
 
 		&.bandaged_left {
