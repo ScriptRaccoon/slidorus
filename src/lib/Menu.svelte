@@ -43,7 +43,7 @@
 	{:else}
 		<button onclick={reset_bandaging}>
 			<RotateCcw />
-			Reset bandaging
+			Reset
 		</button>
 	{/if}
 
@@ -79,7 +79,7 @@
 	}
 
 	button {
-		padding: 0.25rem 0.8rem;
+		padding: 0.3rem 0.8rem;
 		background-color: var(--btn-color);
 		border-radius: 0.25rem;
 		display: flex;
@@ -99,11 +99,13 @@
 	@media (max-width: 540px) {
 		menu {
 			margin-top: 1rem;
-			gap: 0.5rem 0.75rem;
+			gap: 0.5rem;
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
 		}
 		button {
-			font-size: 0.825rem;
-			padding: 0.2rem 0.6rem;
+			font-size: 0.875rem;
+			padding: 0.3rem 0.6rem;
 		}
 	}
 
