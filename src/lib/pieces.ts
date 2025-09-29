@@ -13,6 +13,7 @@ export type Piece = {
 	bandaged_down: boolean
 	bandaged_left: boolean
 	bandaged_up: boolean
+	fixed: boolean
 }
 
 export function get_initial_pieces() {
@@ -39,6 +40,7 @@ export function get_initial_pieces() {
 						bandaged_down: false,
 						bandaged_left: false,
 						bandaged_up: false,
+						fixed: false,
 					}
 					pieces.push(piece)
 				}
@@ -72,6 +74,7 @@ function get_copy(piece: Piece): Piece {
 		bandaged_down: piece.bandaged_down,
 		bandaged_left: piece.bandaged_left,
 		bandaged_up: piece.bandaged_up,
+		fixed: piece.fixed,
 	}
 }
 
@@ -107,7 +110,12 @@ export function unbandage_pieces(pieces: Piece[]) {
 		piece.bandaged_down = false
 		piece.bandaged_left = false
 		piece.bandaged_up = false
+		piece.fixed = false
 	}
+}
+
+export function toggle_fixed(piece: Piece) {
+	piece.fixed = !piece.fixed
 }
 
 export function toggle_bandage(
@@ -234,20 +242,23 @@ export function get_visible_pieces(pieces: Piece[]): Piece[] {
 function execute_row_move(pieces: Piece[], row: number, delta: number) {
 	if (delta === 0 || delta != Math.floor(delta)) return
 	const affected_rows = get_connected_rows(pieces, row)
-	for (const piece of pieces) {
-		if (affected_rows.includes(piece.y)) {
-			piece.x = (piece.x + delta + 9) % 9
-		}
+	const affected_pieces = pieces.filter((piece) => affected_rows.includes(piece.y))
+	const is_blocked = affected_pieces.some((piece) => piece.fixed)
+	if (is_blocked) throw new Error('Row move is not possible because of a fixed piece')
+	for (const piece of affected_pieces) {
+		piece.x = (piece.x + delta + 9) % 9
 	}
 }
 
 function execute_col_move(pieces: Piece[], col: number, delta: number) {
 	if (delta === 0 || delta != Math.floor(delta)) return
 	const affected_cols = get_connected_cols(pieces, col)
-	for (const piece of pieces) {
-		if (affected_cols.includes(piece.x)) {
-			piece.y = (piece.y + delta + 9) % 9
-		}
+	const affected_pieces = pieces.filter((piece) => affected_cols.includes(piece.x))
+	const is_blocked = affected_pieces.some((piece) => piece.fixed)
+	if (is_blocked)
+		throw new Error('Column move is not possible because of a fixed piece')
+	for (const piece of affected_pieces) {
+		piece.y = (piece.y + delta + 9) % 9
 	}
 }
 
@@ -264,8 +275,14 @@ function execute_random_move(pieces: Piece[]) {
 }
 
 export async function scramble_pieces(pieces: Piece[], wait = 0, moves = 100) {
+	let attempts = 0
 	for (let i = 0; i < moves; i++) {
+		attempts++
 		await sleep(wait)
-		execute_random_move(pieces)
+		try {
+			execute_random_move(pieces)
+		} catch (_) {
+			if (attempts < moves * 100) i--
+		}
 	}
 }

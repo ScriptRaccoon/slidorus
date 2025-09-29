@@ -8,6 +8,7 @@
 		get_connected_rows,
 		get_visible_pieces,
 		toggle_bandage,
+		toggle_fixed,
 		type Piece,
 	} from './pieces'
 	import { send_toast } from './Toast.svelte'
@@ -134,6 +135,19 @@
 				if (!is_valid_row) return
 
 				moving_rows = get_connected_rows(pieces, moving_row)
+
+				const is_blocked_row = pieces.some(
+					(piece) => moving_rows.includes(piece.y) && piece.fixed,
+				)
+				if (is_blocked_row) {
+					reset_movement()
+					send_toast({
+						title: 'Row is blocked',
+						variant: 'info',
+					})
+					return
+				}
+
 				const copies_in_rows = create_copies_horizontal(pieces, moving_rows)
 				pieces = pieces.concat(copies_in_rows)
 				moving_pieces = pieces.filter((piece) => moving_rows.includes(piece.y))
@@ -144,7 +158,21 @@
 				)
 				const is_valid_col = moving_col >= 0 && moving_col < 9
 				if (!is_valid_col) return
+
 				moving_cols = get_connected_cols(pieces, moving_col)
+
+				const is_blocked_col = pieces.some(
+					(piece) => moving_cols.includes(piece.x) && piece.fixed,
+				)
+				if (is_blocked_col) {
+					reset_movement()
+					send_toast({
+						title: 'Column is blocked',
+						variant: 'info',
+					})
+					return
+				}
+
 				const copies_in_cols = create_copies_vertical(pieces, moving_cols)
 				pieces = pieces.concat(copies_in_cols)
 				moving_pieces = pieces.filter((piece) => moving_cols.includes(piece.x))
@@ -179,7 +207,11 @@
 			style:--y={piece.y}
 			style:--dx={piece.dx}
 			style:--dy={piece.dy}
-		></div>
+		>
+			{#if piece.fixed && app_state !== 'bandaging'}
+				<div class="dot"></div>
+			{/if}
+		</div>
 	{/each}
 
 	{#if app_state === 'bandaging'}
@@ -203,6 +235,17 @@
 				onclick={() => toggle_bandage(piece, pieces, 'down')}
 				role="switch"
 				aria-checked={piece.bandaged_down}
+				style:--x={piece.x}
+				style:--y={piece.y}
+			>
+			</button>
+
+			<button
+				class="fixer"
+				onclick={() => toggle_fixed(piece)}
+				aria-label="fix piece"
+				role="switch"
+				aria-checked={piece.fixed}
 				style:--x={piece.x}
 				style:--y={piece.y}
 			>
@@ -256,6 +299,9 @@
 		transition: transform 80ms ease-out;
 		border: var(--border) solid var(--bg-color);
 		border-radius: 15%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 
 		&.bandaged_right {
 			border-right: none;
@@ -280,14 +326,22 @@
 			border-top-left-radius: 0;
 			border-top-right-radius: 0;
 		}
+
+		.dot {
+			background-color: var(--bg-color);
+			width: 25%;
+			aspect-ratio: 1;
+			border-radius: 50%;
+		}
 	}
 
-	.bandager {
+	.bandager,
+	.fixer {
 		--dim: calc(var(--size) / 9);
 		position: absolute;
 		background-color: var(--bg-color);
 		transform: translate(-50%, -50%);
-		border-radius: 10%;
+
 		opacity: 0.15;
 		transition: opacity 120ms;
 
@@ -306,6 +360,18 @@
 			position: absolute;
 			inset: -2px;
 		}
+	}
+
+	.bandager {
+		border-radius: 10%;
+	}
+
+	.fixer {
+		width: 2%;
+		height: 2%;
+		border-radius: 50%;
+		left: calc(var(--x) * var(--dim) + var(--dim) / 2);
+		top: calc(var(--y) * var(--dim) + var(--dim) / 2);
 	}
 
 	.bandager[data-direction='right'] {
