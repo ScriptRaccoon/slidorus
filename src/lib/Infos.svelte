@@ -5,11 +5,10 @@
 <details>
 	<summary><Info /> About this puzzle</summary>
 	<p>
-		<i>Slidorus</i> is a sliding puzzle made of 9 blocks, each containing 9 pieces,
-		arranged in a 9×9 grid. Every row and column can be shifted in either direction;
-		use your mouse on desktop or touch movements on a mobile device. When a piece
-		moves off one side of the grid, it reappears on the opposite side. In other words,
-		the pieces move on a
+		<i>Slidorus</i> is a sliding puzzle made of 9 blocks of 9 pieces. Every row and
+		column can be shifted in either direction; use your mouse on desktop or touch
+		movements on a mobile device. When a piece moves off one side of the grid, it
+		reappears on the opposite side. In other words, the pieces move on a
 		<a href="https://en.wikipedia.org/wiki/Torus" target="_blank">torus</a>.
 	</p>
 	<p>
@@ -21,7 +20,7 @@
 	</p>
 
 	<p>
-		An additional option lets you "bandage" pieces together. This makes the puzzle
+		An additional option lets you bandage pieces together. This makes the puzzle
 		significantly more complex, especially when many pieces are bandaged. Furthermore,
 		it is possible to make pieces fixed, so that they will not move anymore. This adds
 		yet another level of complexity. The configuration can be shared by using the
@@ -31,7 +30,7 @@
 	<p>
 		The code for this application can be found on
 		<a href="https://github.com/ScriptRaccoon/slidorus" target="_blank">GitHub</a>.
-		Contributions and feedback are welcome.
+		Contributions and feedback are welcome!
 	</p>
 </details>
 
