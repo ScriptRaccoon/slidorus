@@ -1,5 +1,13 @@
 <script lang="ts">
-	import { Bandage, CircleCheck, Eye, EyeOff, RotateCcw, Shuffle } from '@lucide/svelte'
+	import {
+		Bandage,
+		CircleCheck,
+		Eye,
+		EyeOff,
+		Link2,
+		RotateCcw,
+		Shuffle,
+	} from '@lucide/svelte'
 	import type { APP_STATE } from './types'
 
 	type Props = {
@@ -9,6 +17,7 @@
 		show_torus: boolean
 		toggle_bandaging: () => void
 		reset_bandaging: () => void
+		share: () => void
 		app_state: APP_STATE
 	}
 
@@ -19,6 +28,7 @@
 		show_torus,
 		toggle_bandaging,
 		reset_bandaging,
+		share,
 		app_state,
 	}: Props = $props()
 </script>
@@ -57,18 +67,24 @@
 			<Bandage /> Bandage
 		{/if}
 	</button>
+
+	{#if app_state !== 'bandaging'}
+		<button onclick={share} class="share">
+			<Link2 />
+			Share
+		</button>
+	{/if}
 </menu>
 
 <style>
 	menu {
 		display: flex;
-		justify-content: center;
+		justify-content: space-between;
 		flex-wrap: wrap;
-		gap: 1rem;
 	}
 
 	button {
-		padding: 0.3rem 0.8rem;
+		padding: 0.3rem 0.75rem;
 		background-color: var(--btn-color);
 		border-radius: 0.25rem;
 		display: flex;
@@ -85,12 +101,12 @@
 		}
 	}
 
-	@media (max-width: 540px) {
+	@media (max-width: 720px) {
 		menu {
+			justify-content: center;
 			gap: 0.5rem;
-			display: grid;
-			grid-template-columns: repeat(2, 1fr);
 		}
+
 		button {
 			font-size: 0.875rem;
 			padding: 0.3rem 0.6rem;

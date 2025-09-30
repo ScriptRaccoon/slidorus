@@ -24,7 +24,8 @@
 		An additional option lets you "bandage" pieces together. This makes the puzzle
 		significantly more complex, especially when many pieces are bandaged. Furthermore,
 		it is possible to make pieces fixed, so that they will not move anymore. This adds
-		yet another level of complexity.
+		yet another level of complexity. The configuration can be shared by using the
+		"Share" button.
 	</p>
 
 	<p>

@@ -6,14 +6,17 @@
 	import {
 		create_piece_array,
 		get_initial_pieces,
+		encode_pieces,
 		reset_pieces,
 		scramble_pieces,
 		unbandage_pieces,
 		type Piece,
+		decode_config,
 	} from './lib/pieces'
 	import Torus from './lib/Torus.svelte'
-	import Toast from './lib/Toast.svelte'
+	import Toast, { send_toast } from './lib/Toast.svelte'
 	import type { APP_STATE } from './lib/types'
+	import { onMount } from 'svelte'
 
 	const initial_pieces = get_initial_pieces()
 
@@ -60,6 +63,40 @@
 	function reset_bandaging() {
 		if (app_state === 'bandaging') unbandage_pieces(pieces)
 	}
+
+	async function share() {
+		const config = encode_pieces(pieces)
+
+		const url = new URL(window.location.origin)
+		if (config.length) url.searchParams.set('config', config)
+
+		await navigator.clipboard.writeText(url.href)
+
+		send_toast({
+			variant: 'info',
+			title: 'URL copied to clipboard',
+		})
+	}
+
+	function load_config_from_URL() {
+		const url = new URL(window.location.href)
+		const config = url.searchParams.get('config')
+		if (!config) return
+
+		try {
+			const decoded_pieces = decode_config(config)
+			pieces = decoded_pieces
+			update_pieces_array()
+		} catch (err) {
+			console.error(err)
+			send_toast({
+				variant: 'error',
+				title: 'Invalid config in URL',
+			})
+		}
+	}
+
+	onMount(load_config_from_URL)
 </script>
 
 <Header />
@@ -77,6 +114,7 @@
 		{show_torus}
 		{toggle_bandaging}
 		{reset_bandaging}
+		{share}
 		{app_state}
 	/>
 

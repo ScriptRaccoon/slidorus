@@ -286,3 +286,105 @@ export async function scramble_pieces(pieces: Piece[], wait = 0, moves = 100) {
 		}
 	}
 }
+
+export function encode_pieces(pieces: Piece[]): string {
+	return pieces
+		.filter(
+			(piece) =>
+				piece.fixed ||
+				piece.bandaged_up ||
+				piece.bandaged_right ||
+				piece.bandaged_down ||
+				piece.bandaged_left,
+		)
+		.map((piece) => {
+			const index = piece.original_y * 9 + piece.original_x
+			const flags =
+				(Number(piece.fixed) << 4) |
+				(Number(piece.bandaged_up) << 3) |
+				(Number(piece.bandaged_right) << 2) |
+				(Number(piece.bandaged_down) << 1) |
+				Number(piece.bandaged_left)
+
+			const coord_str = index.toString(36).padStart(2, '0')
+			const flags_str = flags.toString(36)
+			return coord_str + flags_str
+		})
+		.join('')
+}
+
+export function decode_config(config: string): Piece[] {
+	const result: Piece[] = []
+	const seen = new Set<number>()
+
+	for (let i = 0; i < config.length; i += 3) {
+		const coord_str = config.slice(i, i + 2)
+		const flags_str = config[i + 2]
+
+		const index = parseInt(coord_str, 36)
+		const is_valid_index = index >= 0 && index < 81
+		if (!is_valid_index) {
+			throw new Error(`Invalid piece index: ${coord_str}`)
+		}
+
+		const flags = parseInt(flags_str, 36)
+		const is_valid_flags = flags >= 0 && flags < 32
+		if (!is_valid_flags) {
+			throw new Error(`Invalid flags: ${flags_str}`)
+		}
+
+		const id = crypto.randomUUID()
+		const x = index % 9
+		const y = Math.floor(index / 9)
+		const type = Math.floor(x / 3) + Math.floor(y / 3) * 3
+
+		const piece: Piece = {
+			id,
+			x,
+			y,
+			original_x: x,
+			original_y: y,
+			dx: 0,
+			dy: 0,
+			type,
+			fixed: Boolean(flags & 0b10000),
+			bandaged_up: Boolean(flags & 0b01000),
+			bandaged_right: Boolean(flags & 0b00100),
+			bandaged_down: Boolean(flags & 0b00010),
+			bandaged_left: Boolean(flags & 0b00001),
+		}
+
+		result.push(piece)
+		seen.add(index)
+	}
+
+	for (let y = 0; y < 9; y++) {
+		for (let x = 0; x < 9; x++) {
+			const index = y * 9 + x
+			if (seen.has(index)) continue
+
+			const id = crypto.randomUUID()
+			const type = Math.floor(x / 3) + Math.floor(y / 3) * 3
+
+			const piece: Piece = {
+				id,
+				x,
+				y,
+				original_x: x,
+				original_y: y,
+				dx: 0,
+				dy: 0,
+				type,
+				fixed: false,
+				bandaged_up: false,
+				bandaged_right: false,
+				bandaged_down: false,
+				bandaged_left: false,
+			}
+
+			result.push(piece)
+		}
+	}
+
+	return result
+}
