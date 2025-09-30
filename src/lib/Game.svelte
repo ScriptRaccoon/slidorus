@@ -113,11 +113,6 @@
 			title: 'Puzzle solved!',
 			variant: 'success',
 		})
-
-		app_state = 'solved'
-		setTimeout(() => {
-			app_state = 'idle'
-		}, 500)
 	}
 
 	function detect_movement(dx: number, dy: number) {
@@ -268,8 +263,6 @@
 		clip-path: inset(var(--border));
 		overflow: hidden;
 
-		transition: scale 200ms ease-in-out;
-
 		@media (min-width: 600px) {
 			--border: 0.1rem;
 		}
@@ -282,10 +275,6 @@
 
 		&.scrambling .piece {
 			transition: none;
-		}
-
-		&.solved {
-			scale: 1.03;
 		}
 	}
 
