@@ -25,6 +25,8 @@
 
 	let app_state = $state<APP_STATE>('idle')
 	let show_torus = $state(false)
+	let torus_rotating = $state(true)
+
 	let move_count = $state(0)
 
 	function reset() {
@@ -128,7 +130,7 @@
 	{/if}
 
 	{#if show_torus}
-		<Torus {pieces_array} />
+		<Torus {pieces_array} bind:torus_rotating />
 	{/if}
 
 	<Infos />

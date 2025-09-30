@@ -1,15 +1,29 @@
 <script lang="ts">
+	import { Pause, Play } from '@lucide/svelte'
 	import { type Piece } from './pieces'
 
 	type Props = {
 		pieces_array: Piece[][]
+		torus_rotating: boolean
 	}
 
-	let { pieces_array }: Props = $props()
+	let { pieces_array, torus_rotating = $bindable() }: Props = $props()
+
+	function toggle_rotation() {
+		torus_rotating = !torus_rotating
+	}
 </script>
 
 <div class="scene">
-	<div class="torus">
+	<button onclick={toggle_rotation} aria-label={torus_rotating ? 'Pause' : 'Play'}>
+		{#if torus_rotating}
+			<Pause />
+		{:else}
+			<Play />
+		{/if}
+	</button>
+
+	<div class="torus" class:paused={!torus_rotating}>
 		{#each { length: 9 } as _, i}
 			<div class="slice" style:--num={i}>
 				{#each { length: 9 } as _, j}
@@ -45,6 +59,26 @@
 		}
 	}
 
+	button {
+		position: absolute;
+		top: 0.25rem;
+		right: 0.25rem;
+		color: var(--secondary-font-color);
+		padding: 0.5rem;
+		border-radius: 50%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		scale: 0.9;
+		transition: scale 120ms;
+
+		&:hover,
+		&:focus-visible {
+			scale: 1;
+			outline: 1px solid var(--outline-color);
+		}
+	}
+
 	.torus {
 		--unit: min(10vw, 4rem);
 		--tilt: -60deg;
@@ -52,6 +86,10 @@
 		--outer-radius: calc(2.65 * var(--unit));
 		transform: rotateX(var(--tilt)) rotateY(0deg);
 		animation: rotatearound 180s linear infinite;
+
+		&.paused {
+			animation-play-state: paused;
+		}
 	}
 
 	@keyframes rotatearound {
