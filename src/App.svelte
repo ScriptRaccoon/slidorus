@@ -12,7 +12,7 @@
 		type Piece,
 	} from './lib/pieces'
 	import Torus from './lib/Torus.svelte'
-	import Toast, { send_toast } from './lib/Toast.svelte'
+	import Toast from './lib/Toast.svelte'
 	import type { APP_STATE } from './lib/types'
 
 	const initial_pieces = get_initial_pieces()

@@ -135,10 +135,8 @@
 				const moving_row = Math.floor(
 					(clicked_pos.y - square_rect.top) * (9 / square_size),
 				)
-				const is_valid_row = moving_row >= 0 && moving_row < 9
-				if (!is_valid_row) return
-
-				moving_rows = get_connected_rows(pieces, moving_row)
+				const valid_row = clamp(moving_row, 0, 8)
+				moving_rows = get_connected_rows(pieces, valid_row)
 
 				const is_blocked_row = pieces.some(
 					(piece) => moving_rows.includes(piece.y) && piece.fixed,
@@ -160,10 +158,8 @@
 				const moving_col = Math.floor(
 					(clicked_pos.x - square_rect.left) * (9 / square_size),
 				)
-				const is_valid_col = moving_col >= 0 && moving_col < 9
-				if (!is_valid_col) return
-
-				moving_cols = get_connected_cols(pieces, moving_col)
+				const valid_col = clamp(moving_col, 0, 8)
+				moving_cols = get_connected_cols(pieces, valid_col)
 
 				const is_blocked_col = pieces.some(
 					(piece) => moving_cols.includes(piece.x) && piece.fixed,
