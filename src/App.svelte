@@ -102,7 +102,7 @@
 <Header />
 
 <div class="grid" class:show_torus>
-	<div>
+	<div class="game_container">
 		<div class="move_count">{move_count} moves</div>
 		<Game bind:pieces {update_pieces_array} bind:app_state bind:move_count />
 	</div>
@@ -165,7 +165,13 @@
 		}
 	}
 
+	.game_container {
+		position: relative;
+	}
+
 	.move_count {
+		position: absolute;
+		bottom: 100%;
 		color: var(--secondary-font-color);
 		font-size: 0.875rem;
 	}

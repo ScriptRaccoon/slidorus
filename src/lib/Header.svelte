@@ -4,10 +4,10 @@
 
 <style>
 	header {
-		padding-top: 1rem;
+		padding-block: 1rem;
 
 		@media (min-width: 600px) {
-			padding-top: 1.5rem;
+			padding-block: 1.5rem;
 		}
 	}
 
