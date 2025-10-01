@@ -12,7 +12,8 @@ export function throttle<T extends any[]>(fn: (...args: T) => void, delay: numbe
 export function get_position(e: MouseEvent | TouchEvent): { x: number; y: number } {
 	if (e instanceof MouseEvent) {
 		return { x: e.clientX, y: e.clientY }
-	} else if (e.touches.length > 0) {
+	}
+	if (e.touches.length > 0) {
 		return { x: e.touches[0].clientX, y: e.touches[0].clientY }
 	}
 	throw new Error('No position found')
@@ -22,10 +23,11 @@ export function get_changed_position(e: MouseEvent | TouchEvent): {
 	x: number
 	y: number
 } {
-	if (e instanceof TouchEvent && e.changedTouches.length > 0) {
-		return { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY }
-	} else if (e instanceof MouseEvent) {
+	if (e instanceof MouseEvent) {
 		return { x: e.clientX, y: e.clientY }
+	}
+	if ('changedTouches' in e && e.changedTouches.length > 0) {
+		return { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY }
 	}
 	throw new Error('No position found')
 }
