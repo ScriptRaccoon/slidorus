@@ -278,9 +278,9 @@ export async function scramble_pieces(pieces: Piece[], wait = 0, moves = 100) {
 	let attempts = 0
 	for (let i = 0; i < moves; i++) {
 		attempts++
-		await sleep(wait)
 		try {
 			execute_random_move(pieces)
+			await sleep(wait)
 		} catch (_) {
 			if (attempts < moves * 100) i--
 		}
