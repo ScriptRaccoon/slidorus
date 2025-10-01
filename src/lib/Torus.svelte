@@ -27,11 +27,13 @@
 		{#each { length: 9 } as _, i}
 			<div class="slice" style:--num={i}>
 				{#each { length: 9 } as _, j}
+					{@const piece = pieces_array[i][j]}
 					<div
 						class="tile"
+						class:fixed={piece.fixed}
 						class:flipped={j >= 5}
 						style:--index={j}
-						data-type={pieces_array[i][j].type}
+						data-type={piece.type}
 						data-index={j}
 					></div>
 				{/each}
@@ -110,7 +112,7 @@
 		transform: rotateX(calc(var(--index, 0) * 360deg / 9))
 			translateZ(var(--slice-radius));
 
-		background-color: black;
+		background: black;
 		display: inline-flex;
 		justify-content: center;
 		align-items: center;
@@ -172,6 +174,15 @@
 		&[data-index='5'] {
 			--scaler: 1.22;
 			--cut: 9%;
+		}
+
+		&.fixed::after {
+			content: '';
+			position: absolute;
+			width: calc(0.2 * var(--unit));
+			aspect-ratio: 1;
+			background-color: black;
+			border-radius: 50%;
 		}
 	}
 
