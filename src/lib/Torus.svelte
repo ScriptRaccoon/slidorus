@@ -99,10 +99,10 @@
 			rotate: rotateX(var(--tilt)) rotateY(0deg);
 		}
 		50% {
-			transform: rotateX(calc(-1 * var(--tilt))) rotateY(1turn);
+			transform: rotateX(calc(-1 * var(--tilt))) rotateY(-1turn);
 		}
 		100% {
-			transform: rotateX(var(--tilt)) rotateY(2turn);
+			transform: rotateX(var(--tilt)) rotateY(-2turn);
 		}
 	}
 
