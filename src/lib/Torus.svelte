@@ -31,6 +31,10 @@
 					<div
 						class="tile"
 						class:fixed={piece.fixed}
+						class:bandaged_up={piece.bandaged_up}
+						class:bandaged_down={piece.bandaged_down}
+						class:bandaged_left={piece.bandaged_left}
+						class:bandaged_right={piece.bandaged_right}
 						class:flipped={j >= 5}
 						style:--index={j}
 						data-type={piece.type}
@@ -179,10 +183,47 @@
 		&.fixed::after {
 			content: '';
 			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
 			width: calc(0.2 * var(--unit));
 			aspect-ratio: 1;
 			background-color: black;
 			border-radius: 50%;
+		}
+
+		&.bandaged_down {
+			align-items: end;
+		}
+
+		&.bandaged_up {
+			align-items: start;
+		}
+
+		&.bandaged_down::before,
+		&.bandaged_up::before {
+			height: 95%;
+		}
+
+		&.bandaged_up.bandaged_down::before {
+			height: 100%;
+		}
+
+		&.bandaged_left {
+			justify-content: start;
+		}
+
+		&.bandaged_right {
+			justify-content: end;
+		}
+
+		&.bandaged_left::before,
+		&.bandaged_right::before {
+			width: 95%;
+		}
+
+		&.bandaged_left.bandaged_right::before {
+			width: 100%;
 		}
 	}
 
