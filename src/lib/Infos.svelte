@@ -33,23 +33,3 @@
 		Contributions and feedback are welcome!
 	</p>
 </details>
-
-<style>
-	summary {
-		width: max-content;
-		cursor: pointer;
-		list-style: none;
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-
-		&:focus-visible {
-			outline: 1px solid var(--outline-color);
-			outline-offset: 2px;
-		}
-	}
-
-	details[open] summary {
-		color: var(--highlight-color);
-	}
-</style>

@@ -18,6 +18,7 @@
 	import type { APP_STATE } from './lib/types'
 	import { onMount } from 'svelte'
 	import Instructions from './lib/Instructions.svelte'
+	import Challenges from './lib/Challenges.svelte'
 
 	const initial_pieces = get_initial_pieces()
 
@@ -132,6 +133,8 @@
 	{/if}
 
 	{#if app_state !== 'editing'}
+		<Challenges />
+
 		<Infos />
 	{/if}
 </div>
