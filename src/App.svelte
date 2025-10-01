@@ -59,8 +59,19 @@
 		if (app_state === 'editing') {
 			app_state = 'idle'
 		} else if (app_state === 'idle') {
-			reset()
-			app_state = 'editing'
+			const has_shown_warning =
+				localStorage.getItem('warning_shown') === true.toString()
+			if (!has_shown_warning) {
+				send_toast({
+					variant: 'info',
+					title: 'Editing will reset the puzzle. If you are sure, click again.',
+					duration: 5000,
+				})
+				localStorage.setItem('warning_shown', true.toString())
+			} else {
+				reset()
+				app_state = 'editing'
+			}
 		}
 	}
 
