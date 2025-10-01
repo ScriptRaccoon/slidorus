@@ -13,7 +13,7 @@ export function get_position(e: MouseEvent | TouchEvent): { x: number; y: number
 	if (e instanceof MouseEvent) {
 		return { x: e.clientX, y: e.clientY }
 	}
-	if (e.touches.length > 0) {
+	if ('touches' in e && e.touches.length > 0) {
 		return { x: e.touches[0].clientX, y: e.touches[0].clientY }
 	}
 	throw new Error('No position found')
