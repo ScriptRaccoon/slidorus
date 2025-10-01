@@ -25,9 +25,9 @@
 
 	<div class="torus" class:paused={!torus_rotating}>
 		{#each { length: 9 } as _, i}
-			<div class="slice" style:--num={i}>
+			<div class="slice" style:--num={(i + 7) % 9}>
 				{#each { length: 9 } as _, j}
-					{@const piece = pieces_array[i][j]}
+					{@const piece = pieces_array[8 - ((j + 4) % 9)][i]}
 					<div
 						class="tile"
 						class:fixed={piece.fixed}
