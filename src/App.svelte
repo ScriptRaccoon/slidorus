@@ -106,7 +106,9 @@
 
 <div class="grid" class:show_torus>
 	<div class="game_container">
-		<div class="move_count">{move_count} moves</div>
+		{#if app_state !== 'editing'}
+			<div class="move_count">{move_count} moves</div>
+		{/if}
 		<Game bind:pieces {update_pieces_array} bind:app_state bind:move_count />
 	</div>
 
@@ -129,7 +131,9 @@
 		<Torus {pieces_array} bind:torus_rotating />
 	{/if}
 
-	<Infos />
+	{#if app_state !== 'editing'}
+		<Infos />
+	{/if}
 </div>
 
 <Toast position="bottom-center" />
