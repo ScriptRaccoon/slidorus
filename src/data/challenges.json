@@ -24,6 +24,10 @@
 		"config": "0ug0kg1eg1og00g0ag1yg28g"
 	},
 	{
+		"name": "Gap",
+		"config": "18l16l17l12l11l13h15k10l"
+	},
+	{
 		"name": "Circle",
 		"config": "0k91o60060av1yv28901702303i05i06607708309e0bb0ca0d20ea0fe0gv0hb0ic0jd0l80m80n80oc0pd0q90rk0s50t10x40y50zh11412116417119k1a51b11f41g51hh1i61j71k31l21n21p71q31re1sv1tb1ua1wa1xe1zb20c21d22923o25o26c27d1m21v8"
 	},
@@ -40,8 +44,16 @@
 		"config": "0040110c40d10740811941a11441510x40y11j41k11u41v11x41y1"
 	},
 	{
+		"name": "Entrance",
+		"config": "1co13a0a20ui19o10a12a0wi15a1eo1p21bo1j218a16a1fo1ho0xi0zi1y80ti0ri0d20m80j81v81m20p80g21s8"
+	},
+	{
 		"name": "Pills",
 		"config": "0t80v81i80s80y80q20x80u80i21q80w80j20k20l20m20n20o20p20r80z81921a21b21c21d21e21f21g21h21j81k81l81m81n81o81p8"
+	},
+	{
+		"name": "Bubbles",
+		"config": "0x60w31dc1e91rc14e0v615b1i61sd0y71j72491vb1m31171231ad1b91k31t90z30ce0lc0360oc0f60db0m90160ae0jc0430pd0g717d18916c1x626c1y727d1z32891ue23c1l60q90h30k90bb02319c106"
 	},
 	{
 		"name": "E",
