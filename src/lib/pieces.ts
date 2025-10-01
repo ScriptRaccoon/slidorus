@@ -104,7 +104,7 @@ export function check_solved(pieces: Piece[]): boolean {
 	return true
 }
 
-export function unbandage_pieces(pieces: Piece[]) {
+export function revert_pieces_edits(pieces: Piece[]) {
 	for (const piece of pieces) {
 		piece.bandaged_right = false
 		piece.bandaged_down = false

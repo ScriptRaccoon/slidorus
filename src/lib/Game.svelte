@@ -205,13 +205,13 @@
 			style:--dx={piece.dx}
 			style:--dy={piece.dy}
 		>
-			{#if piece.fixed && app_state !== 'bandaging'}
+			{#if piece.fixed && app_state !== 'editing'}
 				<div class="dot"></div>
 			{/if}
 		</div>
 	{/each}
 
-	{#if app_state === 'bandaging'}
+	{#if app_state === 'editing'}
 		{#each pieces as piece (piece.id)}
 			<button
 				class="bandager"
@@ -267,7 +267,7 @@
 			--border: 0.1rem;
 		}
 
-		&.bandaging {
+		&.editing {
 			cursor: default;
 			overflow: visible;
 			clip-path: none;

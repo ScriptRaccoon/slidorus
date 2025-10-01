@@ -9,7 +9,7 @@
 		encode_pieces,
 		reset_pieces,
 		scramble_pieces,
-		unbandage_pieces,
+		revert_pieces_edits,
 		type Piece,
 		decode_config,
 	} from './lib/pieces'
@@ -53,17 +53,17 @@
 		pieces_array = create_piece_array(pieces)
 	}
 
-	function toggle_bandaging() {
-		if (app_state === 'bandaging') {
+	function toggle_editing() {
+		if (app_state === 'editing') {
 			app_state = 'idle'
 		} else if (app_state === 'idle') {
 			reset()
-			app_state = 'bandaging'
+			app_state = 'editing'
 		}
 	}
 
-	function reset_bandaging() {
-		if (app_state === 'bandaging') unbandage_pieces(pieces)
+	function revert_edits() {
+		if (app_state === 'editing') revert_pieces_edits(pieces)
 	}
 
 	async function share() {
@@ -114,18 +114,18 @@
 		{reset}
 		{toggle_torus}
 		{show_torus}
-		{toggle_bandaging}
-		{reset_bandaging}
+		{toggle_editing}
+		{revert_edits}
 		{share}
 		{app_state}
 	/>
 
-	{#if app_state === 'bandaging'}
+	{#if app_state === 'editing'}
 		<div class="instructions">
 			<strong>Instructions.</strong>
-			Click between two pieces to bandage them. You can bandage as many pieces as you
-			like. When one piece moves, all pieces connected to it also move. Click on the
-			middle of a piece to make it fixed. It won't be able to move anymore.
+			1. Click between two pieces to bandage them. You can bandage as many pieces as
+			you like. When one piece moves, all pieces connected to it also move. 2. Click
+			on the middle of a piece to make it fixed: it won't be able to move anymore.
 		</div>
 	{/if}
 
