@@ -65,23 +65,26 @@
 		if (app_state !== 'moving' || !clicked_pos) return
 
 		const current_pos = get_changed_position(e)
+		let has_moved = false
 
 		switch (move_direction) {
 			case 'horizontal':
+				const dx = current_pos.x - clicked_pos.x
+				const dx_int = Math.round(dx * (9 / square_size))
+				const valid_dx = clamp(dx_int, -10, 10)
+				if (valid_dx != 0) has_moved = true
 				for (const piece of moving_pieces) {
-					const dx = current_pos.x - clicked_pos.x
-					const dx_int = Math.round(dx * (9 / square_size))
-					const valid_dx = clamp(dx_int, -10, 10)
 					piece.x += valid_dx
 					piece.dx = 0
 					piece.dy = 0
 				}
 				break
 			case 'vertical':
+				const dy = current_pos.y - clicked_pos.y
+				const dy_int = Math.round(dy * (9 / square_size))
+				const valid_dy = clamp(dy_int, -10, 10)
+				if (valid_dy != 0) has_moved = true
 				for (const piece of moving_pieces) {
-					const dy = current_pos.y - clicked_pos.y
-					const dy_int = Math.round(dy * (9 / square_size))
-					const valid_dy = clamp(dy_int, -10, 10)
 					piece.y += valid_dy
 					piece.dx = 0
 					piece.dy = 0
@@ -91,9 +94,12 @@
 
 		pieces = get_visible_pieces(pieces)
 		reset_movement()
-		update_pieces_array()
-		handle_solved_state()
-		move_count++
+
+		if (has_moved) {
+			move_count++
+			handle_solved_state()
+			update_pieces_array()
+		}
 	}
 
 	function reset_movement() {
