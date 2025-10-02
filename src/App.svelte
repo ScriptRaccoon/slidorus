@@ -111,7 +111,11 @@
 		}
 	}
 
-	onMount(load_config_from_URL)
+	onMount(() => {
+		load_config_from_URL()
+		document.addEventListener('dragover', (e) => e.preventDefault())
+		document.addEventListener('drop', (e) => e.preventDefault())
+	})
 </script>
 
 <Header />
