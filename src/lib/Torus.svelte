@@ -159,7 +159,7 @@
 		&[data-index='1'],
 		&[data-index='8'] {
 			--scaler: 2.81;
-			--cut: 6.5%;
+			--cut: 7.3%;
 		}
 
 		&[data-index='2'],
