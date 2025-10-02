@@ -287,6 +287,25 @@ export async function scramble_pieces(pieces: Piece[], wait = 0, moves = 100) {
 	}
 }
 
+/**
+ * Encodes a list of pieces into a compact base-36 string.
+ *
+ * Format per piece: 3 characters
+ * - **Coordinate (2 chars):** Each piece is located on a 9×9 grid (0–80).
+ *   The coordinate is computed as y*9 + x and encoded in base-36,
+ *   padded to 2 characters.
+ * - **Flags (1 char):** Bandaging state encoded in 5 bits:
+ *   fixed (bit 4), up (bit 3), right (bit 2), down (bit 1), left (bit 0).
+ *   This yields 0–31, stored as a single base-36 character.
+ *
+ * The final string is the concatenation of all encoded pieces.
+ *
+ * Example:
+ *   Piece at (x=6, y=5), bandaged right:
+ *   - Coordinate = 5*9 + 6 = 51 → "1f" (base-36, padded to 2 chars).
+ *   - Flags = 00100₂ = 4 → "4" (base-36).
+ *   - Encoded = "1f4".
+ */
 export function encode_pieces(pieces: Piece[]): string {
 	return pieces
 		.filter(
@@ -298,7 +317,7 @@ export function encode_pieces(pieces: Piece[]): string {
 				piece.bandaged_left,
 		)
 		.map((piece) => {
-			const index = piece.original_y * 9 + piece.original_x
+			const coord = piece.original_y * 9 + piece.original_x
 			const flags =
 				(Number(piece.fixed) << 4) |
 				(Number(piece.bandaged_up) << 3) |
@@ -306,13 +325,16 @@ export function encode_pieces(pieces: Piece[]): string {
 				(Number(piece.bandaged_down) << 1) |
 				Number(piece.bandaged_left)
 
-			const coord_str = index.toString(36).padStart(2, '0')
+			const coord_str = coord.toString(36).padStart(2, '0')
 			const flags_str = flags.toString(36)
 			return coord_str + flags_str
 		})
 		.join('')
 }
 
+/**
+ * Decodes a configuration string produced by {@link encode_pieces}.
+ */
 export function decode_config(config: string): Piece[] {
 	const result: Piece[] = []
 	const seen = new Set<number>()
