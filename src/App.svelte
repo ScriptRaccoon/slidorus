@@ -76,9 +76,9 @@
 		}
 	}
 
-	function update_URL() {
+	function update_URL(config?: string) {
+		config ??= encode_pieces(pieces)
 		const url = new URL(window.location.origin)
-		const config = encode_pieces(pieces)
 		if (config) {
 			url.searchParams.set('config', config)
 		} else {
@@ -100,15 +100,12 @@
 		})
 	}
 
-	function load_config_from_URL() {
-		const url = new URL(window.location.href)
-		const config = url.searchParams.get('config')
-		if (!config) return
-
+	function load_challenge(config: string, options: { update_URL: boolean }) {
 		try {
 			const decoded_pieces = decode_config(config)
 			pieces = decoded_pieces
 			update_pieces_array()
+			if (options.update_URL) update_URL(config)
 		} catch (err) {
 			console.error(err)
 			send_toast({
@@ -116,6 +113,13 @@
 				title: 'Invalid config in URL',
 			})
 		}
+	}
+
+	function load_config_from_URL() {
+		const url = new URL(window.location.href)
+		const config = url.searchParams.get('config')
+		if (!config) return
+		load_challenge(config, { update_URL: false })
 	}
 
 	onMount(() => {
@@ -155,8 +159,9 @@
 	{/if}
 
 	{#if app_state !== 'editing'}
-		<Challenges />
-
+		<Challenges
+			load_challenge={(config) => load_challenge(config, { update_URL: true })}
+		/>
 		<Infos />
 	{/if}
 </div>

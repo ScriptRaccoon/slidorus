@@ -80,15 +80,6 @@
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
-
-		&:focus-visible,
-		&:hover {
-			outline: 1px solid var(--outline-color);
-		}
-
-		&:disabled {
-			cursor: not-allowed;
-		}
 	}
 
 	@media (max-width: 720px) {

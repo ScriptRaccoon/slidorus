@@ -55,6 +55,15 @@ button {
 	background: none;
 	border: none;
 	cursor: pointer;
+
+	&:focus-visible,
+	&:hover {
+		outline: 1px solid var(--outline-color) !important;
+	}
+
+	&:disabled {
+		cursor: not-allowed;
+	}
 }
 
 :is(.piece, .tile) {
