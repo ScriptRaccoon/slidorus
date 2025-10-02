@@ -17,7 +17,7 @@
 		show_torus: boolean
 		toggle_editing: () => void
 		revert_edits: () => void
-		share: () => void
+		share_URL: () => void
 		app_state: APP_STATE
 	}
 
@@ -28,7 +28,7 @@
 		show_torus,
 		toggle_editing,
 		revert_edits,
-		share,
+		share_URL,
 		app_state,
 	}: Props = $props()
 </script>
@@ -53,7 +53,7 @@
 			<SquarePen /> Edit
 		</button>
 
-		<button onclick={share} class="share">
+		<button onclick={share_URL} class="share">
 			<Link2 /> Share
 		</button>
 	{:else}

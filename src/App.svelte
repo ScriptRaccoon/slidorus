@@ -58,6 +58,7 @@
 	function toggle_editing() {
 		if (app_state === 'editing') {
 			app_state = 'idle'
+			update_URL()
 		} else if (app_state === 'idle') {
 			const has_shown_warning =
 				localStorage.getItem('warning_shown') === true.toString()
@@ -75,17 +76,23 @@
 		}
 	}
 
+	function update_URL() {
+		const url = new URL(window.location.origin)
+		const config = encode_pieces(pieces)
+		if (config) {
+			url.searchParams.set('config', config)
+		} else {
+			url.searchParams.delete('config')
+		}
+		window.history.replaceState({}, '', url)
+	}
+
 	function revert_edits() {
 		if (app_state === 'editing') revert_pieces_edits(pieces)
 	}
 
-	async function share() {
-		const config = encode_pieces(pieces)
-
-		const url = new URL(window.location.origin)
-		if (config.length) url.searchParams.set('config', config)
-
-		await navigator.clipboard.writeText(url.href)
+	async function share_URL() {
+		await navigator.clipboard.writeText(window.location.href)
 
 		send_toast({
 			variant: 'info',
@@ -135,7 +142,7 @@
 		{show_torus}
 		{toggle_editing}
 		{revert_edits}
-		{share}
+		{share_URL}
 		{app_state}
 	/>
 
