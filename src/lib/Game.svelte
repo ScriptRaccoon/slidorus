@@ -75,8 +75,6 @@
 				if (valid_dx != 0) has_moved = true
 				for (const piece of moving_pieces) {
 					piece.x += valid_dx
-					piece.dx = 0
-					piece.dy = 0
 				}
 				break
 			case 'vertical':
@@ -86,13 +84,10 @@
 				if (valid_dy != 0) has_moved = true
 				for (const piece of moving_pieces) {
 					piece.y += valid_dy
-					piece.dx = 0
-					piece.dy = 0
 				}
 				break
 		}
 
-		pieces = get_visible_pieces(pieces)
 		reset_movement()
 
 		if (has_moved) {
@@ -103,6 +98,11 @@
 	}
 
 	function reset_movement() {
+		pieces = get_visible_pieces(pieces)
+		pieces.forEach((piece) => {
+			piece.dx = 0
+			piece.dy = 0
+		})
 		clicked_pos = null
 		move_direction = null
 		moving_pieces = []
@@ -180,7 +180,15 @@
 				break
 		}
 	}
+
+	function handle_keydown(e: KeyboardEvent) {
+		if (e.key === 'Escape' && app_state === 'moving') {
+			reset_movement()
+		}
+	}
 </script>
+
+<svelte:window onkeydown={handle_keydown} />
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
