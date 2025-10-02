@@ -19,6 +19,7 @@
 		update_pieces_array: () => void
 		app_state: APP_STATE
 		move_count: number
+		row_connections: number[][]
 	}
 
 	let {
@@ -26,6 +27,7 @@
 		update_pieces_array,
 		app_state = $bindable(),
 		move_count = $bindable(),
+		row_connections = $bindable(),
 	}: Props = $props()
 
 	let square_element = $state<HTMLDivElement | null>(null)
@@ -35,6 +37,8 @@
 	let moving_pieces: Piece[] = []
 	let moving_rows: number[] = []
 	let moving_cols: number[] = []
+
+	let active_row = $state<number | null>(null)
 
 	function handle_mouse_down(e: MouseEvent | TouchEvent) {
 		if (app_state !== 'idle') return
@@ -186,6 +190,39 @@
 			reset_movement()
 		}
 	}
+
+	function connect_row(row: number) {
+		if (active_row === null) {
+			active_row = row
+			return
+		}
+
+		if (active_row === row) {
+			active_row = null
+			return
+		}
+
+		const connection_old_1 = row_connections.find((c) => c.includes(active_row!))
+		const connection_old_2 = row_connections.find((c) => c.includes(row))
+
+		if (!connection_old_1 && !connection_old_2) {
+			const connection_new = [active_row, row]
+			row_connections.push(connection_new)
+		} else if (connection_old_1 && !connection_old_2) {
+			connection_old_1.push(row)
+		} else if (connection_old_2 && !connection_old_1) {
+			connection_old_2.push(active_row)
+		} else if (connection_old_1 && connection_old_2) {
+			row_connections = row_connections.filter((c) => c != connection_old_2)
+			connection_old_1.push(...connection_old_2)
+		}
+
+		active_row = null
+	}
+
+	function remove_connection(row: number) {
+		row_connections = row_connections.filter((c) => !c.includes(row))
+	}
 </script>
 
 <svelte:window onkeydown={handle_keydown} />
@@ -262,6 +299,19 @@
 			>
 			</button>
 		{/each}
+
+		{#each { length: 9 } as _, row}
+			<button
+				class="connector"
+				class:active={row === active_row}
+				aria-label="Connect Row {row}"
+				style:--y={row}
+				onclick={() => connect_row(row)}
+				ondblclick={() => remove_connection(row)}
+				data-index={row_connections.findIndex((c) => c.includes(row))}
+			>
+			</button>
+		{/each}
 	{/if}
 </div>
 
@@ -276,6 +326,8 @@
 		touch-action: none;
 		clip-path: inset(var(--border));
 		overflow: hidden;
+
+		--dim: calc(var(--size) / 9);
 
 		@media (min-width: 600px) {
 			--border: 0.1rem;
@@ -294,7 +346,6 @@
 
 	.piece {
 		position: absolute;
-		--dim: calc(var(--size) / 9);
 		width: var(--dim);
 		height: var(--dim);
 		background-color: var(--color, gray);
@@ -343,7 +394,6 @@
 
 	.bandager,
 	.fixer {
-		--dim: calc(var(--size) / 9);
 		position: absolute;
 		background-color: var(--bg-color);
 		transform: translate(-50%, -50%);
@@ -392,5 +442,20 @@
 		height: 3.75%;
 		left: calc(var(--x) * var(--dim) + var(--dim) / 2);
 		top: calc(var(--y) * var(--dim) + var(--dim));
+	}
+
+	.connector {
+		position: absolute;
+		top: calc(var(--y) * var(--dim) + var(--dim) / 2);
+		transform: translate(0, -50%);
+		left: calc(100% + 0.5rem);
+		width: 1rem;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		background-color: var(--color, var(--btn-color));
+
+		&.active {
+			outline: 1px solid var(--outline-color);
+		}
 	}
 </style>

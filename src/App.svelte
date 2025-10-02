@@ -25,6 +25,8 @@
 	let pieces = $state<Piece[]>(initial_pieces)
 	let pieces_array = $state<Piece[][]>(create_piece_array(initial_pieces))
 
+	let row_connections = $state<number[][]>([])
+
 	let app_state = $state<APP_STATE>('idle')
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
@@ -88,7 +90,10 @@
 	}
 
 	function revert_edits() {
-		if (app_state === 'editing') revert_pieces_edits(pieces)
+		if (app_state === 'editing') {
+			revert_pieces_edits(pieces)
+			clear_row_connections()
+		}
 	}
 
 	async function share_URL() {
@@ -122,6 +127,10 @@
 		load_challenge(config, { update_URL: false })
 	}
 
+	function clear_row_connections() {
+		row_connections = []
+	}
+
 	onMount(() => {
 		load_config_from_URL()
 		document.addEventListener('dragover', (e) => e.preventDefault())
@@ -136,7 +145,13 @@
 		{#if app_state !== 'editing'}
 			<div class="move_count">{move_count} moves</div>
 		{/if}
-		<Game bind:pieces {update_pieces_array} bind:app_state bind:move_count />
+		<Game
+			bind:pieces
+			{update_pieces_array}
+			bind:app_state
+			bind:move_count
+			bind:row_connections
+		/>
 	</div>
 
 	<Menu

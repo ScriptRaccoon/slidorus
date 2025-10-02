@@ -10,6 +10,12 @@
 			can no longer move.
 		</li>
 		<li>
+			The circles next to each row show which rows are <strong>connected</strong>,
+			sharing the same color. Connected rows always move together. Click two circles
+			to create a connection. A connection can include any number of rows.
+			Double-click a circle to remove a connection.
+		</li>
+		<li>
 			When finished, click the "Share" button to generate a link to your current
 			configuration.
 		</li>

@@ -96,6 +96,24 @@ button {
 	}
 }
 
+.connector {
+	&[data-index='0'] {
+		--color: var(--color-0);
+	}
+
+	&[data-index='1'] {
+		--color: var(--color-2);
+	}
+
+	&[data-index='2'] {
+		--color: var(--color-8);
+	}
+
+	&[data-index='3'] {
+		--color: var(--color-6);
+	}
+}
+
 .lucide {
 	width: 1.125rem;
 	height: 1.125rem;
