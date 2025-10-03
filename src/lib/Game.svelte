@@ -521,11 +521,43 @@
 		&[data-type='row'] {
 			top: calc(var(--y) * var(--dim) + var(--dim) / 2);
 			left: calc(100% + 0.75rem);
+
+			&[data-index='0'] {
+				--color: var(--color-0);
+			}
+
+			&[data-index='1'] {
+				--color: var(--color-2);
+			}
+
+			&[data-index='2'] {
+				--color: var(--color-4);
+			}
+
+			&[data-index='3'] {
+				--color: var(--color-6);
+			}
 		}
 
 		&[data-type='col'] {
 			top: calc(100% + 0.75rem);
 			left: calc(var(--x) * var(--dim) + var(--dim) / 2);
+
+			&[data-index='0'] {
+				--color: var(--color-1);
+			}
+
+			&[data-index='1'] {
+				--color: var(--color-3);
+			}
+
+			&[data-index='2'] {
+				--color: var(--color-5);
+			}
+
+			&[data-index='3'] {
+				--color: var(--color-7);
+			}
 		}
 	}
 </style>
