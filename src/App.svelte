@@ -19,6 +19,7 @@
 	import { onMount } from 'svelte'
 	import Instructions from './lib/Instructions.svelte'
 	import Challenges from './lib/Challenges.svelte'
+	import { decode_sets, encode_sets } from './utils'
 
 	const initial_pieces = get_initial_pieces()
 
@@ -61,7 +62,7 @@
 	function toggle_editing() {
 		if (app_state === 'editing') {
 			app_state = 'idle'
-			update_URL()
+			update_URL(null, null, null)
 		} else if (app_state === 'idle') {
 			const has_shown_warning =
 				localStorage.getItem('warning_shown') === true.toString()
@@ -79,14 +80,28 @@
 		}
 	}
 
-	function update_URL(config?: string) {
+	function update_URL(config: string | null, rows: string | null, cols: string | null) {
 		config ??= encode_pieces(pieces)
+		rows ??= encode_sets(row_connections)
+		cols ??= encode_sets(col_connections)
 		const url = new URL(window.location.origin)
+
 		if (config) {
 			url.searchParams.set('config', config)
 		} else {
 			url.searchParams.delete('config')
 		}
+		if (rows) {
+			url.searchParams.set('rows', rows)
+		} else {
+			url.searchParams.delete('rows')
+		}
+		if (cols) {
+			url.searchParams.set('cols', cols)
+		} else {
+			url.searchParams.delete('cols')
+		}
+
 		window.history.replaceState({}, '', url)
 	}
 
@@ -106,26 +121,59 @@
 		})
 	}
 
-	function load_challenge(config: string, options: { update_URL: boolean }) {
-		try {
-			const decoded_pieces = decode_config(config)
-			pieces = decoded_pieces
-			update_pieces_array()
-			if (options.update_URL) update_URL(config)
-		} catch (err) {
-			console.error(err)
-			send_toast({
-				variant: 'error',
-				title: 'Invalid config in URL',
-			})
+	function load_challenge(
+		config: string | null,
+		rows: string | null,
+		cols: string | null,
+		options: { update_URL: boolean },
+	) {
+		if (config) {
+			try {
+				pieces = decode_config(config)
+				update_pieces_array()
+			} catch (err) {
+				console.error(err)
+				send_toast({
+					variant: 'error',
+					title: 'Invalid config in URL',
+				})
+				return
+			}
 		}
+
+		if (rows) {
+			try {
+				row_connections = decode_sets(rows)
+			} catch (err) {
+				console.error(err)
+				send_toast({
+					variant: 'error',
+					title: 'Invalid rows in URL',
+				})
+			}
+		}
+
+		if (cols) {
+			try {
+				col_connections = decode_sets(cols)
+			} catch (err) {
+				console.error(err)
+				send_toast({
+					variant: 'error',
+					title: 'Invalid cols in URL',
+				})
+			}
+		}
+
+		if (options.update_URL) update_URL(config, rows, cols)
 	}
 
 	function load_config_from_URL() {
 		const url = new URL(window.location.href)
 		const config = url.searchParams.get('config')
-		if (!config) return
-		load_challenge(config, { update_URL: false })
+		const rows = url.searchParams.get('rows')
+		const cols = url.searchParams.get('cols')
+		load_challenge(config, rows, cols, { update_URL: false })
 	}
 
 	function clear_connections() {
@@ -178,7 +226,8 @@
 
 	{#if app_state !== 'editing'}
 		<Challenges
-			load_challenge={(config) => load_challenge(config, { update_URL: true })}
+			load_challenge={(config, rows, cols) =>
+				load_challenge(config, rows, cols, { update_URL: true })}
 		/>
 		<Infos />
 	{/if}

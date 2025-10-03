@@ -3,7 +3,7 @@
 	import challenges from '../data/challenges.json'
 
 	type Props = {
-		load_challenge: (config: string) => void
+		load_challenge: (config: string, rows: string, cols: string) => void
 	}
 
 	let { load_challenge }: Props = $props()
@@ -17,7 +17,10 @@
 	<ol>
 		{#each challenges as challenge}
 			<li>
-				<button onclick={() => load_challenge(challenge.config)}>
+				<button
+					onclick={() =>
+						load_challenge(challenge.config, challenge.rows, challenge.cols)}
+				>
 					{challenge.name}
 				</button>
 			</li>
