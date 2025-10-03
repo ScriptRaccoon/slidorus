@@ -15,6 +15,7 @@
 			to create a connection. A connection can include any number of rows.
 			Double-click a circle to remove a connection.
 		</li>
+		<li>The same remarks appliy to connected columns.</li>
 		<li>
 			When finished, click the "Share" button to generate a link to your current
 			configuration.
