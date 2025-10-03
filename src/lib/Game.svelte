@@ -227,40 +227,41 @@
 
 <svelte:window onkeydown={handle_keydown} />
 
-<!-- svelte-ignore a11y_no_static_element_interactions -->
-<div
-	class="square {app_state}"
-	bind:this={square_element}
-	bind:clientWidth={square_size}
-	style:--size="{square_size}px"
-	onmousedown={handle_mouse_down}
-	onmousemove={throttle(handle_mouse_move, 1000 / 60)}
-	onmouseup={handle_mouse_up}
-	onmouseleave={handle_mouse_up}
-	ontouchstart={handle_mouse_down}
-	ontouchmove={throttle(handle_mouse_move, 1000 / 60)}
-	ontouchend={handle_mouse_up}
->
-	{#each pieces as piece (piece.id)}
-		<div
-			class="piece"
-			data-type={piece.type}
-			data-original-x={piece.original_x}
-			data-original-y={piece.original_y}
-			class:bandaged_right={piece.bandaged_right}
-			class:bandaged_down={piece.bandaged_down}
-			class:bandaged_left={piece.bandaged_left}
-			class:bandaged_up={piece.bandaged_up}
-			style:--x={piece.x}
-			style:--y={piece.y}
-			style:--dx={piece.dx}
-			style:--dy={piece.dy}
-		>
-			{#if piece.fixed && app_state !== 'editing'}
-				<div class="dot"></div>
-			{/if}
-		</div>
-	{/each}
+<div class="game" style:--size="{square_size}px">
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div
+		class="square {app_state}"
+		bind:this={square_element}
+		bind:clientWidth={square_size}
+		onmousedown={handle_mouse_down}
+		onmousemove={throttle(handle_mouse_move, 1000 / 60)}
+		onmouseup={handle_mouse_up}
+		onmouseleave={handle_mouse_up}
+		ontouchstart={handle_mouse_down}
+		ontouchmove={throttle(handle_mouse_move, 1000 / 60)}
+		ontouchend={handle_mouse_up}
+	>
+		{#each pieces as piece (piece.id)}
+			<div
+				class="piece"
+				data-type={piece.type}
+				data-original-x={piece.original_x}
+				data-original-y={piece.original_y}
+				class:bandaged_right={piece.bandaged_right}
+				class:bandaged_down={piece.bandaged_down}
+				class:bandaged_left={piece.bandaged_left}
+				class:bandaged_up={piece.bandaged_up}
+				style:--x={piece.x}
+				style:--y={piece.y}
+				style:--dx={piece.dx}
+				style:--dy={piece.dy}
+			>
+				{#if piece.fixed && app_state !== 'editing'}
+					<div class="dot"></div>
+				{/if}
+			</div>
+		{/each}
+	</div>
 
 	{#if app_state === 'editing'}
 		{#each pieces as piece (piece.id)}
@@ -299,23 +300,29 @@
 			>
 			</button>
 		{/each}
-
-		{#each { length: 9 } as _, row}
-			<button
-				class="connector"
-				class:active={row === active_row}
-				aria-label="Connect Row {row}"
-				style:--y={row}
-				onclick={() => connect_row(row)}
-				ondblclick={() => remove_connection(row)}
-				data-index={row_connections.findIndex((c) => c.includes(row))}
-			>
-			</button>
-		{/each}
 	{/if}
+
+	{#each { length: 9 } as _, row}
+		<button
+			class="connector"
+			disabled={app_state !== 'editing'}
+			class:active={row === active_row}
+			aria-label="Connect Row {row}"
+			style:--y={row}
+			onclick={() => connect_row(row)}
+			ondblclick={() => remove_connection(row)}
+			data-index={row_connections.findIndex((c) => c.includes(row))}
+		>
+		</button>
+	{/each}
 </div>
 
 <style>
+	.game {
+		position: relative;
+		--dim: calc(var(--size) / 9);
+	}
+
 	.square {
 		position: relative;
 		width: 100%;
@@ -327,16 +334,12 @@
 		clip-path: inset(var(--border));
 		overflow: hidden;
 
-		--dim: calc(var(--size) / 9);
-
 		@media (min-width: 600px) {
 			--border: 0.1rem;
 		}
 
 		&.editing {
 			cursor: default;
-			overflow: visible;
-			clip-path: none;
 		}
 
 		&.scrambling .piece {
@@ -447,15 +450,20 @@
 	.connector {
 		position: absolute;
 		top: calc(var(--y) * var(--dim) + var(--dim) / 2);
-		transform: translate(0, -50%);
 		left: calc(100% + 0.5rem);
-		width: 1rem;
+		transform: translate(0, -50%);
+		width: calc(0.25 * var(--dim));
 		aspect-ratio: 1;
 		border-radius: 50%;
 		background-color: var(--color, var(--btn-color));
+		transition: opacity 200ms;
 
-		&.active {
+		&.active:not(:disabled) {
 			outline: 1px solid var(--outline-color);
+		}
+
+		&:disabled[data-index='-1'] {
+			opacity: 0;
 		}
 	}
 </style>

@@ -62,7 +62,8 @@ button {
 	}
 
 	&:disabled {
-		cursor: not-allowed;
+		cursor: initial;
+		outline: none !important;
 	}
 }
 
