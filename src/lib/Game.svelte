@@ -375,6 +375,11 @@
 	.game {
 		position: relative;
 		--dim: calc(var(--size) / 9);
+
+		@media (max-width: 720px) {
+			padding-right: calc(0.25 * var(--dim));
+			margin-left: calc(-0.1 * var(--dim));
+		}
 	}
 
 	.square {
@@ -520,7 +525,7 @@
 
 		&[data-type='row'] {
 			top: calc(var(--y) * var(--dim) + var(--dim) / 2);
-			left: calc(100% + 0.75rem);
+			left: calc(var(--size) + 0.25 * var(--dim));
 
 			&[data-index='0'] {
 				--color: var(--color-0);
@@ -540,7 +545,7 @@
 		}
 
 		&[data-type='col'] {
-			top: calc(100% + 0.75rem);
+			top: calc(var(--size) + 0.25 * var(--dim));
 			left: calc(var(--x) * var(--dim) + var(--dim) / 2);
 
 			&[data-index='0'] {
