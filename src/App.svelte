@@ -247,7 +247,7 @@
 			grid-column: 1;
 		}
 
-		@media (min-width: 600px) {
+		@media (min-width: 720px) {
 			row-gap: 1.5rem;
 		}
 

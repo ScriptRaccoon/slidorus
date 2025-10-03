@@ -393,7 +393,7 @@
 		clip-path: inset(var(--border));
 		overflow: hidden;
 
-		@media (min-width: 600px) {
+		@media (min-width: 720px) {
 			--border: 0.1rem;
 		}
 

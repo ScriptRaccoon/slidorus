@@ -5,10 +5,6 @@
 <style>
 	header {
 		padding-block: 1rem;
-
-		@media (min-width: 600px) {
-			padding-block: 1.5rem;
-		}
 	}
 
 	h1 {
@@ -20,8 +16,13 @@
 		color: var(--highlight-color);
 		text-align: center;
 		letter-spacing: 2px;
+	}
 
-		@media (min-width: 600px) {
+	@media (min-width: 720px) {
+		header {
+			padding-block: 1.5rem;
+		}
+		h1 {
 			font-size: 2.75rem;
 		}
 	}
