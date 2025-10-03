@@ -8,7 +8,7 @@
 		Shuffle,
 		SquarePen,
 	} from '@lucide/svelte'
-	import type { APP_STATE } from './types'
+	import { app } from './state.svelte'
 
 	type Props = {
 		scramble: () => void
@@ -18,7 +18,6 @@
 		toggle_editing: () => void
 		revert_edits: () => void
 		share_URL: () => void
-		app_state: APP_STATE
 	}
 
 	let {
@@ -29,16 +28,15 @@
 		toggle_editing,
 		revert_edits,
 		share_URL,
-		app_state,
 	}: Props = $props()
 </script>
 
 <menu>
-	{#if app_state !== 'editing'}
-		<button onclick={scramble} disabled={app_state !== 'idle'}>
+	{#if app.state !== 'editing'}
+		<button onclick={scramble} disabled={app.state !== 'idle'}>
 			<Shuffle /> Scramble
 		</button>
-		<button onclick={reset} disabled={app_state !== 'idle'}>
+		<button onclick={reset} disabled={app.state !== 'idle'}>
 			<RotateCcw /> Reset
 		</button>
 		<button onclick={toggle_torus}>
@@ -49,7 +47,7 @@
 			{/if}
 		</button>
 
-		<button onclick={toggle_editing} disabled={app_state !== 'idle'}>
+		<button onclick={toggle_editing} disabled={app.state !== 'idle'}>
 			<SquarePen /> Edit
 		</button>
 

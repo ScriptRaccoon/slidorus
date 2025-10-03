@@ -15,11 +15,11 @@
 	} from './lib/pieces'
 	import Torus from './lib/Torus.svelte'
 	import Toast, { send_toast } from './lib/Toast.svelte'
-	import type { APP_STATE } from './lib/types'
 	import { onMount } from 'svelte'
 	import Instructions from './lib/Instructions.svelte'
 	import Challenges from './lib/Challenges.svelte'
 	import { decode_sets, encode_sets } from './utils'
+	import { app } from './lib/state.svelte'
 
 	const initial_pieces = get_initial_pieces()
 
@@ -29,25 +29,24 @@
 	let row_connections = $state<number[][]>([])
 	let col_connections = $state<number[][]>([])
 
-	let app_state = $state<APP_STATE>('idle')
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
 
 	let move_count = $state(0)
 
 	function reset() {
-		if (app_state !== 'idle') return
+		if (app.state !== 'idle') return
 		reset_pieces(pieces)
 		update_pieces_array()
 		move_count = 0
 	}
 
 	async function scramble() {
-		if (app_state !== 'idle') return
-		app_state = 'scrambling'
+		if (app.state !== 'idle') return
+		app.state = 'scrambling'
 		await scramble_pieces(pieces, row_connections, col_connections, 10)
 		update_pieces_array()
-		app_state = 'idle'
+		app.state = 'idle'
 		move_count = 0
 	}
 
@@ -60,10 +59,10 @@
 	}
 
 	function toggle_editing() {
-		if (app_state === 'editing') {
-			app_state = 'idle'
+		if (app.state === 'editing') {
+			app.state = 'idle'
 			update_URL(null, null, null)
-		} else if (app_state === 'idle') {
+		} else if (app.state === 'idle') {
 			const has_shown_warning =
 				localStorage.getItem('warning_shown') === true.toString()
 			if (!has_shown_warning) {
@@ -75,7 +74,7 @@
 				localStorage.setItem('warning_shown', true.toString())
 			} else {
 				reset()
-				app_state = 'editing'
+				app.state = 'editing'
 			}
 		}
 	}
@@ -106,7 +105,7 @@
 	}
 
 	function revert_edits() {
-		if (app_state === 'editing') {
+		if (app.state === 'editing') {
 			revert_pieces_edits(pieces)
 			clear_connections()
 		}
@@ -192,13 +191,12 @@
 
 <div class="grid" class:show_torus>
 	<div class="game_container">
-		{#if app_state !== 'editing'}
+		{#if app.state !== 'editing'}
 			<div class="move_count">{move_count} moves</div>
 		{/if}
 		<Game
 			bind:pieces
 			{update_pieces_array}
-			bind:app_state
 			bind:move_count
 			bind:row_connections
 			bind:col_connections
@@ -213,10 +211,9 @@
 		{toggle_editing}
 		{revert_edits}
 		{share_URL}
-		{app_state}
 	/>
 
-	{#if app_state === 'editing'}
+	{#if app.state === 'editing'}
 		<Instructions />
 	{/if}
 
@@ -224,7 +221,7 @@
 		<Torus {pieces_array} bind:torus_rotating />
 	{/if}
 
-	{#if app_state !== 'editing'}
+	{#if app.state !== 'editing'}
 		<Challenges
 			load_challenge={(config, rows, cols) =>
 				load_challenge(config, rows, cols, { update_URL: true })}

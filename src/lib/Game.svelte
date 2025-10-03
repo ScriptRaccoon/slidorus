@@ -14,13 +14,12 @@
 		toggle_fixed,
 		type Piece,
 	} from './pieces'
+	import { app } from './state.svelte'
 	import { send_toast } from './Toast.svelte'
-	import type { APP_STATE } from './types'
 
 	type Props = {
 		pieces: Piece[]
 		update_pieces_array: () => void
-		app_state: APP_STATE
 		move_count: number
 		row_connections: number[][]
 		col_connections: number[][]
@@ -29,7 +28,6 @@
 	let {
 		pieces = $bindable(),
 		update_pieces_array,
-		app_state = $bindable(),
 		move_count = $bindable(),
 		row_connections = $bindable(),
 		col_connections = $bindable(),
@@ -46,13 +44,13 @@
 	let active_col = $state<number | null>(null)
 
 	function handle_mouse_down(e: MouseEvent | TouchEvent) {
-		if (app_state !== 'idle') return
+		if (app.state !== 'idle') return
 		clicked_pos = get_position(e)
-		app_state = 'moving'
+		app.state = 'moving'
 	}
 
 	function handle_mouse_move(e: MouseEvent | TouchEvent) {
-		if (app_state !== 'moving' || !clicked_pos) return
+		if (app.state !== 'moving' || !clicked_pos) return
 
 		const current_pos = get_position(e)
 		const dx = current_pos.x - clicked_pos.x
@@ -118,7 +116,7 @@
 	}
 
 	function handle_mouse_up(e: MouseEvent | TouchEvent) {
-		if (app_state !== 'moving' || !clicked_pos) return
+		if (app.state !== 'moving' || !clicked_pos) return
 
 		const current_pos = get_changed_position(e)
 		const coord = move_direction === 'horizontal' ? 'x' : 'y'
@@ -149,7 +147,7 @@
 		move_direction = null
 		moving_pieces = []
 		moving_lines = []
-		app_state = 'idle'
+		app.state = 'idle'
 	}
 
 	function handle_solved_state() {
@@ -163,7 +161,7 @@
 	}
 
 	function handle_keydown(e: KeyboardEvent) {
-		if (e.key === 'Escape' && app_state === 'moving') {
+		if (e.key === 'Escape' && app.state === 'moving') {
 			reset_movement()
 		}
 	}
@@ -224,7 +222,7 @@
 <div class="game" style:--size="{square_size}px">
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		class="square {app_state}"
+		class="square {app.state}"
 		bind:this={square_element}
 		bind:clientWidth={square_size}
 		onmousedown={handle_mouse_down}
@@ -236,11 +234,11 @@
 		ontouchend={handle_mouse_up}
 	>
 		{#each pieces as piece (piece.id)}
-			<PieceComponent {piece} {app_state} />
+			<PieceComponent {piece} />
 		{/each}
 	</div>
 
-	{#if app_state === 'editing'}
+	{#if app.state === 'editing'}
 		{#each pieces as piece (piece.id)}
 			<PieceEditor
 				{piece}
@@ -255,7 +253,7 @@
 		<Connector
 			type="row"
 			index={row}
-			disabled={app_state !== 'editing'}
+			disabled={app.state !== 'editing'}
 			active={row === active_row}
 			connect={() => connect_row(row)}
 			remove={() => remove_connection(row_connections, row)}
@@ -267,7 +265,7 @@
 		<Connector
 			type="col"
 			index={col}
-			disabled={app_state !== 'editing'}
+			disabled={app.state !== 'editing'}
 			active={col === active_col}
 			connect={() => connect_col(col)}
 			remove={() => remove_connection(col_connections, col)}

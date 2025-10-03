@@ -1,13 +1,12 @@
 <script lang="ts">
 	import type { Piece as PieceType } from './pieces'
-	import type { APP_STATE } from './types'
+	import { app } from './state.svelte'
 
 	type Props = {
 		piece: PieceType
-		app_state: APP_STATE
 	}
 
-	let { piece, app_state }: Props = $props()
+	let { piece }: Props = $props()
 </script>
 
 <div
@@ -23,9 +22,9 @@
 	style:--y={piece.y}
 	style:--dx={piece.dx}
 	style:--dy={piece.dy}
-	class:no_transition={app_state === 'scrambling'}
+	class:no_transition={app.state === 'scrambling'}
 >
-	{#if piece.fixed && app_state !== 'editing'}
+	{#if piece.fixed && app.state !== 'editing'}
 		<div class="dot"></div>
 	{/if}
 </div>
