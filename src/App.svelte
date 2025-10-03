@@ -127,7 +127,7 @@
 		cols: string | null,
 		options: { update_URL: boolean },
 	) {
-		if (config) {
+		if (config !== null) {
 			try {
 				pieces = decode_config(config)
 				update_pieces_array()
@@ -141,7 +141,7 @@
 			}
 		}
 
-		if (rows) {
+		if (rows !== null) {
 			try {
 				row_connections = decode_sets(rows)
 			} catch (err) {
@@ -153,7 +153,7 @@
 			}
 		}
 
-		if (cols) {
+		if (cols !== null) {
 			try {
 				col_connections = decode_sets(cols)
 			} catch (err) {
