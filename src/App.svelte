@@ -43,7 +43,7 @@
 	async function scramble() {
 		if (app_state !== 'idle') return
 		app_state = 'scrambling'
-		await scramble_pieces(pieces, 10)
+		await scramble_pieces(pieces, row_connections, 10)
 		update_pieces_array()
 		app_state = 'idle'
 		move_count = 0

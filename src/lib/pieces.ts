@@ -145,21 +145,53 @@ export function toggle_bandage(
 	}
 }
 
-export function get_connected_rows(pieces: Piece[], row: number): number[] {
+export function get_connected_rows(
+	pieces: Piece[],
+	row_connections: number[][],
+	row: number,
+): number[] {
 	const connected_rows = new Set([row])
 
-	for (let y = row; y < row + 9; y++) {
-		const row_pieces = pieces.filter((piece) => piece.y === y % 9)
-		const is_bandaged = row_pieces.some((piece) => piece.bandaged_down)
-		if (!is_bandaged) break
-		connected_rows.add((y + 1) % 9)
+	function close_under_connections() {
+		const old_size = connected_rows.size
+		for (const connection of row_connections) {
+			const has_intersection = connection.some((r) => connected_rows.has(r))
+			if (has_intersection) {
+				for (const r of connection) {
+					connected_rows.add(r)
+				}
+			}
+		}
+		return connected_rows.size > old_size
 	}
 
-	for (let y = row; y >= row - 9; y--) {
-		const row_pieces = pieces.filter((piece) => piece.y === (y + 9) % 9)
-		const is_bandaged = row_pieces.some((piece) => piece.bandaged_up)
-		if (!is_bandaged) break
-		connected_rows.add((y - 1 + 9) % 9)
+	function close_under_bandaging_below() {
+		const piece = pieces.find(
+			(piece) =>
+				piece.bandaged_down &&
+				connected_rows.has(piece.y) &&
+				!connected_rows.has((piece.y + 1) % 9),
+		)
+		if (piece) connected_rows.add((piece.y + 1) % 9)
+		return !!piece
+	}
+
+	function close_under_bandaging_above() {
+		const piece = pieces.find(
+			(piece) =>
+				piece.bandaged_up &&
+				connected_rows.has(piece.y) &&
+				!connected_rows.has((piece.y - 1) % 9),
+		)
+		if (piece) connected_rows.add((piece.y - 1 + 9) % 9)
+		return !!piece
+	}
+
+	while (connected_rows.size < 9) {
+		const found_bandaging_below = close_under_bandaging_below()
+		const found_bandaging_above = close_under_bandaging_above()
+		const found_rows = close_under_connections()
+		if (!found_bandaging_below && !found_bandaging_above && !found_rows) break
 	}
 
 	return Array.from(connected_rows)
@@ -239,9 +271,14 @@ export function get_visible_pieces(pieces: Piece[]): Piece[] {
 	)
 }
 
-function execute_row_move(pieces: Piece[], row: number, delta: number) {
+function execute_row_move(
+	pieces: Piece[],
+	row_connections: number[][],
+	row: number,
+	delta: number,
+) {
 	if (delta === 0 || delta != Math.floor(delta)) return
-	const affected_rows = get_connected_rows(pieces, row)
+	const affected_rows = get_connected_rows(pieces, row_connections, row)
 	const affected_pieces = pieces.filter((piece) => affected_rows.includes(piece.y))
 	const is_blocked = affected_pieces.some((piece) => piece.fixed)
 	if (is_blocked) throw new Error('Row move is not possible because of a fixed piece')
@@ -262,24 +299,29 @@ function execute_col_move(pieces: Piece[], col: number, delta: number) {
 	}
 }
 
-function execute_random_move(pieces: Piece[]) {
+function execute_random_move(pieces: Piece[], row_connections: number[][]) {
 	const is_horizontal = Math.random() < 0.5
 	const index = Math.floor(Math.random() * 9)
 	let delta = Math.floor(Math.random() * 17) - 8
 	if (delta === 0) delta = 1
 	if (is_horizontal) {
-		execute_row_move(pieces, index, delta)
+		execute_row_move(pieces, row_connections, index, delta)
 	} else {
 		execute_col_move(pieces, index, delta)
 	}
 }
 
-export async function scramble_pieces(pieces: Piece[], wait = 0, moves = 100) {
+export async function scramble_pieces(
+	pieces: Piece[],
+	row_connections: number[][],
+	wait = 0,
+	moves = 100,
+) {
 	let attempts = 0
 	for (let i = 0; i < moves; i++) {
 		attempts++
 		try {
-			execute_random_move(pieces)
+			execute_random_move(pieces, row_connections)
 			await sleep(wait)
 		} catch (_) {
 			if (attempts < moves * 100) i--

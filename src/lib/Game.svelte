@@ -141,7 +141,7 @@
 					(clicked_pos.y - square_rect.top) * (9 / square_size),
 				)
 				const valid_row = clamp(moving_row, 0, 8)
-				moving_rows = get_connected_rows(pieces, valid_row)
+				moving_rows = get_connected_rows(pieces, row_connections, valid_row)
 
 				const is_blocked_row = pieces.some(
 					(piece) => moving_rows.includes(piece.y) && piece.fixed,
