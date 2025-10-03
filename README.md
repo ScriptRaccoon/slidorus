@@ -1,6 +1,6 @@
 # Slidorus
 
-[👉 Play here](https://slidorus.netlify.app)
+[👉 Play here](https://slidorus.xyz)
 
 ## About this puzzle
 
