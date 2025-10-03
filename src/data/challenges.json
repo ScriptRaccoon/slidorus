@@ -172,5 +172,24 @@
 		"config": "",
 		"rows": "7514",
 		"cols": "7514"
-	}
+	},
+	{
+		"name": "Secret",
+		"config": "0120420720aa0da0ga0j80m80p81j21m21p21sa1va1ya218248278",
+		"rows": "1k",
+		"cols": ""
+	},
+	{
+		"name": "Windmill",
+		"config": "0t11f41sg1l21ua2380gg1g514g0r40520ea0n80s51h1",
+		"rows": "14",
+		"cols": "14"
+	},
+	{
+		"name": "Corner",
+		"config": "0t11410r20520ea0n80s400201402103404109a0a40b10c40d10i80j40k10l40m10u40v10w210a11412113415a1981a41b11c41d11e8",
+		"rows": "cg",
+		"cols": "cg"
+	},
+	{ "name": "Group Pressure", "config": "", "rows": "0fdc", "cols": "0fdc" }
 ]
