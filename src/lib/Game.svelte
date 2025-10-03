@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { clamp, get_changed_position, get_position, throttle } from '../utils'
+	import Connector from './Connector.svelte'
+	import PieceComponent from './Piece.svelte'
+	import PieceEditor from './PieceEditor.svelte'
 	import {
 		check_solved,
 		create_copies_horizontal,
@@ -280,94 +283,43 @@
 		ontouchend={handle_mouse_up}
 	>
 		{#each pieces as piece (piece.id)}
-			<div
-				class="piece"
-				data-type={piece.type}
-				data-original-x={piece.original_x}
-				data-original-y={piece.original_y}
-				class:bandaged_right={piece.bandaged_right}
-				class:bandaged_down={piece.bandaged_down}
-				class:bandaged_left={piece.bandaged_left}
-				class:bandaged_up={piece.bandaged_up}
-				style:--x={piece.x}
-				style:--y={piece.y}
-				style:--dx={piece.dx}
-				style:--dy={piece.dy}
-			>
-				{#if piece.fixed && app_state !== 'editing'}
-					<div class="dot"></div>
-				{/if}
-			</div>
+			<PieceComponent {piece} {app_state} />
 		{/each}
 	</div>
 
 	{#if app_state === 'editing'}
 		{#each pieces as piece (piece.id)}
-			<button
-				class="bandager"
-				data-direction="right"
-				aria-label="bandage rightwards"
-				onclick={() => toggle_bandage(piece, pieces, 'right')}
-				role="switch"
-				aria-checked={piece.bandaged_right}
-				style:--x={piece.x}
-				style:--y={piece.y}
-			>
-			</button>
-
-			<button
-				class="bandager"
-				data-direction="down"
-				aria-label="bandage downwards"
-				onclick={() => toggle_bandage(piece, pieces, 'down')}
-				role="switch"
-				aria-checked={piece.bandaged_down}
-				style:--x={piece.x}
-				style:--y={piece.y}
-			>
-			</button>
-
-			<button
-				class="fixer"
-				onclick={() => toggle_fixed(piece)}
-				aria-label="fix piece"
-				role="switch"
-				aria-checked={piece.fixed}
-				style:--x={piece.x}
-				style:--y={piece.y}
-			>
-			</button>
+			<PieceEditor
+				{piece}
+				toggle_bandage_down={() => toggle_bandage(piece, pieces, 'down')}
+				toggle_bandage_right={() => toggle_bandage(piece, pieces, 'right')}
+				toggle_fixed={() => toggle_fixed(piece)}
+			></PieceEditor>
 		{/each}
 	{/if}
 
 	{#each { length: 9 } as _, row}
-		<button
-			class="connector"
-			data-type="row"
+		<Connector
+			type="row"
+			index={row}
 			disabled={app_state !== 'editing'}
-			class:active={row === active_row}
-			aria-label="Connect Row {row}"
-			style:--y={row}
-			onclick={() => connect_row(row)}
-			ondblclick={() => remove_row_connection(row)}
-			data-index={row_connections.findIndex((c) => c.includes(row))}
-		>
-		</button>
+			active={row === active_row}
+			connect={() => connect_row(row)}
+			remove={() => remove_row_connection(row)}
+			group={row_connections.findIndex((c) => c.includes(row))}
+		/>
 	{/each}
 
 	{#each { length: 9 } as _, col}
-		<button
-			class="connector"
-			data-type="col"
+		<Connector
+			type="col"
+			index={col}
 			disabled={app_state !== 'editing'}
-			class:active={col === active_col}
-			aria-label="Connect Column {col}"
-			style:--x={col}
-			onclick={() => connect_col(col)}
-			ondblclick={() => remove_col_connection(col)}
-			data-index={col_connections.findIndex((c) => c.includes(col))}
-		>
-		</button>
+			active={col === active_col}
+			connect={() => connect_col(col)}
+			remove={() => remove_col_connection(col)}
+			group={col_connections.findIndex((c) => c.includes(col))}
+		/>
 	{/each}
 </div>
 
@@ -399,170 +351,6 @@
 
 		&.editing {
 			cursor: default;
-		}
-
-		&.scrambling .piece {
-			transition: none;
-		}
-	}
-
-	.piece {
-		position: absolute;
-		width: var(--dim);
-		height: var(--dim);
-		background-color: var(--color, gray);
-		transform: translateX(calc(var(--x) * var(--dim) + var(--dx) * 1px))
-			translateY(calc(var(--y) * var(--dim) + var(--dy) * 1px));
-		transition: transform 80ms ease-out;
-		border: var(--border) solid var(--bg-color);
-		border-radius: 15%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-
-		&.bandaged_right {
-			border-right: none;
-			border-top-right-radius: 0;
-			border-bottom-right-radius: 0;
-			width: calc(var(--dim) + 1px);
-		}
-
-		&.bandaged_down {
-			border-bottom: none;
-			border-bottom-left-radius: 0;
-			border-bottom-right-radius: 0;
-			height: calc(var(--dim) + 1px);
-		}
-
-		&.bandaged_left {
-			border-left: none;
-			border-top-left-radius: 0;
-			border-bottom-left-radius: 0;
-		}
-
-		&.bandaged_up {
-			border-top: none;
-			border-top-left-radius: 0;
-			border-top-right-radius: 0;
-		}
-
-		.dot {
-			background-color: var(--bg-color);
-			width: 25%;
-			aspect-ratio: 1;
-			border-radius: 50%;
-		}
-	}
-
-	.bandager,
-	.fixer {
-		position: absolute;
-		background-color: var(--bg-color);
-		transform: translate(-50%, -50%);
-
-		opacity: 0.15;
-		transition: opacity 120ms;
-
-		&[aria-checked='true'] {
-			opacity: 1;
-		}
-
-		&:hover,
-		&:focus-visible {
-			opacity: 1;
-			outline: 1px solid var(--font-color);
-		}
-
-		&::before {
-			content: '';
-			position: absolute;
-			inset: -2px;
-		}
-	}
-
-	.bandager {
-		border-radius: 10%;
-	}
-
-	.fixer {
-		width: 2%;
-		height: 2%;
-		border-radius: 50%;
-		left: calc(var(--x) * var(--dim) + var(--dim) / 2);
-		top: calc(var(--y) * var(--dim) + var(--dim) / 2);
-	}
-
-	.bandager[data-direction='right'] {
-		width: 3.75%;
-		height: 1.75%;
-		left: calc(var(--x) * var(--dim) + var(--dim));
-		top: calc(var(--y) * var(--dim) + var(--dim) / 2);
-	}
-
-	.bandager[data-direction='down'] {
-		width: 1.75%;
-		height: 3.75%;
-		left: calc(var(--x) * var(--dim) + var(--dim) / 2);
-		top: calc(var(--y) * var(--dim) + var(--dim));
-	}
-
-	.connector {
-		position: absolute;
-		transform: translate(-50%, -50%);
-		width: calc(0.25 * var(--dim));
-		aspect-ratio: 1;
-		border-radius: 50%;
-		background-color: var(--color, var(--btn-color));
-		transition: opacity 200ms;
-
-		&.active:not(:disabled) {
-			outline: 1px solid var(--outline-color);
-		}
-
-		&:disabled[data-index='-1'] {
-			opacity: 0;
-		}
-
-		&[data-type='row'] {
-			top: calc(var(--y) * var(--dim) + var(--dim) / 2);
-			left: calc(var(--size) + 0.25 * var(--dim));
-
-			&[data-index='0'] {
-				--color: var(--color-0);
-			}
-
-			&[data-index='1'] {
-				--color: var(--color-2);
-			}
-
-			&[data-index='2'] {
-				--color: var(--color-4);
-			}
-
-			&[data-index='3'] {
-				--color: var(--color-6);
-			}
-		}
-
-		&[data-type='col'] {
-			top: calc(var(--size) + 0.25 * var(--dim));
-			left: calc(var(--x) * var(--dim) + var(--dim) / 2);
-
-			&[data-index='0'] {
-				--color: var(--color-1);
-			}
-
-			&[data-index='1'] {
-				--color: var(--color-3);
-			}
-
-			&[data-index='2'] {
-				--color: var(--color-5);
-			}
-
-			&[data-index='3'] {
-				--color: var(--color-7);
-			}
 		}
 	}
 </style>
