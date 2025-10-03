@@ -181,7 +181,7 @@ export function get_connected_rows(
 			(piece) =>
 				piece.bandaged_up &&
 				connected_rows.has(piece.y) &&
-				!connected_rows.has((piece.y - 1) % 9),
+				!connected_rows.has((piece.y - 1 + 9) % 9),
 		)
 		if (piece) connected_rows.add((piece.y - 1 + 9) % 9)
 		return !!piece
@@ -233,7 +233,7 @@ export function get_connected_cols(
 			(piece) =>
 				piece.bandaged_left &&
 				connected_cols.has(piece.x) &&
-				!connected_cols.has((piece.x - 1) % 9),
+				!connected_cols.has((piece.x - 1 + 9) % 9),
 		)
 		if (piece) connected_cols.add((piece.x - 1 + 9) % 9)
 		return !!piece
