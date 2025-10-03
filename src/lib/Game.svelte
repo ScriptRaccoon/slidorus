@@ -40,8 +40,7 @@
 	let clicked_pos: { x: number; y: number } | null = null
 	let move_direction: 'horizontal' | 'vertical' | null = null
 	let moving_pieces: Piece[] = []
-	let moving_rows: number[] = []
-	let moving_cols: number[] = []
+	let moving_lines: number[] = []
 
 	let active_row = $state<number | null>(null)
 	let active_col = $state<number | null>(null)
@@ -71,36 +70,69 @@
 		}
 	}
 
+	function detect_movement(dx: number, dy: number) {
+		const too_early = Math.abs(dx) + Math.abs(dy) < 3
+		if (too_early) return
+
+		move_direction = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical'
+
+		if (!square_element || !clicked_pos) return
+
+		const square_rect = square_element.getBoundingClientRect()
+
+		const coord = move_direction === 'horizontal' ? 'y' : 'x'
+		const rect_side = move_direction === 'horizontal' ? 'top' : 'left'
+		const name = move_direction === 'horizontal' ? 'Row' : 'Column'
+
+		const moving_line = Math.floor(
+			(clicked_pos[coord] - square_rect[rect_side]) * (9 / square_size),
+		)
+		const valid_line = clamp(moving_line, 0, 8)
+
+		moving_lines =
+			move_direction === 'horizontal'
+				? get_connected_rows(pieces, row_connections, valid_line)
+				: get_connected_cols(pieces, col_connections, valid_line)
+
+		const is_blocked = pieces.some(
+			(piece) => moving_lines.includes(piece[coord]) && piece.fixed,
+		)
+
+		if (is_blocked) {
+			reset_movement()
+			send_toast({
+				title: `${name} is blocked`,
+				variant: 'error',
+			})
+			return
+		}
+
+		const copies =
+			move_direction === 'horizontal'
+				? create_copies_horizontal(pieces, moving_lines)
+				: create_copies_vertical(pieces, moving_lines)
+
+		pieces = pieces.concat(copies)
+
+		moving_pieces = pieces.filter((piece) => moving_lines.includes(piece[coord]))
+	}
+
 	function handle_mouse_up(e: MouseEvent | TouchEvent) {
 		if (app_state !== 'moving' || !clicked_pos) return
 
 		const current_pos = get_changed_position(e)
-		let has_moved = false
+		const coord = move_direction === 'horizontal' ? 'x' : 'y'
+		const delta = current_pos[coord] - clicked_pos[coord]
+		const delta_int = Math.round(delta * (9 / square_size))
+		const valid_delta = clamp(delta_int, -10, 10)
 
-		switch (move_direction) {
-			case 'horizontal':
-				const dx = current_pos.x - clicked_pos.x
-				const dx_int = Math.round(dx * (9 / square_size))
-				const valid_dx = clamp(dx_int, -10, 10)
-				if (valid_dx != 0) has_moved = true
-				for (const piece of moving_pieces) {
-					piece.x += valid_dx
-				}
-				break
-			case 'vertical':
-				const dy = current_pos.y - clicked_pos.y
-				const dy_int = Math.round(dy * (9 / square_size))
-				const valid_dy = clamp(dy_int, -10, 10)
-				if (valid_dy != 0) has_moved = true
-				for (const piece of moving_pieces) {
-					piece.y += valid_dy
-				}
-				break
+		for (const piece of moving_pieces) {
+			piece[coord] += valid_delta
 		}
 
 		reset_movement()
 
-		if (has_moved) {
+		if (valid_delta != 0) {
 			move_count++
 			handle_solved_state()
 			update_pieces_array()
@@ -109,15 +141,14 @@
 
 	function reset_movement() {
 		pieces = get_visible_pieces(pieces)
-		pieces.forEach((piece) => {
+		for (const piece of pieces) {
 			piece.dx = 0
 			piece.dy = 0
-		})
+		}
 		clicked_pos = null
 		move_direction = null
 		moving_pieces = []
-		moving_rows = []
-		moving_cols = []
+		moving_lines = []
 		app_state = 'idle'
 	}
 
@@ -131,138 +162,60 @@
 		})
 	}
 
-	function detect_movement(dx: number, dy: number) {
-		const too_early = Math.abs(dx) + Math.abs(dy) < 3
-		if (too_early) return
-
-		move_direction = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical'
-
-		if (!square_element || !clicked_pos) return
-
-		const square_rect = square_element.getBoundingClientRect()
-
-		switch (move_direction) {
-			case 'horizontal':
-				const moving_row = Math.floor(
-					(clicked_pos.y - square_rect.top) * (9 / square_size),
-				)
-				const valid_row = clamp(moving_row, 0, 8)
-				moving_rows = get_connected_rows(pieces, row_connections, valid_row)
-
-				const is_blocked_row = pieces.some(
-					(piece) => moving_rows.includes(piece.y) && piece.fixed,
-				)
-				if (is_blocked_row) {
-					reset_movement()
-					send_toast({
-						title: 'Row is blocked',
-						variant: 'error',
-					})
-					return
-				}
-
-				const copies_in_rows = create_copies_horizontal(pieces, moving_rows)
-				pieces = pieces.concat(copies_in_rows)
-				moving_pieces = pieces.filter((piece) => moving_rows.includes(piece.y))
-				break
-			case 'vertical':
-				const moving_col = Math.floor(
-					(clicked_pos.x - square_rect.left) * (9 / square_size),
-				)
-				const valid_col = clamp(moving_col, 0, 8)
-				moving_cols = get_connected_cols(pieces, col_connections, valid_col)
-
-				const is_blocked_col = pieces.some(
-					(piece) => moving_cols.includes(piece.x) && piece.fixed,
-				)
-				if (is_blocked_col) {
-					reset_movement()
-					send_toast({
-						title: 'Column is blocked',
-						variant: 'error',
-					})
-					return
-				}
-
-				const copies_in_cols = create_copies_vertical(pieces, moving_cols)
-				pieces = pieces.concat(copies_in_cols)
-				moving_pieces = pieces.filter((piece) => moving_cols.includes(piece.x))
-				break
-		}
-	}
-
 	function handle_keydown(e: KeyboardEvent) {
 		if (e.key === 'Escape' && app_state === 'moving') {
 			reset_movement()
 		}
 	}
 
-	function connect_row(row: number) {
-		if (active_row === null) {
-			active_row = row
-			active_col = null
-			return
+	function add_connection(
+		index: number,
+		connections: number[][],
+		active: number | null,
+		set_active: (x: number | null) => void,
+	) {
+		if (active === null) {
+			return set_active(index)
 		}
 
-		if (active_row === row) {
-			active_row = null
-			return
+		if (active === index) {
+			return set_active(null)
 		}
 
-		const connection_old_1 = row_connections.find((c) => c.includes(active_row!))
-		const connection_old_2 = row_connections.find((c) => c.includes(row))
+		const connection_old_1 = connections.find((c) => c.includes(active))
+		const connection_old_2 = connections.find((c) => c.includes(index))
 
 		if (!connection_old_1 && !connection_old_2) {
-			const connection_new = [active_row, row]
-			row_connections.push(connection_new)
+			connections.push([active, index])
 		} else if (connection_old_1 && !connection_old_2) {
-			connection_old_1.push(row)
+			connection_old_1.push(index)
 		} else if (connection_old_2 && !connection_old_1) {
-			connection_old_2.push(active_row)
-		} else if (connection_old_1 && connection_old_2) {
-			row_connections = row_connections.filter((c) => c != connection_old_2)
-			connection_old_1.push(...connection_old_2)
-		}
-
-		active_row = null
-	}
-
-	function remove_row_connection(row: number) {
-		row_connections = row_connections.filter((r) => !r.includes(row))
-	}
-
-	function connect_col(col: number) {
-		if (active_col === null) {
-			active_col = col
-			active_row = null
-			return
-		}
-
-		if (active_col === col) {
-			active_col = null
-			return
-		}
-
-		const connection_old_1 = col_connections.find((c) => c.includes(active_col!))
-		const connection_old_2 = col_connections.find((c) => c.includes(col))
-
-		if (!connection_old_1 && !connection_old_2) {
-			const connection_new = [active_col, col]
-			col_connections.push(connection_new)
-		} else if (connection_old_1 && !connection_old_2) {
-			connection_old_1.push(col)
-		} else if (connection_old_2 && !connection_old_1) {
-			connection_old_2.push(active_col)
+			connection_old_2.push(active)
 		} else if (connection_old_1 && connection_old_2) {
 			col_connections = col_connections.filter((c) => c != connection_old_2)
 			connection_old_1.push(...connection_old_2)
 		}
 
-		active_col = null
+		set_active(null)
 	}
 
-	function remove_col_connection(col: number) {
-		col_connections = col_connections.filter((c) => !c.includes(col))
+	function connect_row(row: number) {
+		add_connection(row, row_connections, active_row, (_row) => {
+			active_row = _row
+			active_col = null
+		})
+	}
+
+	function connect_col(col: number) {
+		add_connection(col, col_connections, active_col, (_col) => {
+			active_col = _col
+			active_row = null
+		})
+	}
+
+	function remove_connection(connections: number[][], index: number) {
+		const i = connections.findIndex((c) => c.includes(index))
+		if (i >= 0) connections.splice(i, 1)
 	}
 </script>
 
@@ -305,7 +258,7 @@
 			disabled={app_state !== 'editing'}
 			active={row === active_row}
 			connect={() => connect_row(row)}
-			remove={() => remove_row_connection(row)}
+			remove={() => remove_connection(row_connections, row)}
 			group={row_connections.findIndex((c) => c.includes(row))}
 		/>
 	{/each}
@@ -317,7 +270,7 @@
 			disabled={app_state !== 'editing'}
 			active={col === active_col}
 			connect={() => connect_col(col)}
-			remove={() => remove_col_connection(col)}
+			remove={() => remove_connection(col_connections, col)}
 			group={col_connections.findIndex((c) => c.includes(col))}
 		/>
 	{/each}
