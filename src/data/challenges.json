@@ -148,5 +148,29 @@
 		"config": "00209a0i80k80ha0q80r20s21081941a10y21621781g42182281v624c2591xc1y90v40w11c80ba0u213a1t20e11k10821511440220mg0d40p10o41181w31f81p31o61mg1j41s21h1",
 		"rows": "",
 		"cols": ""
+	},
+	{
+		"name": "Connect 3",
+		"config": "",
+		"rows": "42",
+		"cols": ""
+	},
+	{
+		"name": "Connect 3+3",
+		"config": "",
+		"rows": "42",
+		"cols": "42"
+	},
+	{
+		"name": "Main St.",
+		"config": "",
+		"rows": "1k",
+		"cols": "1k"
+	},
+	{
+		"name": "Pairs",
+		"config": "",
+		"rows": "7514",
+		"cols": "7514"
 	}
 ]
