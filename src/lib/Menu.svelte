@@ -71,6 +71,7 @@
 		display: flex;
 		justify-content: space-between;
 		flex-wrap: wrap;
+		margin-top: 1.25rem;
 	}
 
 	button {

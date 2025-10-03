@@ -20,6 +20,7 @@
 		app_state: APP_STATE
 		move_count: number
 		row_connections: number[][]
+		col_connections: number[][]
 	}
 
 	let {
@@ -28,6 +29,7 @@
 		app_state = $bindable(),
 		move_count = $bindable(),
 		row_connections = $bindable(),
+		col_connections = $bindable(),
 	}: Props = $props()
 
 	let square_element = $state<HTMLDivElement | null>(null)
@@ -39,6 +41,7 @@
 	let moving_cols: number[] = []
 
 	let active_row = $state<number | null>(null)
+	let active_col = $state<number | null>(null)
 
 	function handle_mouse_down(e: MouseEvent | TouchEvent) {
 		if (app_state !== 'idle') return
@@ -164,7 +167,7 @@
 					(clicked_pos.x - square_rect.left) * (9 / square_size),
 				)
 				const valid_col = clamp(moving_col, 0, 8)
-				moving_cols = get_connected_cols(pieces, valid_col)
+				moving_cols = get_connected_cols(pieces, col_connections, valid_col)
 
 				const is_blocked_col = pieces.some(
 					(piece) => moving_cols.includes(piece.x) && piece.fixed,
@@ -194,6 +197,7 @@
 	function connect_row(row: number) {
 		if (active_row === null) {
 			active_row = row
+			active_col = null
 			return
 		}
 
@@ -220,8 +224,42 @@
 		active_row = null
 	}
 
-	function remove_connection(row: number) {
-		row_connections = row_connections.filter((c) => !c.includes(row))
+	function remove_row_connection(row: number) {
+		row_connections = row_connections.filter((r) => !r.includes(row))
+	}
+
+	function connect_col(col: number) {
+		if (active_col === null) {
+			active_col = col
+			active_row = null
+			return
+		}
+
+		if (active_col === col) {
+			active_col = null
+			return
+		}
+
+		const connection_old_1 = col_connections.find((c) => c.includes(active_col!))
+		const connection_old_2 = col_connections.find((c) => c.includes(col))
+
+		if (!connection_old_1 && !connection_old_2) {
+			const connection_new = [active_col, col]
+			col_connections.push(connection_new)
+		} else if (connection_old_1 && !connection_old_2) {
+			connection_old_1.push(col)
+		} else if (connection_old_2 && !connection_old_1) {
+			connection_old_2.push(active_col)
+		} else if (connection_old_1 && connection_old_2) {
+			col_connections = col_connections.filter((c) => c != connection_old_2)
+			connection_old_1.push(...connection_old_2)
+		}
+
+		active_col = null
+	}
+
+	function remove_col_connection(col: number) {
+		col_connections = col_connections.filter((c) => !c.includes(col))
 	}
 </script>
 
@@ -305,13 +343,29 @@
 	{#each { length: 9 } as _, row}
 		<button
 			class="connector"
+			data-type="row"
 			disabled={app_state !== 'editing'}
 			class:active={row === active_row}
 			aria-label="Connect Row {row}"
 			style:--y={row}
 			onclick={() => connect_row(row)}
-			ondblclick={() => remove_connection(row)}
+			ondblclick={() => remove_row_connection(row)}
 			data-index={row_connections.findIndex((c) => c.includes(row))}
+		>
+		</button>
+	{/each}
+
+	{#each { length: 9 } as _, col}
+		<button
+			class="connector"
+			data-type="col"
+			disabled={app_state !== 'editing'}
+			class:active={col === active_col}
+			aria-label="Connect Column {col}"
+			style:--x={col}
+			onclick={() => connect_col(col)}
+			ondblclick={() => remove_col_connection(col)}
+			data-index={col_connections.findIndex((c) => c.includes(col))}
 		>
 		</button>
 	{/each}
@@ -449,9 +503,7 @@
 
 	.connector {
 		position: absolute;
-		top: calc(var(--y) * var(--dim) + var(--dim) / 2);
-		left: calc(100% + 0.5rem);
-		transform: translate(0, -50%);
+		transform: translate(-50%, -50%);
 		width: calc(0.25 * var(--dim));
 		aspect-ratio: 1;
 		border-radius: 50%;
@@ -464,6 +516,16 @@
 
 		&:disabled[data-index='-1'] {
 			opacity: 0;
+		}
+
+		&[data-type='row'] {
+			top: calc(var(--y) * var(--dim) + var(--dim) / 2);
+			left: calc(100% + 0.75rem);
+		}
+
+		&[data-type='col'] {
+			top: calc(100% + 0.75rem);
+			left: calc(var(--x) * var(--dim) + var(--dim) / 2);
 		}
 	}
 </style>

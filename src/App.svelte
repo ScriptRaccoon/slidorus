@@ -26,6 +26,7 @@
 	let pieces_array = $state<Piece[][]>(create_piece_array(initial_pieces))
 
 	let row_connections = $state<number[][]>([])
+	let col_connections = $state<number[][]>([])
 
 	let app_state = $state<APP_STATE>('idle')
 	let show_torus = $state(false)
@@ -43,7 +44,7 @@
 	async function scramble() {
 		if (app_state !== 'idle') return
 		app_state = 'scrambling'
-		await scramble_pieces(pieces, row_connections, 10)
+		await scramble_pieces(pieces, row_connections, col_connections, 10)
 		update_pieces_array()
 		app_state = 'idle'
 		move_count = 0
@@ -92,7 +93,7 @@
 	function revert_edits() {
 		if (app_state === 'editing') {
 			revert_pieces_edits(pieces)
-			clear_row_connections()
+			clear_connections()
 		}
 	}
 
@@ -127,8 +128,9 @@
 		load_challenge(config, { update_URL: false })
 	}
 
-	function clear_row_connections() {
+	function clear_connections() {
 		row_connections = []
+		col_connections = []
 	}
 
 	onMount(() => {
@@ -151,6 +153,7 @@
 			bind:app_state
 			bind:move_count
 			bind:row_connections
+			bind:col_connections
 		/>
 	</div>
 

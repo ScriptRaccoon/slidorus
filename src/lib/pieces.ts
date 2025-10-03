@@ -197,21 +197,53 @@ export function get_connected_rows(
 	return Array.from(connected_rows)
 }
 
-export function get_connected_cols(pieces: Piece[], col: number): number[] {
+export function get_connected_cols(
+	pieces: Piece[],
+	col_connections: number[][],
+	col: number,
+): number[] {
 	const connected_cols = new Set([col])
 
-	for (let x = col; x < col + 9; x++) {
-		const col_pieces = pieces.filter((piece) => piece.x === x % 9)
-		const is_bandaged = col_pieces.some((piece) => piece.bandaged_right)
-		if (!is_bandaged) break
-		connected_cols.add((x + 1) % 9)
+	function close_under_connections() {
+		const old_size = connected_cols.size
+		for (const connection of col_connections) {
+			const has_intersection = connection.some((c) => connected_cols.has(c))
+			if (has_intersection) {
+				for (const r of connection) {
+					connected_cols.add(r)
+				}
+			}
+		}
+		return connected_cols.size > old_size
 	}
 
-	for (let x = col; x >= col - 9; x--) {
-		const col_pieces = pieces.filter((piece) => piece.x === (x + 9) % 9)
-		const is_bandaged = col_pieces.some((piece) => piece.bandaged_left)
-		if (!is_bandaged) break
-		connected_cols.add((x - 1 + 9) % 9)
+	function close_under_bandaging_right() {
+		const piece = pieces.find(
+			(piece) =>
+				piece.bandaged_right &&
+				connected_cols.has(piece.x) &&
+				!connected_cols.has((piece.x + 1) % 9),
+		)
+		if (piece) connected_cols.add((piece.x + 1) % 9)
+		return !!piece
+	}
+
+	function close_under_bandaging_left() {
+		const piece = pieces.find(
+			(piece) =>
+				piece.bandaged_left &&
+				connected_cols.has(piece.x) &&
+				!connected_cols.has((piece.x - 1) % 9),
+		)
+		if (piece) connected_cols.add((piece.x - 1 + 9) % 9)
+		return !!piece
+	}
+
+	while (connected_cols.size < 9) {
+		const found_bandaging_below = close_under_bandaging_right()
+		const found_bandaging_above = close_under_bandaging_left()
+		const found_rows = close_under_connections()
+		if (!found_bandaging_below && !found_bandaging_above && !found_rows) break
 	}
 
 	return Array.from(connected_cols)
@@ -287,9 +319,14 @@ function execute_row_move(
 	}
 }
 
-function execute_col_move(pieces: Piece[], col: number, delta: number) {
+function execute_col_move(
+	pieces: Piece[],
+	col_connections: number[][],
+	col: number,
+	delta: number,
+) {
 	if (delta === 0 || delta != Math.floor(delta)) return
-	const affected_cols = get_connected_cols(pieces, col)
+	const affected_cols = get_connected_cols(pieces, col_connections, col)
 	const affected_pieces = pieces.filter((piece) => affected_cols.includes(piece.x))
 	const is_blocked = affected_pieces.some((piece) => piece.fixed)
 	if (is_blocked)
@@ -299,7 +336,11 @@ function execute_col_move(pieces: Piece[], col: number, delta: number) {
 	}
 }
 
-function execute_random_move(pieces: Piece[], row_connections: number[][]) {
+function execute_random_move(
+	pieces: Piece[],
+	row_connections: number[][],
+	col_connections: number[][],
+) {
 	const is_horizontal = Math.random() < 0.5
 	const index = Math.floor(Math.random() * 9)
 	let delta = Math.floor(Math.random() * 17) - 8
@@ -307,13 +348,14 @@ function execute_random_move(pieces: Piece[], row_connections: number[][]) {
 	if (is_horizontal) {
 		execute_row_move(pieces, row_connections, index, delta)
 	} else {
-		execute_col_move(pieces, index, delta)
+		execute_col_move(pieces, col_connections, index, delta)
 	}
 }
 
 export async function scramble_pieces(
 	pieces: Piece[],
 	row_connections: number[][],
+	col_connections: number[][],
 	wait = 0,
 	moves = 100,
 ) {
@@ -321,7 +363,7 @@ export async function scramble_pieces(
 	for (let i = 0; i < moves; i++) {
 		attempts++
 		try {
-			execute_random_move(pieces, row_connections)
+			execute_random_move(pieces, row_connections, col_connections)
 			await sleep(wait)
 		} catch (_) {
 			if (attempts < moves * 100) i--
