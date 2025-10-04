@@ -147,7 +147,9 @@
 		move_direction = null
 		moving_pieces = []
 		moving_lines = []
-		app.state = 'idle'
+		setTimeout(() => {
+			app.state = 'idle'
+		}, 80)
 	}
 
 	function handle_solved_state() {
@@ -234,7 +236,7 @@
 		ontouchend={handle_mouse_up}
 	>
 		{#each pieces as piece (piece.id)}
-			<PieceComponent {piece} />
+			<PieceComponent {piece} animated={app.state === 'moving'} />
 		{/each}
 	</div>
 

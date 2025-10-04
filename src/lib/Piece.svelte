@@ -1,12 +1,12 @@
 <script lang="ts">
 	import type { Piece as PieceType } from './pieces'
-	import { app } from './state.svelte'
 
 	type Props = {
 		piece: PieceType
+		animated: boolean
 	}
 
-	let { piece }: Props = $props()
+	let { piece, animated }: Props = $props()
 </script>
 
 <div
@@ -18,11 +18,11 @@
 	class:bandaged_down={piece.bandaged_down}
 	class:bandaged_left={piece.bandaged_left}
 	class:bandaged_up={piece.bandaged_up}
+	class:animated
 	style:--x={piece.x}
 	style:--y={piece.y}
 	style:--dx={piece.dx}
 	style:--dy={piece.dy}
-	class:no_transition={app.state === 'scrambling'}
 ></div>
 
 <style>
@@ -33,15 +33,15 @@
 		background-color: var(--color, gray);
 		transform: translateX(calc(var(--x) * var(--u) + var(--dx) * 1px))
 			translateY(calc(var(--y) * var(--u) + var(--dy) * 1px));
-		transition: transform 80ms ease-out;
+
 		border: var(--border) solid var(--bg-color);
 		border-radius: 15%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 
-		&.no_transition {
-			transition: none;
+		&.animated {
+			transition: transform 80ms ease-out;
 		}
 
 		&.bandaged_right {
