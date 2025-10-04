@@ -23,7 +23,10 @@
 	--highlight-color: yellow;
 	--error-color: red;
 	--success-color: green;
-	--challenge-color: #123;
+	--difficulty-color-1: #023;
+	--difficulty-color-2: #223;
+	--difficulty-color-3: #523;
+	--difficulty-color-4: #824;
 }
 
 body {

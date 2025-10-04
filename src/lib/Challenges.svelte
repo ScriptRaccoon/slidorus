@@ -21,6 +21,7 @@
 	<div>
 		{#each challenges as challenge}
 			<button
+				data-difficulty={challenge.difficulty}
 				onclick={() =>
 					load_challenge(challenge.pieces, challenge.rows, challenge.cols)}
 			>
@@ -45,11 +46,27 @@
 		border-radius: 0.25rem;
 		padding-block: 0.2rem;
 		font-size: 0.75rem;
-		background-color: var(--challenge-color);
+		background-color: var(--color);
 		white-space: nowrap;
 
 		&:not(:hover, :focus-visible) {
 			outline: 1px solid var(--dark-outline-color);
+		}
+
+		&[data-difficulty='1'] {
+			--color: var(--difficulty-color-1);
+		}
+
+		&[data-difficulty='2'] {
+			--color: var(--difficulty-color-2);
+		}
+
+		&[data-difficulty='3'] {
+			--color: var(--difficulty-color-3);
+		}
+
+		&[data-difficulty='4'] {
+			--color: var(--difficulty-color-4);
 		}
 	}
 </style>
