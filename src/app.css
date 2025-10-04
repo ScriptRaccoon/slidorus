@@ -58,12 +58,11 @@ button {
 
 	&:focus-visible,
 	&:hover {
-		outline: 1px solid var(--outline-color) !important;
+		outline: 1px solid var(--outline-color);
 	}
 
 	&:disabled {
-		cursor: initial;
-		outline: none !important;
+		pointer-events: none;
 	}
 }
 

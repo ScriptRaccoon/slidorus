@@ -42,10 +42,13 @@
 	}
 
 	button {
-		outline: 0.1rem solid var(--dark-outline-color);
 		border-radius: 0.25rem;
 		padding: 0.1rem 0.4rem;
 		font-size: 0.75rem;
 		text-decoration: none;
+
+		&:not(:hover, :focus-visible) {
+			outline: 0.1rem solid var(--dark-outline-color);
+		}
 	}
 </style>
