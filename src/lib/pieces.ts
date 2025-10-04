@@ -303,7 +303,7 @@ export function get_visible_pieces(pieces: Piece[]): Piece[] {
 	)
 }
 
-function execute_row_move(
+export function execute_row_move(
 	pieces: Piece[],
 	row_connections: number[][],
 	row: number,
@@ -313,13 +313,13 @@ function execute_row_move(
 	const affected_rows = get_connected_rows(pieces, row_connections, row)
 	const affected_pieces = pieces.filter((piece) => affected_rows.includes(piece.y))
 	const is_blocked = affected_pieces.some((piece) => piece.fixed)
-	if (is_blocked) throw new Error('Row move is not possible because of a fixed piece')
+	if (is_blocked) throw new Error(`Row ${row + 1} is blocked`)
 	for (const piece of affected_pieces) {
 		piece.x = (piece.x + delta + 9) % 9
 	}
 }
 
-function execute_col_move(
+export function execute_col_move(
 	pieces: Piece[],
 	col_connections: number[][],
 	col: number,
@@ -329,8 +329,7 @@ function execute_col_move(
 	const affected_cols = get_connected_cols(pieces, col_connections, col)
 	const affected_pieces = pieces.filter((piece) => affected_cols.includes(piece.x))
 	const is_blocked = affected_pieces.some((piece) => piece.fixed)
-	if (is_blocked)
-		throw new Error('Column move is not possible because of a fixed piece')
+	if (is_blocked) throw new Error(`Column ${col + 1} is blocked`)
 	for (const piece of affected_pieces) {
 		piece.y = (piece.y + delta + 9) % 9
 	}

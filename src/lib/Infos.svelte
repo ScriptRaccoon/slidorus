@@ -29,6 +29,11 @@
 	</p>
 
 	<p>
+		The rows can also be moved by using the keys 1,2,...,9, and the columns by using
+		the keys q,w,...,o. The shift key toggles the direction.
+	</p>
+
+	<p>
 		The code for this application can be found on
 		<a href="https://github.com/ScriptRaccoon/slidorus" target="_blank">GitHub</a>.
 		Contributions and feedback are welcome!

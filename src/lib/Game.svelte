@@ -99,7 +99,7 @@
 		if (is_blocked) {
 			reset_movement()
 			send_toast({
-				title: `${name} is blocked`,
+				title: `${name} ${valid_line + 1} is blocked`,
 				variant: 'error',
 			})
 			return

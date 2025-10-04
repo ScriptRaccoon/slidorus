@@ -12,6 +12,8 @@
 		revert_pieces_edits,
 		type Piece,
 		decode_config,
+		execute_row_move,
+		execute_col_move,
 	} from './lib/pieces'
 	import Torus from './lib/Torus.svelte'
 	import Toast, { send_toast } from './lib/Toast.svelte'
@@ -20,6 +22,7 @@
 	import Challenges from './lib/Challenges.svelte'
 	import { decode_sets, encode_sets } from './utils'
 	import { app } from './lib/state.svelte'
+	import { COL_KEYS, ROW_KEYS } from './lib/keys'
 
 	const initial_pieces = get_initial_pieces()
 
@@ -190,7 +193,37 @@
 		document.addEventListener('dragover', (e) => e.preventDefault())
 		document.addEventListener('drop', (e) => e.preventDefault())
 	})
+
+	function handle_keydown(e: KeyboardEvent) {
+		const delta = e.shiftKey ? -1 : 1
+		const row = ROW_KEYS.findIndex((row) => row === e.code)
+		if (row >= 0) {
+			try {
+				execute_row_move(pieces, row_connections, row, delta)
+			} catch (err) {
+				send_toast({
+					title: (err as Error).message,
+					variant: 'error',
+				})
+			}
+			return
+		}
+
+		const col = COL_KEYS.findIndex((col) => col === e.code)
+		if (col >= 0) {
+			try {
+				execute_col_move(pieces, col_connections, col, delta)
+			} catch (err) {
+				send_toast({
+					title: (err as Error).message,
+					variant: 'error',
+				})
+			}
+		}
+	}
 </script>
+
+<svelte:window onkeydown={handle_keydown} />
 
 <Header />
 
