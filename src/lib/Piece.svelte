@@ -32,11 +32,11 @@
 <style>
 	.piece {
 		position: absolute;
-		width: var(--dim);
-		height: var(--dim);
+		width: var(--u);
+		height: var(--u);
 		background-color: var(--color, gray);
-		transform: translateX(calc(var(--x) * var(--dim) + var(--dx) * 1px))
-			translateY(calc(var(--y) * var(--dim) + var(--dy) * 1px));
+		transform: translateX(calc(var(--x) * var(--u) + var(--dx) * 1px))
+			translateY(calc(var(--y) * var(--u) + var(--dy) * 1px));
 		transition: transform 80ms ease-out;
 		border: var(--border) solid var(--bg-color);
 		border-radius: 15%;
@@ -52,14 +52,14 @@
 			border-right: none;
 			border-top-right-radius: 0;
 			border-bottom-right-radius: 0;
-			width: calc(var(--dim) + 1px);
+			width: calc(var(--u) + 1px);
 		}
 
 		&.bandaged_down {
 			border-bottom: none;
 			border-bottom-left-radius: 0;
 			border-bottom-right-radius: 0;
-			height: calc(var(--dim) + 1px);
+			height: calc(var(--u) + 1px);
 		}
 
 		&.bandaged_left {

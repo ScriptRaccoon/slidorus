@@ -277,11 +277,11 @@
 <style>
 	.game {
 		position: relative;
-		--dim: calc(var(--size) / 9);
+		--u: calc(var(--size) / 9);
 
 		@media (max-width: 720px) {
-			padding-right: calc(0.25 * var(--dim));
-			margin-left: calc(-0.1 * var(--dim));
+			padding-right: calc(0.25 * var(--u));
+			margin-left: calc(-0.1 * var(--u));
 		}
 	}
 

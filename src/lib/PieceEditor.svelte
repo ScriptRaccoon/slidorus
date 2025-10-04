@@ -82,21 +82,21 @@
 		width: 2%;
 		height: 2%;
 		border-radius: 50%;
-		left: calc(var(--x) * var(--dim) + var(--dim) / 2);
-		top: calc(var(--y) * var(--dim) + var(--dim) / 2);
+		left: calc(var(--x) * var(--u) + var(--u) / 2);
+		top: calc(var(--y) * var(--u) + var(--u) / 2);
 	}
 
 	.bandager[data-direction='right'] {
 		width: 3.75%;
 		height: 1.75%;
-		left: calc(var(--x) * var(--dim) + var(--dim));
-		top: calc(var(--y) * var(--dim) + var(--dim) / 2);
+		left: calc(var(--x) * var(--u) + var(--u));
+		top: calc(var(--y) * var(--u) + var(--u) / 2);
 	}
 
 	.bandager[data-direction='down'] {
 		width: 1.75%;
 		height: 3.75%;
-		left: calc(var(--x) * var(--dim) + var(--dim) / 2);
-		top: calc(var(--y) * var(--dim) + var(--dim));
+		left: calc(var(--x) * var(--u) + var(--u) / 2);
+		top: calc(var(--y) * var(--u) + var(--u));
 	}
 </style>
