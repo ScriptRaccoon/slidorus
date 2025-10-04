@@ -1,21 +1,14 @@
 <script lang="ts">
-	import type { Piece as PieceType } from '../piece'
+	import type { Piece as PieceType } from '../piece.svelte'
 
 	type Props = {
 		piece: PieceType
 		toggle_bandage_right: () => void
 		toggle_bandage_down: () => void
-		toggle_fixed: () => void
 		disabled: boolean
 	}
 
-	let {
-		piece,
-		toggle_bandage_down,
-		toggle_bandage_right,
-		toggle_fixed,
-		disabled,
-	}: Props = $props()
+	let { piece, toggle_bandage_down, toggle_bandage_right, disabled }: Props = $props()
 </script>
 
 <button
@@ -47,7 +40,7 @@
 <button
 	{disabled}
 	class="fixer"
-	onclick={toggle_fixed}
+	onclick={() => piece.toggle_fixed()}
 	aria-label="fix piece"
 	role="switch"
 	aria-checked={piece.fixed}

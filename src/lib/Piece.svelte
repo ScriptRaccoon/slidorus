@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Piece as PieceType } from '../piece'
+	import type { Piece as PieceType } from '../piece.svelte'
 
 	type Props = {
 		piece: PieceType

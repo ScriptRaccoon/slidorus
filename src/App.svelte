@@ -21,7 +21,7 @@
 	import Challenges from './lib/Challenges.svelte'
 	import { decode_sets, encode_sets } from './utils'
 	import { COL_KEYS, ROW_KEYS } from './config'
-	import type { Piece } from './piece'
+	import type { Piece } from './piece.svelte'
 
 	let pieces_array = $state<Piece[][]>(create_piece_array())
 

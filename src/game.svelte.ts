@@ -1,19 +1,10 @@
-import {
-	adjust_piece,
-	get_copy,
-	get_default_piece,
-	reset_piece_position,
-	revert_piece_edits,
-	type Piece,
-} from './piece'
+import { Piece } from './piece.svelte'
 import { sleep } from './utils'
 
-type GameType = {
+export const game = $state<{
 	pieces: Piece[]
 	state: 'idle' | 'moving' | 'scrambling' | 'editing'
-}
-
-export const game = $state<GameType>({ pieces: get_initial_pieces(), state: 'idle' })
+}>({ pieces: get_initial_pieces(), state: 'idle' })
 
 export function get_initial_pieces() {
 	const pieces: Piece[] = []
@@ -25,7 +16,7 @@ export function get_initial_pieces() {
 				for (let x = 0; x < 3; x++) {
 					const piece_x = 3 * col + x
 					const piece_y = 3 * row + y
-					const piece = get_default_piece(piece_x, piece_y, piece_type)
+					const piece = new Piece(piece_x, piece_y, piece_type)
 					pieces.push(piece)
 				}
 			}
@@ -37,7 +28,7 @@ export function get_initial_pieces() {
 
 export function reset_pieces_positions() {
 	for (const piece of game.pieces) {
-		reset_piece_position(piece)
+		piece.reset_position()
 	}
 }
 
@@ -69,13 +60,13 @@ export function check_solved(): boolean {
 
 export function revert_pieces_edits() {
 	for (const piece of game.pieces) {
-		revert_piece_edits(piece)
+		piece.revert_edits()
 	}
 }
 
 export function adjust_pieces() {
 	for (const piece of game.pieces) {
-		adjust_piece(piece)
+		piece.adjust()
 	}
 }
 
@@ -213,7 +204,7 @@ export function create_copies_horizontal(moving_rows: number[]) {
 			)
 			if (piece_in_row) {
 				for (const offset of offsets) {
-					const copy = get_copy(piece_in_row)
+					const copy = piece_in_row.get_copy()
 					copy.x += offset * 9
 					copies.push(copy)
 				}
@@ -236,7 +227,7 @@ export function create_copies_vertical(moving_cols: number[]) {
 
 			if (piece_in_col) {
 				for (const offset of offsets) {
-					const copy = get_copy(piece_in_col)
+					const copy = piece_in_col.get_copy()
 					copy.y += offset * 9
 					copies.push(copy)
 				}
@@ -381,26 +372,24 @@ export function decode_config(config: string) {
 			throw new Error(`Invalid flags: ${flags_str}`)
 		}
 
-		const id = crypto.randomUUID()
 		const x = index % 9
 		const y = Math.floor(index / 9)
 		const type = Math.floor(x / 3) + Math.floor(y / 3) * 3
 
-		const piece: Piece = {
-			id,
-			x,
-			y,
-			original_x: x,
-			original_y: y,
-			dx: 0,
-			dy: 0,
-			type,
-			fixed: Boolean(flags & 0b10000),
-			bandaged_up: Boolean(flags & 0b01000),
-			bandaged_right: Boolean(flags & 0b00100),
-			bandaged_down: Boolean(flags & 0b00010),
-			bandaged_left: Boolean(flags & 0b00001),
-		}
+		const piece = $state(
+			new Piece(
+				x,
+				y,
+				type,
+				x,
+				y,
+				Boolean(flags & 0b10000),
+				Boolean(flags & 0b01000),
+				Boolean(flags & 0b00100),
+				Boolean(flags & 0b00010),
+				Boolean(flags & 0b00001),
+			),
+		)
 
 		result.push(piece)
 		seen.add(index)
@@ -410,26 +399,8 @@ export function decode_config(config: string) {
 		for (let x = 0; x < 9; x++) {
 			const index = y * 9 + x
 			if (seen.has(index)) continue
-
-			const id = crypto.randomUUID()
 			const type = Math.floor(x / 3) + Math.floor(y / 3) * 3
-
-			const piece: Piece = {
-				id,
-				x,
-				y,
-				original_x: x,
-				original_y: y,
-				dx: 0,
-				dy: 0,
-				type,
-				fixed: false,
-				bandaged_up: false,
-				bandaged_right: false,
-				bandaged_down: false,
-				bandaged_left: false,
-			}
-
+			const piece = $state(new Piece(x, y, type))
 			result.push(piece)
 		}
 	}

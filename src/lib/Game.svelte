@@ -16,7 +16,7 @@
 		toggle_bandage,
 	} from '../game.svelte'
 	import { send_toast } from './Toast.svelte'
-	import { toggle_fixed, type Piece } from '../piece'
+	import { type Piece } from '../piece.svelte'
 
 	type Props = {
 		update_pieces_array: () => void
@@ -239,7 +239,6 @@
 			{piece}
 			toggle_bandage_down={() => toggle_bandage(piece, 'down')}
 			toggle_bandage_right={() => toggle_bandage(piece, 'right')}
-			toggle_fixed={() => toggle_fixed(piece)}
 		></PieceEditor>
 	{/each}
 
