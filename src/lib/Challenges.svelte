@@ -3,7 +3,11 @@
 	import challenges from '../data/challenges.json'
 
 	type Props = {
-		load_challenge: (config: string, rows: string, cols: string) => void
+		load_challenge: (
+			pieces_config: string,
+			rows_config: string,
+			cols_config: string,
+		) => void
 	}
 
 	let { load_challenge }: Props = $props()
@@ -19,7 +23,7 @@
 			<li>
 				<button
 					onclick={() =>
-						load_challenge(challenge.config, challenge.rows, challenge.cols)}
+						load_challenge(challenge.pieces, challenge.rows, challenge.cols)}
 				>
 					{challenge.name}
 				</button>

@@ -79,24 +79,29 @@
 		}
 	}
 
-	function update_URL(config: string | null, rows: string | null, cols: string | null) {
-		config ??= encode_pieces(pieces)
-		rows ??= encode_sets(row_connections)
-		cols ??= encode_sets(col_connections)
+	function update_URL(
+		pieces_config: string | null,
+		rows_config: string | null,
+		cols_config: string | null,
+	) {
+		pieces_config ??= encode_pieces(pieces)
+		rows_config ??= encode_sets(row_connections)
+		cols_config ??= encode_sets(col_connections)
+
 		const url = new URL(window.location.origin)
 
-		if (config) {
-			url.searchParams.set('config', config)
+		if (pieces_config) {
+			url.searchParams.set('pieces', pieces_config)
 		} else {
-			url.searchParams.delete('config')
+			url.searchParams.delete('pieces')
 		}
-		if (rows) {
-			url.searchParams.set('rows', rows)
+		if (rows_config) {
+			url.searchParams.set('rows', rows_config)
 		} else {
 			url.searchParams.delete('rows')
 		}
-		if (cols) {
-			url.searchParams.set('cols', cols)
+		if (cols_config) {
+			url.searchParams.set('cols', cols_config)
 		} else {
 			url.searchParams.delete('cols')
 		}
@@ -121,14 +126,14 @@
 	}
 
 	function load_challenge(
-		config: string | null,
-		rows: string | null,
-		cols: string | null,
+		pieces_config: string | null,
+		rows_config: string | null,
+		cols_config: string | null,
 		options: { update_URL: boolean },
 	) {
-		if (config !== null) {
+		if (pieces_config !== null) {
 			try {
-				pieces = decode_config(config)
+				pieces = decode_config(pieces_config)
 				update_pieces_array()
 			} catch (err) {
 				console.error(err)
@@ -140,9 +145,9 @@
 			}
 		}
 
-		if (rows !== null) {
+		if (rows_config !== null) {
 			try {
-				row_connections = decode_sets(rows)
+				row_connections = decode_sets(rows_config)
 			} catch (err) {
 				console.error(err)
 				send_toast({
@@ -152,9 +157,9 @@
 			}
 		}
 
-		if (cols !== null) {
+		if (cols_config !== null) {
 			try {
-				col_connections = decode_sets(cols)
+				col_connections = decode_sets(cols_config)
 			} catch (err) {
 				console.error(err)
 				send_toast({
@@ -164,15 +169,15 @@
 			}
 		}
 
-		if (options.update_URL) update_URL(config, rows, cols)
+		if (options.update_URL) update_URL(pieces_config, rows_config, cols_config)
 	}
 
 	function load_config_from_URL() {
 		const url = new URL(window.location.href)
-		const config = url.searchParams.get('config')
-		const rows = url.searchParams.get('rows')
-		const cols = url.searchParams.get('cols')
-		load_challenge(config, rows, cols, { update_URL: false })
+		const pieces_config = url.searchParams.get('pieces')
+		const rows_config = url.searchParams.get('rows')
+		const cols_config = url.searchParams.get('cols')
+		load_challenge(pieces_config, rows_config, cols_config, { update_URL: false })
 	}
 
 	function clear_connections() {
@@ -223,8 +228,10 @@
 
 	{#if app.state !== 'editing'}
 		<Challenges
-			load_challenge={(config, rows, cols) =>
-				load_challenge(config, rows, cols, { update_URL: true })}
+			load_challenge={(pieces_config, rows_config, cols_config) =>
+				load_challenge(pieces_config, rows_config, cols_config, {
+					update_URL: true,
+				})}
 		/>
 		<Infos />
 	{/if}
