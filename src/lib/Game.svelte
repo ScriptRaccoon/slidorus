@@ -4,21 +4,21 @@
 	import PieceComponent from './Piece.svelte'
 	import PieceEditor from './PieceEditor.svelte'
 	import {
+		adjust_pieces,
 		check_solved,
 		create_copies_horizontal,
 		create_copies_vertical,
+		game,
 		get_connected_cols,
 		get_connected_rows,
-		get_visible_pieces,
+		get_pieces_in_lines,
+		reduce_to_visible_pieces,
 		toggle_bandage,
-		toggle_fixed,
-		type Piece,
-	} from '../pieces'
-	import { app } from '../config.svelte'
+	} from '../game.svelte'
 	import { send_toast } from './Toast.svelte'
+	import { toggle_fixed, type Piece } from '../piece'
 
 	type Props = {
-		pieces: Piece[]
 		update_pieces_array: () => void
 		move_count: number
 		row_connections: number[][]
@@ -26,7 +26,6 @@
 	}
 
 	let {
-		pieces = $bindable(),
 		update_pieces_array,
 		move_count = $bindable(),
 		row_connections = $bindable(),
@@ -44,13 +43,13 @@
 	let active_col = $state<number | null>(null)
 
 	function handle_mouse_down(e: MouseEvent | TouchEvent) {
-		if (app.state !== 'idle') return
+		if (game.state !== 'idle') return
 		clicked_pos = get_position(e)
-		app.state = 'moving'
+		game.state = 'moving'
 	}
 
 	function handle_mouse_move(e: MouseEvent | TouchEvent) {
-		if (app.state !== 'moving' || !clicked_pos) return
+		if (game.state !== 'moving' || !clicked_pos) return
 
 		const current_pos = get_position(e)
 		const dx = current_pos.x - clicked_pos.x
@@ -89,12 +88,12 @@
 
 		moving_lines =
 			move_direction === 'horizontal'
-				? get_connected_rows(pieces, row_connections, valid_line)
-				: get_connected_cols(pieces, col_connections, valid_line)
+				? get_connected_rows(row_connections, valid_line)
+				: get_connected_cols(col_connections, valid_line)
 
-		const is_blocked = pieces.some(
-			(piece) => moving_lines.includes(piece[coord]) && piece.fixed,
-		)
+		const pieces_in_lines = get_pieces_in_lines(moving_lines, coord)
+
+		const is_blocked = pieces_in_lines.some((piece) => piece.fixed)
 
 		if (is_blocked) {
 			reset_movement()
@@ -105,18 +104,15 @@
 			return
 		}
 
-		const copies =
-			move_direction === 'horizontal'
-				? create_copies_horizontal(pieces, moving_lines)
-				: create_copies_vertical(pieces, moving_lines)
+		move_direction === 'horizontal'
+			? create_copies_horizontal(moving_lines)
+			: create_copies_vertical(moving_lines)
 
-		pieces = pieces.concat(copies)
-
-		moving_pieces = pieces.filter((piece) => moving_lines.includes(piece[coord]))
+		moving_pieces = get_pieces_in_lines(moving_lines, coord)
 	}
 
 	function handle_mouse_up(e: MouseEvent | TouchEvent) {
-		if (app.state !== 'moving' || !clicked_pos) return
+		if (game.state !== 'moving' || !clicked_pos) return
 
 		const current_pos = get_changed_position(e)
 		const coord = move_direction === 'horizontal' ? 'x' : 'y'
@@ -138,22 +134,19 @@
 	}
 
 	function reset_movement() {
-		pieces = get_visible_pieces(pieces)
-		for (const piece of pieces) {
-			piece.dx = 0
-			piece.dy = 0
-		}
+		reduce_to_visible_pieces()
+		adjust_pieces()
 		clicked_pos = null
 		move_direction = null
 		moving_pieces = []
 		moving_lines = []
 		setTimeout(() => {
-			app.state = 'idle'
+			game.state = 'idle'
 		}, 80)
 	}
 
 	function handle_solved_state() {
-		const is_solved = check_solved(pieces)
+		const is_solved = check_solved()
 		if (!is_solved) return
 
 		send_toast({
@@ -163,7 +156,7 @@
 	}
 
 	function handle_keydown(e: KeyboardEvent) {
-		if (e.key === 'Escape' && app.state === 'moving') {
+		if (e.key === 'Escape' && game.state === 'moving') {
 			reset_movement()
 		}
 	}
@@ -224,7 +217,7 @@
 <div class="game" style:--size="{square_size}px">
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		class="square {app.state}"
+		class="square {game.state}"
 		bind:this={square_element}
 		bind:clientWidth={square_size}
 		onmousedown={handle_mouse_down}
@@ -235,17 +228,17 @@
 		ontouchmove={throttle(handle_mouse_move, 1000 / 60)}
 		ontouchend={handle_mouse_up}
 	>
-		{#each pieces as piece (piece.id)}
-			<PieceComponent {piece} animated={app.state === 'moving'} />
+		{#each game.pieces as piece (piece.id)}
+			<PieceComponent {piece} animated={game.state === 'moving'} />
 		{/each}
 	</div>
 
-	{#each pieces as piece (piece.id)}
+	{#each game.pieces as piece (piece.id)}
 		<PieceEditor
-			disabled={app.state !== 'editing'}
+			disabled={game.state !== 'editing'}
 			{piece}
-			toggle_bandage_down={() => toggle_bandage(piece, pieces, 'down')}
-			toggle_bandage_right={() => toggle_bandage(piece, pieces, 'right')}
+			toggle_bandage_down={() => toggle_bandage(piece, 'down')}
+			toggle_bandage_right={() => toggle_bandage(piece, 'right')}
 			toggle_fixed={() => toggle_fixed(piece)}
 		></PieceEditor>
 	{/each}
@@ -254,7 +247,7 @@
 		<Connector
 			type="row"
 			index={row}
-			disabled={app.state !== 'editing'}
+			disabled={game.state !== 'editing'}
 			active={row === active_row}
 			connect={() => connect_row(row)}
 			remove={() => remove_connection(row_connections, row)}
@@ -266,7 +259,7 @@
 		<Connector
 			type="col"
 			index={col}
-			disabled={app.state !== 'editing'}
+			disabled={game.state !== 'editing'}
 			active={col === active_col}
 			connect={() => connect_col(col)}
 			remove={() => remove_connection(col_connections, col)}

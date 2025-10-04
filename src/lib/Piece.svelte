@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Piece as PieceType } from '../pieces'
+	import type { Piece as PieceType } from '../piece'
 
 	type Props = {
 		piece: PieceType

@@ -1,20 +1,19 @@
+import {
+	adjust_piece,
+	get_copy,
+	get_default_piece,
+	reset_piece_position,
+	revert_piece_edits,
+	type Piece,
+} from './piece'
 import { sleep } from './utils'
 
-export type Piece = {
-	id: string
-	x: number
-	y: number
-	dx: number
-	dy: number
-	original_x: number
-	original_y: number
-	type: number
-	bandaged_right: boolean
-	bandaged_down: boolean
-	bandaged_left: boolean
-	bandaged_up: boolean
-	fixed: boolean
+type GameType = {
+	pieces: Piece[]
+	state: 'idle' | 'moving' | 'scrambling' | 'editing'
 }
+
+export const game = $state<GameType>({ pieces: get_initial_pieces(), state: 'idle' })
 
 export function get_initial_pieces() {
 	const pieces: Piece[] = []
@@ -26,22 +25,7 @@ export function get_initial_pieces() {
 				for (let x = 0; x < 3; x++) {
 					const piece_x = 3 * col + x
 					const piece_y = 3 * row + y
-
-					const piece = {
-						id: crypto.randomUUID(),
-						x: piece_x,
-						y: piece_y,
-						dx: 0,
-						dy: 0,
-						original_x: piece_x,
-						original_y: piece_y,
-						type: piece_type,
-						bandaged_right: false,
-						bandaged_down: false,
-						bandaged_left: false,
-						bandaged_up: false,
-						fixed: false,
-					}
+					const piece = get_default_piece(piece_x, piece_y, piece_type)
 					pieces.push(piece)
 				}
 			}
@@ -51,46 +35,25 @@ export function get_initial_pieces() {
 	return pieces
 }
 
-export function reset_pieces(pieces: Piece[]) {
-	for (const piece of pieces) {
-		piece.x = piece.original_x
-		piece.y = piece.original_y
-		piece.dx = 0
-		piece.dy = 0
+export function reset_pieces_positions() {
+	for (const piece of game.pieces) {
+		reset_piece_position(piece)
 	}
 }
 
-function get_copy(piece: Piece): Piece {
-	return {
-		id: crypto.randomUUID(),
-		x: piece.x,
-		y: piece.y,
-		dx: piece.dx,
-		dy: piece.dy,
-		original_x: piece.original_x,
-		original_y: piece.original_y,
-		type: piece.type,
-		bandaged_right: piece.bandaged_right,
-		bandaged_down: piece.bandaged_down,
-		bandaged_left: piece.bandaged_left,
-		bandaged_up: piece.bandaged_up,
-		fixed: piece.fixed,
-	}
-}
-
-export function create_piece_array(pieces: Piece[]): Piece[][] {
+export function create_piece_array(): Piece[][] {
 	const result: Piece[][] = []
-	for (const piece of pieces) {
+	for (const piece of game.pieces) {
 		if (!result[piece.y]) result[piece.y] = []
 		result[piece.y][piece.x] = piece
 	}
 	return result
 }
 
-export function check_solved(pieces: Piece[]): boolean {
+export function check_solved(): boolean {
 	for (let row = 0; row < 3; row++) {
 		for (let col = 0; col < 3; col++) {
-			const block_pieces = pieces.filter(
+			const block_pieces = game.pieces.filter(
 				(piece) =>
 					piece.x >= 3 * col &&
 					piece.x < 3 * (col + 1) &&
@@ -104,29 +67,23 @@ export function check_solved(pieces: Piece[]): boolean {
 	return true
 }
 
-export function revert_pieces_edits(pieces: Piece[]) {
-	for (const piece of pieces) {
-		piece.bandaged_right = false
-		piece.bandaged_down = false
-		piece.bandaged_left = false
-		piece.bandaged_up = false
-		piece.fixed = false
+export function revert_pieces_edits() {
+	for (const piece of game.pieces) {
+		revert_piece_edits(piece)
 	}
 }
 
-export function toggle_fixed(piece: Piece) {
-	piece.fixed = !piece.fixed
+export function adjust_pieces() {
+	for (const piece of game.pieces) {
+		adjust_piece(piece)
+	}
 }
 
-export function toggle_bandage(
-	piece: Piece,
-	pieces: Piece[],
-	direction: 'right' | 'down',
-) {
+export function toggle_bandage(piece: Piece, direction: 'right' | 'down') {
 	switch (direction) {
 		case 'right':
 			piece.bandaged_right = !piece.bandaged_right
-			const adjacent_piece_right = pieces.find(
+			const adjacent_piece_right = game.pieces.find(
 				(p) => p.x === (piece.x + 1) % 9 && p.y === piece.y,
 			)
 			if (adjacent_piece_right) {
@@ -135,7 +92,7 @@ export function toggle_bandage(
 			break
 		case 'down':
 			piece.bandaged_down = !piece.bandaged_down
-			const adjacent_piece_down = pieces.find(
+			const adjacent_piece_down = game.pieces.find(
 				(p) => p.x === piece.x && p.y === (piece.y + 1) % 9,
 			)
 			if (adjacent_piece_down) {
@@ -145,11 +102,7 @@ export function toggle_bandage(
 	}
 }
 
-export function get_connected_rows(
-	pieces: Piece[],
-	row_connections: number[][],
-	row: number,
-): number[] {
+export function get_connected_rows(row_connections: number[][], row: number): number[] {
 	const connected_rows = new Set([row])
 
 	function close_under_connections() {
@@ -166,7 +119,7 @@ export function get_connected_rows(
 	}
 
 	function close_under_bandaging_below() {
-		const piece = pieces.find(
+		const piece = game.pieces.find(
 			(piece) =>
 				piece.bandaged_down &&
 				connected_rows.has(piece.y) &&
@@ -177,7 +130,7 @@ export function get_connected_rows(
 	}
 
 	function close_under_bandaging_above() {
-		const piece = pieces.find(
+		const piece = game.pieces.find(
 			(piece) =>
 				piece.bandaged_up &&
 				connected_rows.has(piece.y) &&
@@ -197,11 +150,7 @@ export function get_connected_rows(
 	return Array.from(connected_rows)
 }
 
-export function get_connected_cols(
-	pieces: Piece[],
-	col_connections: number[][],
-	col: number,
-): number[] {
+export function get_connected_cols(col_connections: number[][], col: number): number[] {
 	const connected_cols = new Set([col])
 
 	function close_under_connections() {
@@ -218,7 +167,7 @@ export function get_connected_cols(
 	}
 
 	function close_under_bandaging_right() {
-		const piece = pieces.find(
+		const piece = game.pieces.find(
 			(piece) =>
 				piece.bandaged_right &&
 				connected_cols.has(piece.x) &&
@@ -229,7 +178,7 @@ export function get_connected_cols(
 	}
 
 	function close_under_bandaging_left() {
-		const piece = pieces.find(
+		const piece = game.pieces.find(
 			(piece) =>
 				piece.bandaged_left &&
 				connected_cols.has(piece.x) &&
@@ -249,16 +198,17 @@ export function get_connected_cols(
 	return Array.from(connected_cols)
 }
 
-export function create_copies_horizontal(
-	pieces: Piece[],
-	moving_rows: number[],
-): Piece[] {
+export function get_pieces_in_lines(lines: number[], coord: 'x' | 'y') {
+	return game.pieces.filter((piece) => lines.includes(piece[coord]))
+}
+
+export function create_copies_horizontal(moving_rows: number[]) {
 	const copies: Piece[] = []
 	const offsets = [1, 2, -1, -2]
 
 	for (let x = 0; x < 9; x++) {
 		for (const moving_row of moving_rows) {
-			const piece_in_row = pieces.find(
+			const piece_in_row = game.pieces.find(
 				(piece) => piece.x === x && piece.y === moving_row,
 			)
 			if (piece_in_row) {
@@ -271,16 +221,16 @@ export function create_copies_horizontal(
 		}
 	}
 
-	return copies
+	game.pieces = game.pieces.concat(copies)
 }
 
-export function create_copies_vertical(pieces: Piece[], moving_cols: number[]): Piece[] {
+export function create_copies_vertical(moving_cols: number[]) {
 	const copies: Piece[] = []
 	const offsets = [1, 2, -1, -2]
 
 	for (let y = 0; y < 9; y++) {
 		for (const moving_col of moving_cols) {
-			const piece_in_col = pieces.find(
+			const piece_in_col = game.pieces.find(
 				(piece) => piece.x === moving_col && piece.y === y,
 			)
 
@@ -294,24 +244,23 @@ export function create_copies_vertical(pieces: Piece[], moving_cols: number[]): 
 		}
 	}
 
-	return copies
+	game.pieces = game.pieces.concat(copies)
 }
 
-export function get_visible_pieces(pieces: Piece[]): Piece[] {
-	return pieces.filter(
+export function reduce_to_visible_pieces() {
+	game.pieces = game.pieces.filter(
 		(piece) => piece.x >= 0 && piece.x < 9 && piece.y >= 0 && piece.y < 9,
 	)
 }
 
 export function execute_row_move(
-	pieces: Piece[],
 	row_connections: number[][],
 	row: number,
 	delta: number,
 ) {
 	if (delta === 0 || delta != Math.floor(delta)) return
-	const affected_rows = get_connected_rows(pieces, row_connections, row)
-	const affected_pieces = pieces.filter((piece) => affected_rows.includes(piece.y))
+	const affected_rows = get_connected_rows(row_connections, row)
+	const affected_pieces = game.pieces.filter((piece) => affected_rows.includes(piece.y))
 	const is_blocked = affected_pieces.some((piece) => piece.fixed)
 	if (is_blocked) throw new Error(`Row ${row + 1} is blocked`)
 	for (const piece of affected_pieces) {
@@ -320,14 +269,13 @@ export function execute_row_move(
 }
 
 export function execute_col_move(
-	pieces: Piece[],
 	col_connections: number[][],
 	col: number,
 	delta: number,
 ) {
 	if (delta === 0 || delta != Math.floor(delta)) return
-	const affected_cols = get_connected_cols(pieces, col_connections, col)
-	const affected_pieces = pieces.filter((piece) => affected_cols.includes(piece.x))
+	const affected_cols = get_connected_cols(col_connections, col)
+	const affected_pieces = game.pieces.filter((piece) => affected_cols.includes(piece.x))
 	const is_blocked = affected_pieces.some((piece) => piece.fixed)
 	if (is_blocked) throw new Error(`Column ${col + 1} is blocked`)
 	for (const piece of affected_pieces) {
@@ -335,24 +283,19 @@ export function execute_col_move(
 	}
 }
 
-function execute_random_move(
-	pieces: Piece[],
-	row_connections: number[][],
-	col_connections: number[][],
-) {
+function execute_random_move(row_connections: number[][], col_connections: number[][]) {
 	const is_horizontal = Math.random() < 0.5
 	const index = Math.floor(Math.random() * 9)
 	let delta = Math.floor(Math.random() * 17) - 8
 	if (delta === 0) delta = 1
 	if (is_horizontal) {
-		execute_row_move(pieces, row_connections, index, delta)
+		execute_row_move(row_connections, index, delta)
 	} else {
-		execute_col_move(pieces, col_connections, index, delta)
+		execute_col_move(col_connections, index, delta)
 	}
 }
 
 export async function scramble_pieces(
-	pieces: Piece[],
 	row_connections: number[][],
 	col_connections: number[][],
 	wait = 0,
@@ -362,7 +305,7 @@ export async function scramble_pieces(
 	for (let i = 0; i < moves; i++) {
 		attempts++
 		try {
-			execute_random_move(pieces, row_connections, col_connections)
+			execute_random_move(row_connections, col_connections)
 			await sleep(wait)
 		} catch (_) {
 			if (attempts < moves * 100) i--
@@ -389,8 +332,8 @@ export async function scramble_pieces(
  *   - Flags = 00100₂ = 4 → "4" (base-36).
  *   - Encoded = "1f4".
  */
-export function encode_pieces(pieces: Piece[]): string {
-	return pieces
+export function encode_pieces(): string {
+	return game.pieces
 		.filter(
 			(piece) =>
 				piece.fixed ||
@@ -418,7 +361,7 @@ export function encode_pieces(pieces: Piece[]): string {
 /**
  * Decodes a configuration string produced by {@link encode_pieces}.
  */
-export function decode_config(config: string): Piece[] {
+export function decode_config(config: string) {
 	const result: Piece[] = []
 	const seen = new Set<number>()
 
@@ -491,5 +434,5 @@ export function decode_config(config: string): Piece[] {
 		}
 	}
 
-	return result
+	game.pieces = result
 }

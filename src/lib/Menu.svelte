@@ -8,7 +8,7 @@
 		Shuffle,
 		SquarePen,
 	} from '@lucide/svelte'
-	import { app } from '../config.svelte'
+	import { game } from '../game.svelte'
 
 	type Props = {
 		scramble: () => void
@@ -32,11 +32,11 @@
 </script>
 
 <menu>
-	{#if app.state !== 'editing'}
-		<button onclick={scramble} disabled={app.state !== 'idle'}>
+	{#if game.state !== 'editing'}
+		<button onclick={scramble} disabled={game.state !== 'idle'}>
 			<Shuffle /> Scramble
 		</button>
-		<button onclick={reset} disabled={app.state !== 'idle'}>
+		<button onclick={reset} disabled={game.state !== 'idle'}>
 			<RotateCcw /> Reset
 		</button>
 		<button onclick={toggle_torus}>
@@ -47,7 +47,7 @@
 			{/if}
 		</button>
 
-		<button onclick={toggle_editing} disabled={app.state !== 'idle'}>
+		<button onclick={toggle_editing} disabled={game.state !== 'idle'}>
 			<SquarePen /> Edit
 		</button>
 
