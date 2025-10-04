@@ -1,5 +1,11 @@
 [
 	{
+		"name": "Zero",
+		"pieces": "",
+		"rows": "",
+		"cols": ""
+	},
+	{
 		"name": "Five Dots",
 		"pieces": "0ag0gg14g1sg1yg",
 		"rows": "",
