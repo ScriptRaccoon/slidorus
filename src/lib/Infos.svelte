@@ -23,8 +23,9 @@
 		An additional option lets you bandage pieces together. This makes the puzzle
 		significantly more complex, especially when many pieces are bandaged. Furthermore,
 		it is possible to make pieces fixed, so that they will not move anymore. This adds
-		yet another level of complexity. The configuration can be shared by using the
-		"Share" button.
+		yet another level of complexity. Finally, rows and columns can be connected to
+		each other, meaning they always move together. The configuration can be shared by
+		using the "Share" button.
 	</p>
 
 	<p>

@@ -16,7 +16,7 @@ An additional option lets you bandage pieces together. This makes the puzzle sig
 
 <img src="/public/screenshot-bandaged.png" width="300" /> <img src="/public/screenshot-bandaged-scrambled.png" width="300" />
 
-Finally, rows and columns can be connected to each other, meaning they always move together. This yields very difficult configurations. Any configuration can be shared via a link.
+Finally, rows and columns can be connected to each other, meaning they always move together. Any configuration can be shared via a link.
 
 The app works on both desktop and mobile. Contributions and feedback are welcome!
 
