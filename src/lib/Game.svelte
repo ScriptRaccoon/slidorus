@@ -238,16 +238,15 @@
 		{/each}
 	</div>
 
-	{#if app.state === 'editing'}
-		{#each pieces as piece (piece.id)}
-			<PieceEditor
-				{piece}
-				toggle_bandage_down={() => toggle_bandage(piece, pieces, 'down')}
-				toggle_bandage_right={() => toggle_bandage(piece, pieces, 'right')}
-				toggle_fixed={() => toggle_fixed(piece)}
-			></PieceEditor>
-		{/each}
-	{/if}
+	{#each pieces as piece (piece.id)}
+		<PieceEditor
+			disabled={app.state !== 'editing'}
+			{piece}
+			toggle_bandage_down={() => toggle_bandage(piece, pieces, 'down')}
+			toggle_bandage_right={() => toggle_bandage(piece, pieces, 'right')}
+			toggle_fixed={() => toggle_fixed(piece)}
+		></PieceEditor>
+	{/each}
 
 	{#each { length: 9 } as _, row}
 		<Connector

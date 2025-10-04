@@ -23,11 +23,7 @@
 	style:--dx={piece.dx}
 	style:--dy={piece.dy}
 	class:no_transition={app.state === 'scrambling'}
->
-	{#if piece.fixed && app.state !== 'editing'}
-		<div class="dot"></div>
-	{/if}
-</div>
+></div>
 
 <style>
 	.piece {
@@ -72,13 +68,6 @@
 			border-top: none;
 			border-top-left-radius: 0;
 			border-top-right-radius: 0;
-		}
-
-		.dot {
-			background-color: var(--bg-color);
-			width: 25%;
-			aspect-ratio: 1;
-			border-radius: 50%;
 		}
 	}
 </style>

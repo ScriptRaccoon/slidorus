@@ -6,13 +6,20 @@
 		toggle_bandage_right: () => void
 		toggle_bandage_down: () => void
 		toggle_fixed: () => void
+		disabled: boolean
 	}
 
-	let { piece, toggle_bandage_down, toggle_bandage_right, toggle_fixed }: Props =
-		$props()
+	let {
+		piece,
+		toggle_bandage_down,
+		toggle_bandage_right,
+		toggle_fixed,
+		disabled,
+	}: Props = $props()
 </script>
 
 <button
+	{disabled}
 	class="bandager"
 	data-direction="right"
 	aria-label="bandage rightwards"
@@ -25,6 +32,7 @@
 </button>
 
 <button
+	{disabled}
 	class="bandager"
 	data-direction="down"
 	aria-label="bandage downwards"
@@ -37,6 +45,7 @@
 </button>
 
 <button
+	{disabled}
 	class="fixer"
 	onclick={toggle_fixed}
 	aria-label="fix piece"
@@ -54,8 +63,12 @@
 		background-color: var(--bg-color);
 		transform: translate(-50%, -50%);
 
-		opacity: 0.15;
-		transition: opacity 120ms;
+		opacity: 0;
+		transition: opacity 200ms;
+
+		&:not(:disabled) {
+			opacity: 0.15;
+		}
 
 		&[aria-checked='true'] {
 			opacity: 1;
@@ -76,27 +89,31 @@
 
 	.bandager {
 		border-radius: 10%;
+
+		&:disabled {
+			opacity: 0;
+		}
+
+		&[data-direction='right'] {
+			width: 3.75%;
+			height: 1.75%;
+			left: calc(var(--x) * var(--u) + var(--u));
+			top: calc(var(--y) * var(--u) + var(--u) / 2);
+		}
+
+		&[data-direction='down'] {
+			width: 1.75%;
+			height: 3.75%;
+			left: calc(var(--x) * var(--u) + var(--u) / 2);
+			top: calc(var(--y) * var(--u) + var(--u));
+		}
 	}
 
 	.fixer {
-		width: 2%;
-		height: 2%;
+		width: calc(0.2 * var(--u));
+		aspect-ratio: 1;
 		border-radius: 50%;
 		left: calc(var(--x) * var(--u) + var(--u) / 2);
 		top: calc(var(--y) * var(--u) + var(--u) / 2);
-	}
-
-	.bandager[data-direction='right'] {
-		width: 3.75%;
-		height: 1.75%;
-		left: calc(var(--x) * var(--u) + var(--u));
-		top: calc(var(--y) * var(--u) + var(--u) / 2);
-	}
-
-	.bandager[data-direction='down'] {
-		width: 1.75%;
-		height: 3.75%;
-		left: calc(var(--x) * var(--u) + var(--u) / 2);
-		top: calc(var(--y) * var(--u) + var(--u));
 	}
 </style>
