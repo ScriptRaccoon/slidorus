@@ -236,5 +236,12 @@
 		"rows": "",
 		"cols": "",
 		"difficulty": 4
+	},
+	{
+		"name": "Entropy",
+		"pieces": "14",
+		"rows": "drdc",
+		"cols": "dr",
+		"difficulty": 4
 	}
 ]
