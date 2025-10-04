@@ -12,9 +12,11 @@ The puzzle is similar to 9×9 [Loopover](https://loopover.xyz/), but with a Rubi
 
 ![screenshot](/public/screenshot-solved.png)
 
-An additional option lets you bandage pieces together. This makes the puzzle significantly more complex, especially when many pieces are bandaged. Furthermore, it is possible to make pieces fixed, so that they will not move anymore. This adds yet another level of complexity. The configuration can be shared via a link.
+An additional option lets you bandage pieces together. This makes the puzzle significantly more complex, especially when many pieces are bandaged. Furthermore, it is possible to make pieces fixed, so that they will not move anymore. This adds yet another level of complexity.
 
 <img src="/public/screenshot-bandaged.png" width="300" /> <img src="/public/screenshot-bandaged-scrambled.png" width="300" />
+
+Finally, rows and columns can be connected to each other, meaning they always move together. This yields very difficult configurations. Any configuration can be shared via a link.
 
 The app works on both desktop and mobile. Contributions and feedback are welcome!
 
