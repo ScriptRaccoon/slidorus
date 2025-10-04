@@ -13,8 +13,8 @@
 		toggle_bandage,
 		toggle_fixed,
 		type Piece,
-	} from './pieces'
-	import { app } from './state.svelte'
+	} from '../pieces'
+	import { app } from '../config.svelte'
 	import { send_toast } from './Toast.svelte'
 
 	type Props = {

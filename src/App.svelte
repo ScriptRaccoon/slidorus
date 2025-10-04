@@ -14,15 +14,14 @@
 		decode_config,
 		execute_row_move,
 		execute_col_move,
-	} from './lib/pieces'
+	} from './pieces'
 	import Torus from './lib/Torus.svelte'
 	import Toast, { send_toast } from './lib/Toast.svelte'
 	import { onMount } from 'svelte'
 	import Instructions from './lib/Instructions.svelte'
 	import Challenges from './lib/Challenges.svelte'
 	import { decode_sets, encode_sets } from './utils'
-	import { app } from './lib/state.svelte'
-	import { COL_KEYS, ROW_KEYS } from './lib/keys'
+	import { app, COL_KEYS, ROW_KEYS } from './config.svelte'
 
 	const initial_pieces = get_initial_pieces()
 

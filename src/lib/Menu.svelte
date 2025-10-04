@@ -8,7 +8,7 @@
 		Shuffle,
 		SquarePen,
 	} from '@lucide/svelte'
-	import { app } from './state.svelte'
+	import { app } from '../config.svelte'
 
 	type Props = {
 		scramble: () => void
