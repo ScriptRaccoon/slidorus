@@ -18,37 +18,38 @@
 		<Trophy /> Challenges
 	</summary>
 
-	<ol>
+	<div>
 		{#each challenges as challenge}
-			<li>
-				<button
-					onclick={() =>
-						load_challenge(challenge.pieces, challenge.rows, challenge.cols)}
-				>
-					{challenge.name}
-				</button>
-			</li>
+			<button
+				onclick={() =>
+					load_challenge(challenge.pieces, challenge.rows, challenge.cols)}
+			>
+				{challenge.name}
+			</button>
 		{/each}
-	</ol>
+	</div>
 </details>
 
 <style>
-	ol {
+	div {
 		margin-top: 1rem;
 		list-style-type: none;
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.4rem 0.6rem;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+		gap: 0.6rem;
 	}
 
 	button {
+		font-family: monospace;
+		text-transform: uppercase;
 		border-radius: 0.25rem;
-		padding: 0.1rem 0.4rem;
+		padding-block: 0.2rem;
 		font-size: 0.75rem;
-		text-decoration: none;
+		background-color: var(--challenge-color);
+		white-space: nowrap;
 
 		&:not(:hover, :focus-visible) {
-			outline: 0.1rem solid var(--dark-outline-color);
+			outline: 1px solid var(--dark-outline-color);
 		}
 	}
 </style>
