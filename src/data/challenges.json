@@ -228,20 +228,20 @@
 		"pieces": "0160230ac0b90d60e30mc0n90f40g10o40p11161231ac1b90v20w21481581c41d51e10z218a1h81r61s320c2191m61n31vc1w92342411o61p31xc1y9",
 		"rows": "",
 		"cols": "",
-		"difficulty": 4
+		"difficulty": 5
 	},
 	{
 		"name": "Madness",
 		"pieces": "00209a0i80k80ha0q80r20s21081941a10y21621781g42182281v624c2591xc1y90v40w11c80ba0u213a1t20e11k10821511440220mg0d40p10o41181w31f81p31o61mg1j41s21h1",
 		"rows": "",
 		"cols": "",
-		"difficulty": 4
+		"difficulty": 5
 	},
 	{
 		"name": "Entropy",
-		"pieces": "14",
-		"rows": "drdc",
+		"pieces": "14g",
+		"rows": "dr",
 		"cols": "dr",
-		"difficulty": 4
+		"difficulty": 5
 	}
 ]

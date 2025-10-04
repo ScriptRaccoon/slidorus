@@ -68,5 +68,9 @@
 		&[data-difficulty='4'] {
 			--color: var(--difficulty-color-4);
 		}
+
+		&[data-difficulty='5'] {
+			--color: var(--difficulty-color-5);
+		}
 	}
 </style>
