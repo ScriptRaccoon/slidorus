@@ -84,7 +84,7 @@
 		"cols": ""
 	},
 	{
-		"name": "X",
+		"name": "Elephant",
 		"pieces": "00g0k90g320g1xc1y928g0a60jc0f60oc0v70w31cc1dd1e90b30p90u613e1o61p31sc1t91j61k308g15b14f",
 		"rows": "",
 		"cols": ""
@@ -102,13 +102,13 @@
 		"cols": ""
 	},
 	{
-		"name": "E",
+		"name": "Books",
 		"pieces": "0e80n10f40g10o40p10w214115a1d11h11r22081m11v11x21y20711741g41l41u41z21e80221k10640t10820v10ba0k81811i41s22181981020r40l40c81j50s50m50d81a81120y40041b81220z10112581wa1n21t20ha0q816a1f80x21341c40u40940a12282342412682782880i40j11o41p51q1032042052",
 		"rows": "",
 		"cols": ""
 	},
 	{
-		"name": "T",
+		"name": "Tea",
 		"pieces": "0t11i40s50p81a81d81g51j51k11o20640750810a40d10g21421781s21v12180520y20r41n21y40020w11120u40v509a0b10c40ea0i80n81f41h11u41wa1xa1z1258268",
 		"rows": "",
 		"cols": ""
@@ -156,13 +156,13 @@
 		"cols": ""
 	},
 	{
-		"name": "Connect 3",
+		"name": "Connect",
 		"pieces": "",
 		"rows": "42",
 		"cols": ""
 	},
 	{
-		"name": "Connect 3+3",
+		"name": "Flow",
 		"pieces": "",
 		"rows": "42",
 		"cols": "42"
