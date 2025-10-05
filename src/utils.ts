@@ -86,3 +86,11 @@ export function decode_sets(encoded: string): number[][] {
 
 	return sets
 }
+
+export function update_URL_param(url: URL, key: string, val: string) {
+	if (val) {
+		url.searchParams.set(key, val)
+	} else {
+		url.searchParams.delete(key)
+	}
+}

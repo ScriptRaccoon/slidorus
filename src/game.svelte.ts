@@ -1,5 +1,5 @@
 import { Piece } from './piece.svelte'
-import { sleep } from './utils'
+import { decode_sets, encode_sets, sleep } from './utils'
 
 class Game {
 	pieces: Piece[]
@@ -376,13 +376,13 @@ class Game {
 	/**
 	 * Decodes a configuration string produced by {@link encode_pieces}.
 	 */
-	decode_config(config: string) {
+	decode_pieces_config(pieces_config: string) {
 		const result: Piece[] = []
 		const seen = new Set<number>()
 
-		for (let i = 0; i < config.length; i += 3) {
-			const coord_str = config.slice(i, i + 2)
-			const flags_str = config[i + 2]
+		for (let i = 0; i < pieces_config.length; i += 3) {
+			const coord_str = pieces_config.slice(i, i + 2)
+			const flags_str = pieces_config[i + 2]
 
 			const index = parseInt(coord_str, 36)
 			const is_valid_index = index >= 0 && index < 81
@@ -430,6 +430,22 @@ class Game {
 		}
 
 		this.pieces = result
+	}
+
+	encode_row_connections() {
+		return encode_sets(this.row_connections)
+	}
+
+	decode_rows_config(rows_config: string) {
+		this.row_connections = decode_sets(rows_config)
+	}
+
+	encode_col_connections() {
+		return encode_sets(this.col_connections)
+	}
+
+	decode_cols_config(cols_config: string) {
+		this.col_connections = decode_sets(cols_config)
 	}
 }
 

@@ -8,7 +8,7 @@
 	import { onMount } from 'svelte'
 	import Instructions from './lib/Instructions.svelte'
 	import Challenges from './lib/Challenges.svelte'
-	import { decode_sets, encode_sets } from './utils'
+	import { update_URL_param } from './utils'
 	import { COL_KEYS, ROW_KEYS } from './config'
 	import { game } from './game.svelte'
 
@@ -46,26 +46,14 @@
 		cols_config: string | null,
 	) {
 		pieces_config ??= game.encode_pieces()
-		rows_config ??= encode_sets(game.row_connections)
-		cols_config ??= encode_sets(game.col_connections)
+		rows_config ??= game.encode_row_connections()
+		cols_config ??= game.encode_col_connections()
 
 		const url = new URL(window.location.origin)
 
-		if (pieces_config) {
-			url.searchParams.set('pieces', pieces_config)
-		} else {
-			url.searchParams.delete('pieces')
-		}
-		if (rows_config) {
-			url.searchParams.set('rows', rows_config)
-		} else {
-			url.searchParams.delete('rows')
-		}
-		if (cols_config) {
-			url.searchParams.set('cols', cols_config)
-		} else {
-			url.searchParams.delete('cols')
-		}
+		update_URL_param(url, 'pieces', pieces_config)
+		update_URL_param(url, 'rows', rows_config)
+		update_URL_param(url, 'cols', cols_config)
 
 		window.history.replaceState({}, '', url)
 	}
@@ -87,7 +75,7 @@
 	) {
 		if (pieces_config !== null) {
 			try {
-				game.decode_config(pieces_config)
+				game.decode_pieces_config(pieces_config)
 				game.update_pieces_array()
 			} catch (err) {
 				console.error(err)
@@ -101,7 +89,7 @@
 
 		if (rows_config !== null) {
 			try {
-				game.row_connections = decode_sets(rows_config)
+				game.decode_rows_config(rows_config)
 			} catch (err) {
 				console.error(err)
 				send_toast({
@@ -113,7 +101,7 @@
 
 		if (cols_config !== null) {
 			try {
-				game.col_connections = decode_sets(cols_config)
+				game.decode_cols_config(cols_config)
 			} catch (err) {
 				console.error(err)
 				send_toast({
@@ -123,7 +111,9 @@
 			}
 		}
 
-		if (options.update_URL) update_URL(pieces_config, rows_config, cols_config)
+		if (options.update_URL) {
+			update_URL(pieces_config, rows_config, cols_config)
+		}
 	}
 
 	function load_config_from_URL() {
