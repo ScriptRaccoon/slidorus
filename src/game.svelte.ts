@@ -1,3 +1,4 @@
+import { Move } from './move'
 import { Piece } from './piece.svelte'
 import { decode_sets, encode_sets, sleep } from './utils'
 
@@ -268,41 +269,24 @@ class Game {
 		)
 	}
 
-	execute_row_move(row: number, delta: number) {
-		if (delta === 0 || delta != Math.floor(delta)) return
-		const affected_rows = this.get_connected_rows(row)
-		const affected_pieces = this.pieces.filter((piece) =>
-			affected_rows.includes(piece.y),
-		)
-		const is_blocked = affected_pieces.some((piece) => piece.fixed)
-		if (is_blocked) throw new Error(`Row ${row + 1} is blocked`)
-		for (const piece of affected_pieces) {
-			piece.x = (piece.x + delta + 9) % 9
-		}
-	}
+	execute_move(move: Move) {
+		if (move.delta === 0 || move.delta != Math.floor(move.delta)) return
 
-	execute_col_move(col: number, delta: number) {
-		if (delta === 0 || delta != Math.floor(delta)) return
-		const affected_cols = this.get_connected_cols(col)
-		const affected_pieces = this.pieces.filter((piece) =>
-			affected_cols.includes(piece.x),
-		)
-		const is_blocked = affected_pieces.some((piece) => piece.fixed)
-		if (is_blocked) throw new Error(`Column ${col + 1} is blocked`)
-		for (const piece of affected_pieces) {
-			piece.y = (piece.y + delta + 9) % 9
-		}
-	}
+		const affected_lines =
+			move.type === 'row'
+				? this.get_connected_rows(move.line)
+				: this.get_connected_cols(move.line)
 
-	execute_random_move() {
-		const is_horizontal = Math.random() < 0.5
-		const index = Math.floor(Math.random() * 9)
-		let delta = Math.floor(Math.random() * 17) - 8
-		if (delta === 0) delta = 1
-		if (is_horizontal) {
-			this.execute_row_move(index, delta)
-		} else {
-			this.execute_col_move(index, delta)
+		const affected_pieces = this.pieces.filter((piece) =>
+			affected_lines.includes(piece[move.coord]),
+		)
+
+		const is_blocked = affected_pieces.some((piece) => piece.fixed)
+
+		if (is_blocked) throw new Error(`${move.name} is blocked`)
+
+		for (const piece of affected_pieces) {
+			piece.execute_move(move)
 		}
 	}
 
@@ -311,7 +295,8 @@ class Game {
 		for (let i = 0; i < moves; i++) {
 			attempts++
 			try {
-				this.execute_random_move()
+				const move = Move.generate_random_move()
+				this.execute_move(move)
 				await sleep(wait)
 			} catch (_) {
 				if (attempts < moves * 100) i--

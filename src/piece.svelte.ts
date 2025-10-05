@@ -1,3 +1,5 @@
+import type { Move } from './move'
+
 export class Piece {
 	id: string
 	x: number
@@ -28,7 +30,7 @@ export class Piece {
 		this.id = crypto.randomUUID()
 		this.x = $state(x)
 		this.y = $state(y)
-		this.type = $state(type)
+		this.type = type
 		this.dx = $state(0)
 		this.dy = $state(0)
 		this.original_x = original_x
@@ -77,5 +79,10 @@ export class Piece {
 	adjust() {
 		this.dx = 0
 		this.dy = 0
+	}
+
+	execute_move(move: Move) {
+		const coord = move.type === 'row' ? 'x' : 'y'
+		this[coord] = (this[coord] + move.delta + 9) % 9
 	}
 }

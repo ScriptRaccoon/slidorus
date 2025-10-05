@@ -11,6 +11,7 @@
 	import { update_URL_param } from './utils'
 	import { COL_KEYS, ROW_KEYS } from './config'
 	import { game } from './game.svelte'
+	import { Move } from './move'
 
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
@@ -135,7 +136,8 @@
 		const row = ROW_KEYS.findIndex((row) => row === e.code)
 		if (row >= 0) {
 			try {
-				game.execute_row_move(row, delta)
+				const move = new Move('row', row, delta)
+				game.execute_move(move)
 			} catch (err) {
 				send_toast({
 					title: (err as Error).message,
@@ -148,7 +150,8 @@
 		const col = COL_KEYS.findIndex((col) => col === e.code)
 		if (col >= 0) {
 			try {
-				game.execute_col_move(col, delta)
+				const move = new Move('col', col, delta)
+				game.execute_move(move)
 			} catch (err) {
 				send_toast({
 					title: (err as Error).message,
