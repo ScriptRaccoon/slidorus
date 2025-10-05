@@ -40,7 +40,7 @@ export function sleep(delay: number): Promise<void> {
 	return new Promise((res) => setTimeout(res, delay))
 }
 
-export function update_URL_param(url: URL, key: string, val: string) {
+export function update_URL_param(url: URL, key: string, val: string | null) {
 	if (val) {
 		url.searchParams.set(key, val)
 	} else {

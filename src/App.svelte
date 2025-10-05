@@ -46,7 +46,11 @@
 		}
 	}
 
-	function update_URL(pieces_config: string, rows_config: string, cols_config: string) {
+	function update_URL(
+		pieces_config: string | null,
+		rows_config: string | null,
+		cols_config: string | null,
+	) {
 		const url = new URL(window.location.origin)
 
 		update_URL_param(url, 'pieces', pieces_config)
@@ -66,12 +70,12 @@
 	}
 
 	function load_challenge(
-		pieces_config: string,
-		rows_config: string,
-		cols_config: string,
+		pieces_config: string | null,
+		rows_config: string | null,
+		cols_config: string | null,
 		options: { update_URL: boolean },
 	) {
-		if (pieces_config) {
+		if (pieces_config !== null) {
 			try {
 				game.pieces = Encoder.decode_pieces_config(pieces_config)
 				game.update_pieces_array()
@@ -85,7 +89,7 @@
 			}
 		}
 
-		if (rows_config) {
+		if (rows_config !== null) {
 			try {
 				game.row_connections = Encoder.decode_sets(rows_config)
 			} catch (err) {
@@ -98,7 +102,7 @@
 			}
 		}
 
-		if (cols_config) {
+		if (cols_config !== null) {
 			try {
 				game.col_connections = Encoder.decode_sets(cols_config)
 			} catch (err) {
