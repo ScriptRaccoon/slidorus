@@ -8,11 +8,11 @@
 	import { onMount } from 'svelte'
 	import Instructions from './lib/Instructions.svelte'
 	import Challenges from './lib/Challenges.svelte'
-	import { update_URL_param } from './utils'
-	import { COL_KEYS, ROW_KEYS } from './config'
-	import { game } from './game.svelte'
-	import { Move } from './move'
-	import { Encoder } from './encoder'
+	import { update_URL_param } from './core/utils'
+	import { COL_KEYS, ROW_KEYS } from './core/config'
+	import { game } from './core/game.svelte'
+	import { Move } from './core/move'
+	import { Encoder } from './core/encoder'
 
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)

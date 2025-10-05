@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { clamp, get_changed_position, get_position, throttle } from '../utils'
+	import { clamp, get_changed_position, get_position, throttle } from '../core/utils'
 	import Connector from './Connector.svelte'
 	import PieceComponent from './Piece.svelte'
 	import PieceEditor from './PieceEditor.svelte'
 	import { send_toast } from './Toast.svelte'
-	import { type Piece } from '../piece.svelte'
-	import { game } from '../game.svelte'
+	import { type Piece } from '../core/piece.svelte'
+	import { game } from '../core/game.svelte'
 
 	let square_element = $state<HTMLDivElement | null>(null)
 	let square_size = $state(0)

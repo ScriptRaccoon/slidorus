@@ -8,7 +8,7 @@
 		Shuffle,
 		SquarePen,
 	} from '@lucide/svelte'
-	import { game } from '../game.svelte'
+	import { game } from '../core/game.svelte'
 
 	type Props = {
 		scramble: () => void

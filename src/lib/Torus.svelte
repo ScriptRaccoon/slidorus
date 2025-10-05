@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Pause, Play } from '@lucide/svelte'
-	import type { Piece } from '../piece.svelte'
+	import type { Piece } from '../core/piece.svelte'
 
 	type Props = {
 		pieces_array: Piece[][]
