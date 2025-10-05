@@ -16,7 +16,7 @@ class Game {
 		this.row_connections = $state([])
 		this.col_connections = $state([])
 		this.pieces_array = $state(this.create_piece_array())
-		this.move_count = 0
+		this.move_count = $state(0)
 	}
 
 	get_initial_pieces(): Piece[] {
