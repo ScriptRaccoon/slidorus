@@ -30,15 +30,16 @@
 		const dx = current_pos.x - clicked_pos.x
 		const dy = current_pos.y - clicked_pos.y
 
-		if (!move_direction) detect_movement(dx, dy)
-		if (!move_direction) return
-
-		for (const piece of moving_pieces) {
-			if (move_direction === 'horizontal') {
-				piece.dx = dx
-			} else {
-				piece.dy = dy
+		if (move_direction) {
+			for (const piece of moving_pieces) {
+				if (move_direction === 'horizontal') {
+					piece.dx = dx
+				} else {
+					piece.dy = dy
+				}
 			}
+		} else {
+			detect_movement(dx, dy)
 		}
 	}
 
@@ -117,7 +118,7 @@
 		moving_lines = []
 		setTimeout(() => {
 			game.state = 'idle'
-		}, 80)
+		}, 80) // transition duration
 	}
 
 	function handle_solved_state() {
