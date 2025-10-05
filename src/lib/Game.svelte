@@ -3,34 +3,9 @@
 	import Connector from './Connector.svelte'
 	import PieceComponent from './Piece.svelte'
 	import PieceEditor from './PieceEditor.svelte'
-	import {
-		adjust_pieces,
-		check_solved,
-		create_copies_horizontal,
-		create_copies_vertical,
-		game,
-		get_connected_cols,
-		get_connected_rows,
-		get_pieces_in_lines,
-		reduce_to_visible_pieces,
-		toggle_bandage,
-	} from '../game.svelte'
 	import { send_toast } from './Toast.svelte'
 	import { type Piece } from '../piece.svelte'
-
-	type Props = {
-		update_pieces_array: () => void
-		move_count: number
-		row_connections: number[][]
-		col_connections: number[][]
-	}
-
-	let {
-		update_pieces_array,
-		move_count = $bindable(),
-		row_connections = $bindable(),
-		col_connections = $bindable(),
-	}: Props = $props()
+	import { game } from '../game.svelte'
 
 	let square_element = $state<HTMLDivElement | null>(null)
 	let square_size = $state(0)
@@ -88,10 +63,10 @@
 
 		moving_lines =
 			move_direction === 'horizontal'
-				? get_connected_rows(row_connections, valid_line)
-				: get_connected_cols(col_connections, valid_line)
+				? game.get_connected_rows(valid_line)
+				: game.get_connected_cols(valid_line)
 
-		const pieces_in_lines = get_pieces_in_lines(moving_lines, coord)
+		const pieces_in_lines = game.get_pieces_in_lines(moving_lines, coord)
 
 		const is_blocked = pieces_in_lines.some((piece) => piece.fixed)
 
@@ -105,10 +80,10 @@
 		}
 
 		move_direction === 'horizontal'
-			? create_copies_horizontal(moving_lines)
-			: create_copies_vertical(moving_lines)
+			? game.create_copies_horizontal(moving_lines)
+			: game.create_copies_vertical(moving_lines)
 
-		moving_pieces = get_pieces_in_lines(moving_lines, coord)
+		moving_pieces = game.get_pieces_in_lines(moving_lines, coord)
 	}
 
 	function handle_mouse_up(e: MouseEvent | TouchEvent) {
@@ -127,15 +102,15 @@
 		reset_movement()
 
 		if (valid_delta != 0) {
-			move_count++
+			game.move_count++
+			game.update_pieces_array()
 			handle_solved_state()
-			update_pieces_array()
 		}
 	}
 
 	function reset_movement() {
-		reduce_to_visible_pieces()
-		adjust_pieces()
+		game.reduce_to_visible_pieces()
+		game.adjust_pieces()
 		clicked_pos = null
 		move_direction = null
 		moving_pieces = []
@@ -146,7 +121,7 @@
 	}
 
 	function handle_solved_state() {
-		const is_solved = check_solved()
+		const is_solved = game.check_solved()
 		if (!is_solved) return
 
 		send_toast({
@@ -185,7 +160,9 @@
 		} else if (connection_old_2 && !connection_old_1) {
 			connection_old_2.push(active)
 		} else if (connection_old_1 && connection_old_2) {
-			col_connections = col_connections.filter((c) => c != connection_old_2)
+			game.col_connections = game.col_connections.filter(
+				(c) => c != connection_old_2,
+			)
 			connection_old_1.push(...connection_old_2)
 		}
 
@@ -193,14 +170,14 @@
 	}
 
 	function connect_row(row: number) {
-		add_connection(row, row_connections, active_row, (_row) => {
+		add_connection(row, game.row_connections, active_row, (_row) => {
 			active_row = _row
 			active_col = null
 		})
 	}
 
 	function connect_col(col: number) {
-		add_connection(col, col_connections, active_col, (_col) => {
+		add_connection(col, game.col_connections, active_col, (_col) => {
 			active_col = _col
 			active_row = null
 		})
@@ -237,8 +214,8 @@
 		<PieceEditor
 			disabled={game.state !== 'editing'}
 			{piece}
-			toggle_bandage_down={() => toggle_bandage(piece, 'down')}
-			toggle_bandage_right={() => toggle_bandage(piece, 'right')}
+			toggle_bandage_down={() => game.toggle_bandage(piece, 'down')}
+			toggle_bandage_right={() => game.toggle_bandage(piece, 'right')}
 		></PieceEditor>
 	{/each}
 
@@ -249,8 +226,8 @@
 			disabled={game.state !== 'editing'}
 			active={row === active_row}
 			connect={() => connect_row(row)}
-			remove={() => remove_connection(row_connections, row)}
-			group={row_connections.findIndex((c) => c.includes(row))}
+			remove={() => remove_connection(game.row_connections, row)}
+			group={game.row_connections.findIndex((c) => c.includes(row))}
 		/>
 	{/each}
 
@@ -261,8 +238,8 @@
 			disabled={game.state !== 'editing'}
 			active={col === active_col}
 			connect={() => connect_col(col)}
-			remove={() => remove_connection(col_connections, col)}
-			group={col_connections.findIndex((c) => c.includes(col))}
+			remove={() => remove_connection(game.col_connections, col)}
+			group={game.col_connections.findIndex((c) => c.includes(col))}
 		/>
 	{/each}
 </div>
