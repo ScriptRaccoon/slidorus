@@ -12,6 +12,7 @@
 	import { COL_KEYS, ROW_KEYS } from './config'
 	import { game } from './game.svelte'
 	import { Move } from './move'
+	import { Encoder } from './encoder'
 
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
@@ -24,9 +25,9 @@
 		if (game.state === 'editing') {
 			game.state = 'idle'
 			update_URL(
-				game.encode_pieces(),
-				game.encode_row_connections(),
-				game.encode_col_connections(),
+				Encoder.encode_pieces(game.pieces),
+				Encoder.encode_sets(game.row_connections),
+				Encoder.encode_sets(game.col_connections),
 			)
 		} else if (game.state === 'idle') {
 			const has_shown_warning =
@@ -72,13 +73,13 @@
 	) {
 		if (pieces_config) {
 			try {
-				game.decode_pieces_config(pieces_config)
+				game.pieces = Encoder.decode_pieces_config(pieces_config)
 				game.update_pieces_array()
 			} catch (err) {
 				console.error(err)
 				send_toast({
 					variant: 'error',
-					title: 'Invalid config in URL',
+					title: 'Invalid pieces in URL',
 				})
 				return
 			}
@@ -86,7 +87,7 @@
 
 		if (rows_config) {
 			try {
-				game.decode_rows_config(rows_config)
+				game.row_connections = Encoder.decode_sets(rows_config)
 			} catch (err) {
 				console.error(err)
 				send_toast({
@@ -99,7 +100,7 @@
 
 		if (cols_config) {
 			try {
-				game.decode_cols_config(cols_config)
+				game.col_connections = Encoder.decode_sets(cols_config)
 			} catch (err) {
 				console.error(err)
 				send_toast({
