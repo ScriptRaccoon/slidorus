@@ -1,3 +1,5 @@
+import { Encoder } from './encoder'
+import { Grouping } from './grouping.svelte'
 import { Move } from './move'
 import { Piece } from './piece.svelte'
 import { sleep } from './utils'
@@ -5,16 +7,16 @@ import { sleep } from './utils'
 export class Game {
 	pieces: Piece[]
 	state: 'idle' | 'moving' | 'scrambling' | 'editing'
-	row_connections: number[][]
-	col_connections: number[][]
+	row_grouping: Grouping<number>
+	col_grouping: Grouping<number>
 	pieces_array: Piece[][]
 	move_count: number
 
 	constructor() {
 		this.pieces = $state(this.get_initial_pieces())
 		this.state = $state('idle')
-		this.row_connections = $state([])
-		this.col_connections = $state([])
+		this.row_grouping = $state(new Grouping())
+		this.col_grouping = $state(new Grouping())
 		this.pieces_array = $state(this.create_piece_array())
 		this.move_count = $state(0)
 	}
@@ -84,8 +86,8 @@ export class Game {
 		for (const piece of this.pieces) {
 			piece.revert_edits()
 		}
-		this.row_connections = []
-		this.col_connections = []
+		this.row_grouping.reset()
+		this.col_grouping.reset()
 	}
 
 	adjust_pieces() {
@@ -125,25 +127,22 @@ export class Game {
 		if (piece) lines.add((piece[coord] + delta + 9) % 9)
 	}
 
-	close_lines_under_connections(lines: Set<number>, type: 'row' | 'col') {
-		const connections = type === 'row' ? this.row_connections : this.col_connections
-		for (const connection of connections) {
-			const has_intersection = connection.some((l) => lines.has(l))
-			if (has_intersection) {
-				for (const l of connection) {
-					lines.add(l)
-				}
-			}
+	close_lines_under_groupings(lines: Set<number>, type: 'row' | 'col') {
+		if (type === 'row') {
+			this.row_grouping.close(lines)
+		} else {
+			this.col_grouping.close(lines)
 		}
 	}
 
-	get_connected_lines(line: number, type: 'row' | 'col'): number[] {
+	get_moving_lines(line: number, type: 'row' | 'col'): number[] {
 		const lines = new Set([line])
 		let number_connected_lines = 1
+
 		while (lines.size < 9) {
 			this.close_lines_under_bandaging(lines, type === 'row' ? 'up' : 'right')
 			this.close_lines_under_bandaging(lines, type === 'row' ? 'down' : 'left')
-			this.close_lines_under_connections(lines, type)
+			this.close_lines_under_groupings(lines, type)
 			if (lines.size === number_connected_lines) break
 			number_connected_lines = lines.size
 		}
@@ -186,16 +185,15 @@ export class Game {
 	execute_move(move: Move) {
 		if (move.delta === 0 || move.delta != Math.floor(move.delta)) return
 
-		const affected_lines = this.get_connected_lines(move.line, move.type)
-		const affected_pieces = this.pieces.filter((piece) =>
-			affected_lines.includes(piece[move.coord]),
+		const moving_lines = this.get_moving_lines(move.line, move.type)
+		const moving_pieces = this.pieces.filter((piece) =>
+			moving_lines.includes(piece[move.coord]),
 		)
 
-		const is_blocked = affected_pieces.some((piece) => piece.fixed)
-
+		const is_blocked = moving_pieces.some((piece) => piece.fixed)
 		if (is_blocked) throw new Error(`${move.name} is blocked`)
 
-		for (const piece of affected_pieces) {
+		for (const piece of moving_pieces) {
 			piece.execute_move(move)
 		}
 	}
@@ -221,6 +219,31 @@ export class Game {
 		this.update_pieces_array()
 		this.state = 'idle'
 		this.move_count = 0
+	}
+
+	get pieces_config() {
+		return Encoder.encode_pieces(this.pieces)
+	}
+
+	get rows_config() {
+		return Encoder.encode_sets(this.row_grouping.groups)
+	}
+
+	get cols_config() {
+		return Encoder.encode_sets(this.col_grouping.groups)
+	}
+
+	decode_pieces(pieces_config: string) {
+		this.pieces = Encoder.decode_pieces_config(pieces_config)
+		this.update_pieces_array()
+	}
+
+	decode_rows(rows_config: string) {
+		this.row_grouping.groups = Encoder.decode_sets(rows_config)
+	}
+
+	decode_cols(cols_config: string) {
+		this.col_grouping.groups = Encoder.decode_sets(cols_config)
 	}
 }
 

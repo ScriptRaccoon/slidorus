@@ -12,7 +12,6 @@
 	import { COL_KEYS, ROW_KEYS } from './core/config'
 	import { game } from './core/game.svelte'
 	import { Move } from './core/move'
-	import { Encoder } from './core/encoder'
 
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
@@ -24,11 +23,7 @@
 	function toggle_editing() {
 		if (game.state === 'editing') {
 			game.state = 'idle'
-			update_URL(
-				Encoder.encode_pieces(game.pieces),
-				Encoder.encode_sets(game.row_connections),
-				Encoder.encode_sets(game.col_connections),
-			)
+			update_URL(game.pieces_config, game.rows_config, game.cols_config)
 		} else if (game.state === 'idle') {
 			const has_shown_warning =
 				localStorage.getItem('warning_shown') === true.toString()
@@ -77,8 +72,7 @@
 	) {
 		if (pieces_config !== null) {
 			try {
-				game.pieces = Encoder.decode_pieces_config(pieces_config)
-				game.update_pieces_array()
+				game.decode_pieces(pieces_config)
 			} catch (err) {
 				console.error(err)
 				send_toast({
@@ -91,7 +85,7 @@
 
 		if (rows_config !== null) {
 			try {
-				game.row_connections = Encoder.decode_sets(rows_config)
+				game.decode_rows(rows_config)
 			} catch (err) {
 				console.error(err)
 				send_toast({
@@ -104,7 +98,7 @@
 
 		if (cols_config !== null) {
 			try {
-				game.col_connections = Encoder.decode_sets(cols_config)
+				game.decode_cols(cols_config)
 			} catch (err) {
 				console.error(err)
 				send_toast({

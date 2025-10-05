@@ -14,8 +14,8 @@
 	let moving_pieces: Piece[] = []
 	let moving_lines: number[] = []
 
-	let active_row = $state<number | null>(null)
-	let active_col = $state<number | null>(null)
+	let clicked_row = $state<number | null>(null)
+	let clicked_col = $state<number | null>(null)
 
 	function handle_mouse_down(e: MouseEvent | TouchEvent) {
 		if (game.state !== 'idle') return
@@ -64,8 +64,8 @@
 
 		moving_lines =
 			move_direction === 'horizontal'
-				? game.get_connected_lines(valid_line, 'row')
-				: game.get_connected_lines(valid_line, 'col')
+				? game.get_moving_lines(valid_line, 'row')
+				: game.get_moving_lines(valid_line, 'col')
 
 		const pieces_in_lines = game.get_pieces_in_lines(moving_lines, coord)
 
@@ -137,56 +137,44 @@
 		}
 	}
 
-	function add_connection(
-		index: number,
-		connections: number[][],
-		active: number | null,
-		set_active: (x: number | null) => void,
-	) {
-		if (active === null) {
-			return set_active(index)
+	function connect_row(row: number) {
+		if (clicked_row === null) {
+			clicked_row = row
+			return
 		}
 
-		if (active === index) {
-			return set_active(null)
+		if (clicked_row === row) {
+			clicked_row = null
+			return
 		}
 
-		const connection_old_1 = connections.find((c) => c.includes(active))
-		const connection_old_2 = connections.find((c) => c.includes(index))
+		game.row_grouping.merge(clicked_row, row)
 
-		if (!connection_old_1 && !connection_old_2) {
-			connections.push([active, index])
-		} else if (connection_old_1 && !connection_old_2) {
-			connection_old_1.push(index)
-		} else if (connection_old_2 && !connection_old_1) {
-			connection_old_2.push(active)
-		} else if (connection_old_1 && connection_old_2) {
-			game.col_connections = game.col_connections.filter(
-				(c) => c != connection_old_2,
-			)
-			connection_old_1.push(...connection_old_2)
-		}
-
-		set_active(null)
+		clicked_row = null
 	}
 
-	function connect_row(row: number) {
-		add_connection(row, game.row_connections, active_row, (_row) => {
-			active_row = _row
-			active_col = null
-		})
+	function disconnect_row(row: number) {
+		game.row_grouping.remove_group(row)
 	}
 
 	function connect_col(col: number) {
-		add_connection(col, game.col_connections, active_col, (_col) => {
-			active_col = _col
-			active_row = null
-		})
+		if (clicked_col === null) {
+			clicked_col = col
+			return
+		}
+
+		if (clicked_col === col) {
+			clicked_col = null
+			return
+		}
+
+		game.col_grouping.merge(clicked_col, col)
+
+		clicked_col = null
 	}
 
-	function remove_connection(connections: number[][], index: number) {
-		const i = connections.findIndex((c) => c.includes(index))
-		if (i >= 0) connections.splice(i, 1)
+	function disconnect_col(col: number) {
+		game.col_grouping.remove_group(col)
 	}
 </script>
 
@@ -225,10 +213,10 @@
 			type="row"
 			index={row}
 			disabled={game.state !== 'editing'}
-			active={row === active_row}
+			active={row === clicked_row}
 			connect={() => connect_row(row)}
-			remove={() => remove_connection(game.row_connections, row)}
-			group={game.row_connections.findIndex((c) => c.includes(row))}
+			remove={() => disconnect_row(row)}
+			group={game.row_grouping.get_group_index(row)}
 		/>
 	{/each}
 
@@ -237,10 +225,10 @@
 			type="col"
 			index={col}
 			disabled={game.state !== 'editing'}
-			active={col === active_col}
+			active={col === clicked_col}
 			connect={() => connect_col(col)}
-			remove={() => remove_connection(game.col_connections, col)}
-			group={game.col_connections.findIndex((c) => c.includes(col))}
+			remove={() => disconnect_col(col)}
+			group={game.col_grouping.get_group_index(col)}
 		/>
 	{/each}
 </div>

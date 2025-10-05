@@ -10,12 +10,12 @@
 			can no longer move.
 		</li>
 		<li>
-			The circles next to each row show which rows are <strong>connected</strong>,
-			sharing the same color. Connected rows always move together. Click two circles
-			to create a connection. A connection can include any number of rows.
-			Double-click a circle to remove a connection.
+			The circles next to each row show which rows are <strong>grouped</strong>,
+			sharing the same color. Grouped rows always move together. Click two circles
+			to create a group. A group can include any number of rows. Double-click a
+			circle to remove a group.
 		</li>
-		<li>The same remarks appliy to connected columns.</li>
+		<li>The same remarks apply to grouped columns.</li>
 		<li>
 			When finished, click the "Share" button to generate a link to your current
 			configuration.
