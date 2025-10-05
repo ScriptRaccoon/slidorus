@@ -22,7 +22,11 @@
 	function toggle_editing() {
 		if (game.state === 'editing') {
 			game.state = 'idle'
-			update_URL(null, null, null)
+			update_URL(
+				game.encode_pieces(),
+				game.encode_row_connections(),
+				game.encode_col_connections(),
+			)
 		} else if (game.state === 'idle') {
 			const has_shown_warning =
 				localStorage.getItem('warning_shown') === true.toString()
@@ -40,15 +44,7 @@
 		}
 	}
 
-	function update_URL(
-		pieces_config: string | null,
-		rows_config: string | null,
-		cols_config: string | null,
-	) {
-		pieces_config ??= game.encode_pieces()
-		rows_config ??= game.encode_row_connections()
-		cols_config ??= game.encode_col_connections()
-
+	function update_URL(pieces_config: string, rows_config: string, cols_config: string) {
 		const url = new URL(window.location.origin)
 
 		update_URL_param(url, 'pieces', pieces_config)
@@ -68,12 +64,12 @@
 	}
 
 	function load_challenge(
-		pieces_config: string | null,
-		rows_config: string | null,
-		cols_config: string | null,
+		pieces_config: string,
+		rows_config: string,
+		cols_config: string,
 		options: { update_URL: boolean },
 	) {
-		if (pieces_config !== null) {
+		if (pieces_config) {
 			try {
 				game.decode_pieces_config(pieces_config)
 				game.update_pieces_array()
@@ -87,7 +83,7 @@
 			}
 		}
 
-		if (rows_config !== null) {
+		if (rows_config) {
 			try {
 				game.decode_rows_config(rows_config)
 			} catch (err) {
@@ -96,10 +92,11 @@
 					variant: 'error',
 					title: 'Invalid rows in URL',
 				})
+				return
 			}
 		}
 
-		if (cols_config !== null) {
+		if (cols_config) {
 			try {
 				game.decode_cols_config(cols_config)
 			} catch (err) {
@@ -108,6 +105,7 @@
 					variant: 'error',
 					title: 'Invalid cols in URL',
 				})
+				return
 			}
 		}
 
@@ -121,7 +119,9 @@
 		const pieces_config = url.searchParams.get('pieces')
 		const rows_config = url.searchParams.get('rows')
 		const cols_config = url.searchParams.get('cols')
-		load_challenge(pieces_config, rows_config, cols_config, { update_URL: false })
+		load_challenge(pieces_config ?? '', rows_config ?? '', cols_config ?? '', {
+			update_URL: false,
+		})
 	}
 
 	onMount(() => {
