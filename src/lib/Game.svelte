@@ -63,8 +63,8 @@
 
 		moving_lines =
 			move_direction === 'horizontal'
-				? game.get_connected_rows(valid_line)
-				: game.get_connected_cols(valid_line)
+				? game.get_connected_lines(valid_line, 'row')
+				: game.get_connected_lines(valid_line, 'col')
 
 		const pieces_in_lines = game.get_pieces_in_lines(moving_lines, coord)
 
@@ -80,8 +80,8 @@
 		}
 
 		move_direction === 'horizontal'
-			? game.create_copies_horizontal(moving_lines)
-			: game.create_copies_vertical(moving_lines)
+			? game.create_copies(moving_lines, 'row')
+			: game.create_copies(moving_lines, 'col')
 
 		moving_pieces = game.get_pieces_in_lines(moving_lines, coord)
 	}

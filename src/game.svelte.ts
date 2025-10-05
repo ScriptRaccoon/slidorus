@@ -95,165 +95,81 @@ class Game {
 	}
 
 	toggle_bandage(piece: Piece, direction: 'right' | 'down') {
-		switch (direction) {
-			case 'right':
-				piece.bandaged_right = !piece.bandaged_right
-				const adjacent_piece_right = this.pieces.find(
-					(p) => p.x === (piece.x + 1) % 9 && p.y === piece.y,
-				)
-				if (adjacent_piece_right) {
-					adjacent_piece_right.bandaged_left =
-						!adjacent_piece_right.bandaged_left
-				}
-				break
-			case 'down':
-				piece.bandaged_down = !piece.bandaged_down
-				const adjacent_piece_down = this.pieces.find(
-					(p) => p.x === piece.x && p.y === (piece.y + 1) % 9,
-				)
-				if (adjacent_piece_down) {
-					adjacent_piece_down.bandaged_up = !adjacent_piece_down.bandaged_up
-				}
-				break
+		const other_direction = direction === 'right' ? 'left' : 'up'
+		const x = direction === 'right' ? 'x' : 'y'
+		const y = direction === 'right' ? 'y' : 'x'
+
+		piece[`bandaged_${direction}`] = !piece[`bandaged_${direction}`]
+		const adjacent_piece = this.pieces.find(
+			(p) => p[x] === (piece[x] + 1) % 9 && p[y] === piece[y],
+		)
+
+		if (adjacent_piece) {
+			adjacent_piece[`bandaged_${other_direction}`] =
+				!adjacent_piece[`bandaged_${other_direction}`]
 		}
 	}
 
-	get_connected_rows(row: number): number[] {
-		const connected_rows = new Set([row])
-
-		const close_under_connections = () => {
-			const old_size = connected_rows.size
-			for (const connection of this.row_connections) {
-				const has_intersection = connection.some((r) => connected_rows.has(r))
-				if (has_intersection) {
-					for (const r of connection) {
-						connected_rows.add(r)
-					}
-				}
-			}
-			return connected_rows.size > old_size
-		}
-
-		const close_under_bandaging_below = () => {
-			const piece = this.pieces.find(
-				(piece) =>
-					piece.bandaged_down &&
-					connected_rows.has(piece.y) &&
-					!connected_rows.has((piece.y + 1) % 9),
-			)
-			if (piece) connected_rows.add((piece.y + 1) % 9)
-			return !!piece
-		}
-
-		const close_under_bandaging_above = () => {
-			const piece = this.pieces.find(
-				(piece) =>
-					piece.bandaged_up &&
-					connected_rows.has(piece.y) &&
-					!connected_rows.has((piece.y - 1 + 9) % 9),
-			)
-			if (piece) connected_rows.add((piece.y - 1 + 9) % 9)
-			return !!piece
-		}
-
-		while (connected_rows.size < 9) {
-			const found_bandaging_below = close_under_bandaging_below()
-			const found_bandaging_above = close_under_bandaging_above()
-			const found_rows = close_under_connections()
-			if (!found_bandaging_below && !found_bandaging_above && !found_rows) break
-		}
-
-		return Array.from(connected_rows)
+	close_lines_under_bandaging(
+		lines: Set<number>,
+		direction: 'up' | 'right' | 'down' | 'left',
+	) {
+		const coord = ['up', 'down'].includes(direction) ? 'y' : 'x'
+		const delta = ['right', 'down'].includes(direction) ? 1 : -1
+		const piece = this.pieces.find(
+			(piece) =>
+				piece[`bandaged_${direction}`] &&
+				lines.has(piece[coord]) &&
+				!lines.has((piece[coord] + delta + 9) % 9),
+		)
+		if (piece) lines.add((piece[coord] + delta + 9) % 9)
 	}
 
-	get_connected_cols(col: number): number[] {
-		const connected_cols = new Set([col])
-
-		const close_under_connections = () => {
-			const old_size = connected_cols.size
-			for (const connection of this.col_connections) {
-				const has_intersection = connection.some((c) => connected_cols.has(c))
-				if (has_intersection) {
-					for (const r of connection) {
-						connected_cols.add(r)
-					}
+	close_lines_under_connections(lines: Set<number>, type: 'row' | 'col') {
+		const connections = type === 'row' ? this.row_connections : this.col_connections
+		for (const connection of connections) {
+			const has_intersection = connection.some((l) => lines.has(l))
+			if (has_intersection) {
+				for (const l of connection) {
+					lines.add(l)
 				}
 			}
-			return connected_cols.size > old_size
+		}
+	}
+
+	get_connected_lines(line: number, type: 'row' | 'col'): number[] {
+		const lines = new Set([line])
+		let number_connected_lines = 1
+		while (lines.size < 9) {
+			this.close_lines_under_bandaging(lines, type === 'row' ? 'up' : 'right')
+			this.close_lines_under_bandaging(lines, type === 'row' ? 'down' : 'left')
+			this.close_lines_under_connections(lines, type)
+			if (lines.size === number_connected_lines) break
+			number_connected_lines = lines.size
 		}
 
-		const close_under_bandaging_right = () => {
-			const piece = this.pieces.find(
-				(piece) =>
-					piece.bandaged_right &&
-					connected_cols.has(piece.x) &&
-					!connected_cols.has((piece.x + 1) % 9),
-			)
-			if (piece) connected_cols.add((piece.x + 1) % 9)
-			return !!piece
-		}
-
-		const close_under_bandaging_left = () => {
-			const piece = this.pieces.find(
-				(piece) =>
-					piece.bandaged_left &&
-					connected_cols.has(piece.x) &&
-					!connected_cols.has((piece.x - 1 + 9) % 9),
-			)
-			if (piece) connected_cols.add((piece.x - 1 + 9) % 9)
-			return !!piece
-		}
-
-		while (connected_cols.size < 9) {
-			const found_bandaging_below = close_under_bandaging_right()
-			const found_bandaging_above = close_under_bandaging_left()
-			const found_rows = close_under_connections()
-			if (!found_bandaging_below && !found_bandaging_above && !found_rows) break
-		}
-
-		return Array.from(connected_cols)
+		return Array.from(lines)
 	}
 
 	get_pieces_in_lines(lines: number[], coord: 'x' | 'y') {
 		return this.pieces.filter((piece) => lines.includes(piece[coord]))
 	}
 
-	create_copies_horizontal(moving_rows: number[]) {
+	create_copies(lines: number[], type: 'row' | 'col') {
 		const copies: Piece[] = []
 		const offsets = [1, 2, -1, -2]
+		const x = type === 'row' ? 'x' : 'y'
+		const y = type === 'row' ? 'y' : 'x'
 
-		for (let x = 0; x < 9; x++) {
-			for (const moving_row of moving_rows) {
-				const piece_in_row = this.pieces.find(
-					(piece) => piece.x === x && piece.y === moving_row,
+		for (let i = 0; i < 9; i++) {
+			for (const line of lines) {
+				const piece = this.pieces.find(
+					(piece) => piece[x] === i && piece[y] === line,
 				)
-				if (piece_in_row) {
+				if (piece) {
 					for (const offset of offsets) {
-						const copy = piece_in_row.get_copy()
-						copy.x += offset * 9
-						copies.push(copy)
-					}
-				}
-			}
-		}
-
-		this.pieces = this.pieces.concat(copies)
-	}
-
-	create_copies_vertical(moving_cols: number[]) {
-		const copies: Piece[] = []
-		const offsets = [1, 2, -1, -2]
-
-		for (let y = 0; y < 9; y++) {
-			for (const moving_col of moving_cols) {
-				const piece_in_col = this.pieces.find(
-					(piece) => piece.x === moving_col && piece.y === y,
-				)
-
-				if (piece_in_col) {
-					for (const offset of offsets) {
-						const copy = piece_in_col.get_copy()
-						copy.y += offset * 9
+						const copy = piece.get_copy()
+						copy[x] += offset * 9
 						copies.push(copy)
 					}
 				}
@@ -270,11 +186,7 @@ class Game {
 	execute_move(move: Move) {
 		if (move.delta === 0 || move.delta != Math.floor(move.delta)) return
 
-		const affected_lines =
-			move.type === 'row'
-				? this.get_connected_rows(move.line)
-				: this.get_connected_cols(move.line)
-
+		const affected_lines = this.get_connected_lines(move.line, move.type)
 		const affected_pieces = this.pieces.filter((piece) =>
 			affected_lines.includes(piece[move.coord]),
 		)
