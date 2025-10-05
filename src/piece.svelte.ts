@@ -85,4 +85,8 @@ export class Piece {
 		const coord = move.type === 'row' ? 'x' : 'y'
 		this[coord] = (this[coord] + move.delta + 9) % 9
 	}
+
+	get is_visible() {
+		return this.x >= 0 && this.x < 9 && this.y >= 0 && this.y < 9
+	}
 }

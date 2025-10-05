@@ -264,9 +264,7 @@ class Game {
 	}
 
 	reduce_to_visible_pieces() {
-		this.pieces = this.pieces.filter(
-			(piece) => piece.x >= 0 && piece.x < 9 && piece.y >= 0 && piece.y < 9,
-		)
+		this.pieces = this.pieces.filter((piece) => piece.is_visible)
 	}
 
 	execute_move(move: Move) {
