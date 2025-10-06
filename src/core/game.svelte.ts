@@ -45,7 +45,7 @@ export class Game {
 		for (const piece of this.pieces) {
 			piece.reset_position()
 		}
-		this.move_history = []
+		this.clear_move_history()
 	}
 
 	check_solved(): boolean {
@@ -208,7 +208,7 @@ export class Game {
 		this.state = 'scrambling'
 		await this.scramble_pieces(10, 100)
 		this.state = 'idle'
-		this.move_history = []
+		this.clear_move_history()
 	}
 
 	get pieces_config() {
@@ -233,6 +233,10 @@ export class Game {
 
 	decode_cols(cols_config: string) {
 		this.col_grouping.groups = Encoder.decode_sets(cols_config)
+	}
+
+	clear_move_history() {
+		this.move_history = []
 	}
 
 	get move_count() {

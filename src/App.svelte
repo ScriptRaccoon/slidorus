@@ -120,6 +120,8 @@
 			}
 		}
 
+		game.clear_move_history()
+
 		if (options.update_URL) {
 			update_URL(pieces_config, rows_config, cols_config)
 		}
