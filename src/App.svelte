@@ -119,9 +119,12 @@
 		const pieces_config = url.searchParams.get('pieces')
 		const rows_config = url.searchParams.get('rows')
 		const cols_config = url.searchParams.get('cols')
-		load_challenge(pieces_config ?? '', rows_config ?? '', cols_config ?? '', {
-			update_URL: false,
-		})
+		load_challenge(
+			pieces_config ?? '',
+			rows_config ?? '',
+			cols_config ?? '',
+			{ update_URL: false },
+		)
 	}
 
 	onMount(() => {

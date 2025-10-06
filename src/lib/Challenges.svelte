@@ -23,7 +23,11 @@
 			<button
 				data-difficulty={challenge.difficulty}
 				onclick={() =>
-					load_challenge(challenge.pieces, challenge.rows, challenge.cols)}
+					load_challenge(
+						challenge.pieces,
+						challenge.rows,
+						challenge.cols,
+					)}
 			>
 				{challenge.name}
 			</button>

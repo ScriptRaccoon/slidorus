@@ -15,7 +15,10 @@
 </script>
 
 <div class="scene">
-	<button onclick={toggle_rotation} aria-label={torus_rotating ? 'Pause' : 'Play'}>
+	<button
+		onclick={toggle_rotation}
+		aria-label={torus_rotating ? 'Pause' : 'Play'}
+	>
 		{#if torus_rotating}
 			<Pause />
 		{:else}
@@ -50,7 +53,11 @@
 	.scene {
 		aspect-ratio: 1;
 		perspective: 1200px;
-		background-image: radial-gradient(#383820 0%, transparent 70%, transparent 100%);
+		background-image: radial-gradient(
+			#383820 0%,
+			transparent 70%,
+			transparent 100%
+		);
 		border-radius: 0.5rem;
 		overflow: hidden;
 

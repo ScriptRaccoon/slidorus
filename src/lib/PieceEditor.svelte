@@ -8,7 +8,8 @@
 		disabled: boolean
 	}
 
-	let { piece, toggle_bandage_down, toggle_bandage_right, disabled }: Props = $props()
+	let { piece, toggle_bandage_down, toggle_bandage_right, disabled }: Props =
+		$props()
 </script>
 
 <button

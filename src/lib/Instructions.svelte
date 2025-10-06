@@ -2,23 +2,25 @@
 	<h2>Editing Instructions</h2>
 	<ul>
 		<li>
-			Click between two pieces to <strong>bandage</strong> them. You can bandage any
-			number of pieces. When one piece moves, all connected pieces move together.
+			Click between two pieces to <strong>bandage</strong> them. You can bandage
+			any number of pieces. When one piece moves, all connected pieces move
+			together.
 		</li>
 		<li>
-			Click the center of a piece to make it <strong>fixed</strong>. Fixed pieces
-			can no longer move.
+			Click the center of a piece to make it <strong>fixed</strong>. Fixed
+			pieces can no longer move.
 		</li>
 		<li>
-			The circles next to each row show which rows are <strong>grouped</strong>,
-			sharing the same color. Grouped rows always move together. Click two circles
-			to create a group. A group can include any number of rows. Double-click a
-			circle to remove a group.
+			The circles next to each row show which rows are <strong
+				>grouped</strong
+			>, sharing the same color. Grouped rows always move together. Click
+			two circles to create a group. A group can include any number of
+			rows. Double-click a circle to remove a group.
 		</li>
 		<li>The same remarks apply to grouped columns.</li>
 		<li>
-			When finished, click the "Share" button to generate a link to your current
-			configuration.
+			When finished, click the "Share" button to generate a link to your
+			current configuration.
 		</li>
 	</ul>
 </div>

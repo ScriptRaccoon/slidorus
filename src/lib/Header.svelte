@@ -9,8 +9,8 @@
 
 	h1 {
 		font-size: 1.75rem;
-		font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans',
-			Arial, sans-serif;
+		font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
+			'Lucida Sans', Arial, sans-serif;
 		text-transform: uppercase;
 		font-weight: 600;
 		color: var(--highlight-color);

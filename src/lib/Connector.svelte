@@ -9,7 +9,8 @@
 		group: number
 	}
 
-	let { type, disabled, index, active, connect, remove, group }: Props = $props()
+	let { type, disabled, index, active, connect, remove, group }: Props =
+		$props()
 </script>
 
 <button
