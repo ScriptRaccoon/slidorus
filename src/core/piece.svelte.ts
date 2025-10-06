@@ -82,8 +82,7 @@ export class Piece {
 	}
 
 	execute_move(move: Move) {
-		const coord = move.type === 'row' ? 'x' : 'y'
-		this[coord] = (this[coord] + move.delta + 9) % 9
+		this[move.type.x] = (this[move.type.x] + move.delta + 9) % 9
 	}
 
 	get is_visible() {

@@ -1,24 +1,22 @@
+import { MOVE_TYPE, type MOVE_TYPES } from './config'
+
 export class Move {
-	type: 'row' | 'col'
+	type: MOVE_TYPES
 	line: number
 	delta: number
 
-	constructor(type: 'row' | 'col', line: number, delta: number) {
+	constructor(type: MOVE_TYPES, line: number, delta: number) {
 		this.type = type
 		this.line = line
 		this.delta = delta
 	}
 
-	get coord() {
-		return this.type == 'row' ? 'y' : 'x'
-	}
-
 	get name() {
-		return this.type === 'row' ? `Row ${this.line + 1}` : `Column ${this.line + 1}`
+		return `${this.type.name} ${this.line + 1}`
 	}
 
 	static generate_random_move(): Move {
-		const type = Math.random() < 0.5 ? 'row' : 'col'
+		const type = Math.random() < 0.5 ? MOVE_TYPE.ROW : MOVE_TYPE.COL
 		const line = Math.floor(Math.random() * 9)
 		let delta = Math.floor(Math.random() * 17) - 8
 		if (delta === 0) delta = 1

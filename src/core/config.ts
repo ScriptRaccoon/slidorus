@@ -21,3 +21,22 @@ export const COL_KEYS = [
 	'KeyI',
 	'KeyO',
 ]
+
+export const MOVE_TYPE = {
+	ROW: {
+		name: 'Row',
+		x: 'x',
+		y: 'y',
+		side: 'top',
+		sides: ['up', 'down'],
+	},
+	COL: {
+		name: 'Column',
+		x: 'y',
+		y: 'x',
+		side: 'left',
+		sides: ['left', 'right'],
+	},
+} as const
+
+export type MOVE_TYPES = typeof MOVE_TYPE.ROW | typeof MOVE_TYPE.COL
