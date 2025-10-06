@@ -57,13 +57,10 @@
 		const delta = drag_action.compute_delta(current_pos)
 
 		drag_action.commit(delta)
-		drag_action.cleanup()
 
 		reset_movement()
 
 		if (delta != 0) {
-			game.move_count++
-			game.update_pieces_array()
 			handle_solved_state()
 		}
 	}

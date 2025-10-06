@@ -11,7 +11,7 @@ export class Game {
 	row_grouping: Grouping<number>
 	col_grouping: Grouping<number>
 	pieces_array: Piece[][]
-	move_count: number
+	move_history: Move[]
 
 	constructor() {
 		this.pieces = $state(this.get_initial_pieces())
@@ -19,7 +19,7 @@ export class Game {
 		this.row_grouping = $state(new Grouping())
 		this.col_grouping = $state(new Grouping())
 		this.pieces_array = $state(this.create_piece_array())
-		this.move_count = $state(0)
+		this.move_history = $state([])
 	}
 
 	get_initial_pieces(): Piece[] {
@@ -48,7 +48,7 @@ export class Game {
 			piece.reset_position()
 		}
 		this.update_pieces_array()
-		this.move_count = 0
+		this.move_history = []
 	}
 
 	create_piece_array(): Piece[][] {
@@ -75,7 +75,9 @@ export class Game {
 						piece.y >= 3 * row &&
 						piece.y < 3 * (row + 1),
 				)
-				const piece_types = new Set(block_pieces.map((piece) => piece.type))
+				const piece_types = new Set(
+					block_pieces.map((piece) => piece.type),
+				)
 				if (piece_types.size > 1) return false
 			}
 		}
@@ -158,7 +160,10 @@ export class Game {
 
 	get_moving_pieces_and_lines(move: Move): [Piece[], number[]] {
 		const moving_lines = this.get_moving_lines(move)
-		const moving_pieces = this.get_pieces_in_lines(moving_lines, move.face.y)
+		const moving_pieces = this.get_pieces_in_lines(
+			moving_lines,
+			move.face.y,
+		)
 
 		const is_blocked = moving_pieces.some((piece) => piece.fixed)
 		if (is_blocked) throw new Error(`${move.name} is blocked`)
@@ -172,6 +177,7 @@ export class Game {
 		for (const piece of moving_pieces) {
 			piece.execute_move(move)
 		}
+		this.move_history.push(move)
 	}
 
 	create_copies(lines: number[], face: FACES_TYPE) {
@@ -220,7 +226,7 @@ export class Game {
 		await this.scramble_pieces(10, 100)
 		this.update_pieces_array()
 		this.state = 'idle'
-		this.move_count = 0
+		this.move_history = []
 	}
 
 	get pieces_config() {
@@ -246,6 +252,10 @@ export class Game {
 
 	decode_cols(cols_config: string) {
 		this.col_grouping.groups = Encoder.decode_sets(cols_config)
+	}
+
+	get move_count() {
+		return this.move_history.length
 	}
 }
 

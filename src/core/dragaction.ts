@@ -12,7 +12,12 @@ export class DragAction {
 	rect_size: number
 	moving_pieces: Piece[] = []
 
-	constructor(pos: { x: number; y: number }, rect: DOMRect, size: number, game: Game) {
+	constructor(
+		pos: { x: number; y: number },
+		rect: DOMRect,
+		size: number,
+		game: Game,
+	) {
 		this.game = game
 		this.start = pos
 		this.rect = rect
@@ -23,14 +28,18 @@ export class DragAction {
 		this.face = Math.abs(dx) > Math.abs(dy) ? FACES.ROW : FACES.COL
 
 		const moving_line = Math.floor(
-			(this.start[this.face.y] - this.rect[this.face.side]) * (9 / this.rect_size),
+			(this.start[this.face.y] - this.rect[this.face.side]) *
+				(9 / this.rect_size),
 		)
 		const valid_line = clamp(moving_line, 0, 8)
 
 		const move = new Move(this.face, valid_line, 0)
 		const [, moving_lines] = this.game.get_moving_pieces_and_lines(move)
 		this.game.create_copies(moving_lines, this.face)
-		this.moving_pieces = this.game.get_pieces_in_lines(moving_lines, this.face.y)
+		this.moving_pieces = this.game.get_pieces_in_lines(
+			moving_lines,
+			this.face.y,
+		)
 	}
 
 	apply(dx: number, dy: number) {
@@ -50,9 +59,17 @@ export class DragAction {
 
 	commit(delta: number) {
 		if (!this.face) return
+
 		for (const piece of this.moving_pieces) {
 			piece[this.face.x] += delta
 		}
+		if (delta !== 0) {
+			const move = new Move(this.face, this.start[this.face.y], delta)
+			this.game.move_history.push(move)
+			this.game.update_pieces_array()
+		}
+
+		this.cleanup()
 	}
 
 	cleanup() {
