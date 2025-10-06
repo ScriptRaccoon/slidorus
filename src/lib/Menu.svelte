@@ -7,6 +7,7 @@
 		RotateCcw,
 		Shuffle,
 		SquarePen,
+		Undo,
 	} from '@lucide/svelte'
 	import { game } from '../core/game.svelte'
 
@@ -18,6 +19,7 @@
 		toggle_editing: () => void
 		revert_edits: () => void
 		share_URL: () => void
+		undo_move: () => void
 	}
 
 	let {
@@ -28,6 +30,7 @@
 		toggle_editing,
 		revert_edits,
 		share_URL,
+		undo_move,
 	}: Props = $props()
 </script>
 
@@ -38,6 +41,9 @@
 		</button>
 		<button onclick={reset} disabled={game.state !== 'idle'}>
 			<RotateCcw /> Reset
+		</button>
+		<button onclick={undo_move} disabled={game.move_count === 0}>
+			<Undo /> Undo
 		</button>
 		<button onclick={toggle_torus}>
 			{#if show_torus}
@@ -66,10 +72,11 @@
 
 <style>
 	menu {
-		display: flex;
-		justify-content: space-between;
-		flex-wrap: wrap;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+		justify-content: center;
 		margin-top: 1.25rem;
+		gap: 0.5rem 1rem;
 	}
 
 	button {
@@ -79,17 +86,16 @@
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
+		white-space: nowrap;
 	}
 
 	@media (max-width: 720px) {
 		menu {
-			justify-content: center;
 			gap: 0.5rem;
 		}
 
 		button {
 			font-size: 0.875rem;
-			padding: 0.3rem 0.6rem;
 		}
 	}
 </style>

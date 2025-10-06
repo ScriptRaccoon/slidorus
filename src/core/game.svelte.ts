@@ -257,6 +257,13 @@ export class Game {
 	get move_count() {
 		return this.move_history.length
 	}
+
+	undo_move() {
+		const last_move = this.move_history.pop()
+		if (!last_move) return
+		const opposite_move = last_move.get_opposite()
+		this.execute_move(opposite_move, false)
+	}
 }
 
 export const game = $state(new Game())

@@ -15,6 +15,10 @@ export class Move {
 		return `${this.face.name} ${this.line + 1}`
 	}
 
+	get_opposite(): Move {
+		return new Move(this.face, this.line, -this.delta)
+	}
+
 	get notation() {
 		if (this.delta === 0) return ''
 		if (this.delta > 0)

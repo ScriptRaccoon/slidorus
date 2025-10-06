@@ -153,6 +153,7 @@
 		{toggle_editing}
 		revert_edits={() => game.revert_edits()}
 		{share_URL}
+		undo_move={() => game.undo_move()}
 	/>
 
 	{#if game.state === 'editing'}
