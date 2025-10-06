@@ -10,6 +10,7 @@ export class DragAction {
 	start: { x: number; y: number }
 	rect: DOMRect
 	rect_size: number
+	line: number = 0
 	moving_pieces: Piece[] = []
 
 	constructor(
@@ -31,9 +32,9 @@ export class DragAction {
 			(this.start[this.face.y] - this.rect[this.face.side]) *
 				(9 / this.rect_size),
 		)
-		const valid_line = clamp(moving_line, 0, 8)
+		this.line = clamp(moving_line, 0, 8)
 
-		const move = new Move(this.face, valid_line, 0)
+		const move = new Move(this.face, this.line, 0)
 		const [, moving_lines] = this.game.get_moving_pieces_and_lines(move)
 		this.game.create_copies(moving_lines, this.face)
 		this.moving_pieces = this.game.get_pieces_in_lines(
@@ -64,7 +65,7 @@ export class DragAction {
 			piece[this.face.x] += delta
 		}
 		if (delta !== 0) {
-			const move = new Move(this.face, this.start[this.face.y], delta)
+			const move = new Move(this.face, this.line, delta)
 			this.game.move_history.push(move)
 			this.game.update_pieces_array()
 		}
