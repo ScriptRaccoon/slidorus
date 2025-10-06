@@ -10,7 +10,7 @@
 	let square_element = $state<HTMLDivElement | null>(null)
 	let square_size = $state(0)
 	let clicked_pos: { x: number; y: number } | null = null
-	let move_direction: 'horizontal' | 'vertical' | null = null
+	let move_type: 'row' | 'col' | null = null
 	let moving_pieces: Piece[] = []
 	let moving_lines: number[] = []
 
@@ -30,9 +30,9 @@
 		const dx = current_pos.x - clicked_pos.x
 		const dy = current_pos.y - clicked_pos.y
 
-		if (move_direction) {
+		if (move_type) {
 			for (const piece of moving_pieces) {
-				if (move_direction === 'horizontal') {
+				if (move_type === 'row') {
 					piece.dx = dx
 				} else {
 					piece.dy = dy
@@ -47,25 +47,22 @@
 		const too_early = Math.abs(dx) + Math.abs(dy) < 3
 		if (too_early) return
 
-		move_direction = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical'
+		move_type = Math.abs(dx) > Math.abs(dy) ? 'row' : 'col'
 
 		if (!square_element || !clicked_pos) return
 
 		const square_rect = square_element.getBoundingClientRect()
 
-		const coord = move_direction === 'horizontal' ? 'y' : 'x'
-		const rect_side = move_direction === 'horizontal' ? 'top' : 'left'
-		const name = move_direction === 'horizontal' ? 'Row' : 'Column'
+		const coord = move_type === 'row' ? 'y' : 'x'
+		const rect_side = move_type === 'row' ? 'top' : 'left'
+		const name = move_type === 'row' ? 'Row' : 'Column'
 
 		const moving_line = Math.floor(
 			(clicked_pos[coord] - square_rect[rect_side]) * (9 / square_size),
 		)
 		const valid_line = clamp(moving_line, 0, 8)
 
-		moving_lines =
-			move_direction === 'horizontal'
-				? game.get_moving_lines(valid_line, 'row')
-				: game.get_moving_lines(valid_line, 'col')
+		moving_lines = game.get_moving_lines(valid_line, move_type)
 
 		const pieces_in_lines = game.get_pieces_in_lines(moving_lines, coord)
 
@@ -80,9 +77,7 @@
 			return
 		}
 
-		move_direction === 'horizontal'
-			? game.create_copies(moving_lines, 'row')
-			: game.create_copies(moving_lines, 'col')
+		game.create_copies(moving_lines, move_type)
 
 		moving_pieces = game.get_pieces_in_lines(moving_lines, coord)
 	}
@@ -91,7 +86,7 @@
 		if (game.state !== 'moving' || !clicked_pos) return
 
 		const current_pos = get_changed_position(e)
-		const coord = move_direction === 'horizontal' ? 'x' : 'y'
+		const coord = move_type === 'row' ? 'x' : 'y'
 		const delta = current_pos[coord] - clicked_pos[coord]
 		const delta_int = Math.round(delta * (9 / square_size))
 		const valid_delta = clamp(delta_int, -10, 10)
@@ -113,7 +108,7 @@
 		game.reduce_to_visible_pieces()
 		game.adjust_pieces()
 		clicked_pos = null
-		move_direction = null
+		move_type = null
 		moving_pieces = []
 		moving_lines = []
 		setTimeout(() => {
