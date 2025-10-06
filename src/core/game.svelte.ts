@@ -171,13 +171,13 @@ export class Game {
 		return [moving_pieces, moving_lines]
 	}
 
-	execute_move(move: Move) {
+	execute_move(move: Move, add_to_history = true) {
 		if (move.delta === 0 || move.delta != Math.floor(move.delta)) return
 		const [moving_pieces] = this.get_moving_pieces_and_lines(move)
 		for (const piece of moving_pieces) {
 			piece.execute_move(move)
 		}
-		this.move_history.push(move)
+		if (add_to_history) this.move_history.push(move)
 	}
 
 	create_copies(lines: number[], face: FACES_TYPE) {
@@ -212,7 +212,7 @@ export class Game {
 			attempts++
 			try {
 				const move = Move.generate_random_move()
-				this.execute_move(move)
+				this.execute_move(move, false)
 				await sleep(wait)
 			} catch (_) {
 				if (attempts < moves * 100) i--
