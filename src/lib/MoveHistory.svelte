@@ -14,7 +14,14 @@
 </script>
 
 <div class="move_display">
-	<div class="move_count">{game.move_count} moves</div>
+	<div class="move_count">
+		{game.move_count}
+		{#if game.move_count === 1}
+			move
+		{:else}
+			moves
+		{/if}
+	</div>
 	<div class="move_history_container">
 		<div class="overlay"></div>
 		<ol class="move_history no-scrollbars" bind:this={move_history_element}>
