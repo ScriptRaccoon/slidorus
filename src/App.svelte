@@ -133,30 +133,7 @@
 		document.addEventListener('dragover', (e) => e.preventDefault())
 		document.addEventListener('drop', (e) => e.preventDefault())
 	})
-
-	function handle_keydown(e: KeyboardEvent) {
-		const delta = e.shiftKey ? -1 : 1
-		const row = ROW_KEYS.findIndex((row) => row === e.code)
-		const col = COL_KEYS.findIndex((col) => col === e.code)
-		if (row < 0 && col < 0) return
-
-		try {
-			const move =
-				row >= 0
-					? new Move(FACES.ROW, row, delta)
-					: new Move(FACES.COL, col, delta)
-
-			game.execute_move(move)
-		} catch (err) {
-			send_toast({
-				variant: 'error',
-				title: (err as Error).message,
-			})
-		}
-	}
 </script>
-
-<svelte:window onkeydown={handle_keydown} />
 
 <Header />
 
