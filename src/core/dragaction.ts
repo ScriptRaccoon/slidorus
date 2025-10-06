@@ -67,7 +67,6 @@ export class DragAction {
 		if (delta !== 0) {
 			const move = new Move(this.face, this.line, delta)
 			this.game.move_history.push(move)
-			this.game.update_pieces_array()
 		}
 
 		this.cleanup()

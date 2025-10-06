@@ -62,9 +62,12 @@
 
 		reset_movement()
 
-		if (delta != 0) {
-			handle_solved_state()
-		}
+		if (delta != 0) finish_move()
+	}
+
+	function finish_move() {
+		game.update_pieces_array()
+		handle_solved_state()
 	}
 
 	function reset_movement() {
@@ -103,6 +106,7 @@
 					: new Move(FACES.COL, col, delta)
 
 			game.execute_move(move)
+			finish_move()
 		} catch (err) {
 			send_toast({
 				variant: 'error',
