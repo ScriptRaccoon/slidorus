@@ -22,7 +22,7 @@ export const COL_KEYS = [
 	'KeyO',
 ]
 
-export const MOVE_TYPE = {
+export const FACES = {
 	ROW: {
 		name: 'Row',
 		x: 'x',
@@ -39,4 +39,4 @@ export const MOVE_TYPE = {
 	},
 } as const
 
-export type MOVE_TYPES = typeof MOVE_TYPE.ROW | typeof MOVE_TYPE.COL
+export type FACES_TYPE = typeof FACES.ROW | typeof FACES.COL

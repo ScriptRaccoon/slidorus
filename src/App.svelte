@@ -9,7 +9,7 @@
 	import Instructions from './lib/Instructions.svelte'
 	import Challenges from './lib/Challenges.svelte'
 	import { update_URL_param } from './core/utils'
-	import { COL_KEYS, MOVE_TYPE, ROW_KEYS } from './core/config'
+	import { COL_KEYS, FACES, ROW_KEYS } from './core/config'
 	import { game } from './core/game.svelte'
 	import { Move } from './core/move'
 
@@ -135,7 +135,7 @@
 		const row = ROW_KEYS.findIndex((row) => row === e.code)
 		if (row >= 0) {
 			try {
-				const move = new Move(MOVE_TYPE.ROW, row, delta)
+				const move = new Move(FACES.ROW, row, delta)
 				game.execute_move(move)
 			} catch (err) {
 				send_toast({
@@ -149,7 +149,7 @@
 		const col = COL_KEYS.findIndex((col) => col === e.code)
 		if (col >= 0) {
 			try {
-				const move = new Move(MOVE_TYPE.COL, col, delta)
+				const move = new Move(FACES.COL, col, delta)
 				game.execute_move(move)
 			} catch (err) {
 				send_toast({

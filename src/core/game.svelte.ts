@@ -1,4 +1,4 @@
-import { MOVE_TYPE, type MOVE_TYPES } from './config'
+import { FACES, type FACES_TYPE } from './config'
 import { Encoder } from './encoder'
 import { Grouping } from './grouping.svelte'
 import { Move } from './move'
@@ -128,8 +128,8 @@ export class Game {
 		if (piece) lines.add((piece[coord] + delta + 9) % 9)
 	}
 
-	close_lines_under_groupings(lines: Set<number>, type: MOVE_TYPES) {
-		if (type === MOVE_TYPE.ROW) {
+	close_lines_under_groupings(lines: Set<number>, face: FACES_TYPE) {
+		if (face === FACES.ROW) {
 			this.row_grouping.close(lines)
 		} else {
 			this.col_grouping.close(lines)
@@ -141,10 +141,10 @@ export class Game {
 		let number_connected_lines = 1
 
 		while (lines.size < 9) {
-			for (const side of move.type.sides) {
+			for (const side of move.face.sides) {
 				this.close_lines_under_bandaging(lines, side)
 			}
-			this.close_lines_under_groupings(lines, move.type)
+			this.close_lines_under_groupings(lines, move.face)
 			if (lines.size === number_connected_lines) break
 			number_connected_lines = lines.size
 		}
@@ -158,7 +158,7 @@ export class Game {
 
 	get_moving_pieces_and_lines(move: Move): [Piece[], number[]] {
 		const moving_lines = this.get_moving_lines(move)
-		const moving_pieces = this.get_pieces_in_lines(moving_lines, move.type.y)
+		const moving_pieces = this.get_pieces_in_lines(moving_lines, move.face.y)
 
 		const is_blocked = moving_pieces.some((piece) => piece.fixed)
 		if (is_blocked) throw new Error(`${move.name} is blocked`)
@@ -174,19 +174,19 @@ export class Game {
 		}
 	}
 
-	create_copies(lines: number[], type: MOVE_TYPES) {
+	create_copies(lines: number[], face: FACES_TYPE) {
 		const copies: Piece[] = []
 		const offsets = [1, 2, -1, -2]
 
 		for (let i = 0; i < 9; i++) {
 			for (const line of lines) {
 				const piece = this.pieces.find(
-					(piece) => piece[type.x] === i && piece[type.y] === line,
+					(piece) => piece[face.x] === i && piece[face.y] === line,
 				)
 				if (piece) {
 					for (const offset of offsets) {
 						const copy = piece.get_copy()
-						copy[type.x] += offset * 9
+						copy[face.x] += offset * 9
 						copies.push(copy)
 					}
 				}

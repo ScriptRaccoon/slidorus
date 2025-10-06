@@ -1,25 +1,25 @@
-import { MOVE_TYPE, type MOVE_TYPES } from './config'
+import { FACES, type FACES_TYPE } from './config'
 
 export class Move {
-	type: MOVE_TYPES
+	face: FACES_TYPE
 	line: number
 	delta: number
 
-	constructor(type: MOVE_TYPES, line: number, delta: number) {
-		this.type = type
+	constructor(face: FACES_TYPE, line: number, delta: number) {
+		this.face = face
 		this.line = line
 		this.delta = delta
 	}
 
 	get name() {
-		return `${this.type.name} ${this.line + 1}`
+		return `${this.face.name} ${this.line + 1}`
 	}
 
 	static generate_random_move(): Move {
-		const type = Math.random() < 0.5 ? MOVE_TYPE.ROW : MOVE_TYPE.COL
+		const face = Math.random() < 0.5 ? FACES.ROW : FACES.COL
 		const line = Math.floor(Math.random() * 9)
 		let delta = Math.floor(Math.random() * 17) - 8
 		if (delta === 0) delta = 1
-		return new Move(type, line, delta)
+		return new Move(face, line, delta)
 	}
 }

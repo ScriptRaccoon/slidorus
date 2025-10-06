@@ -82,7 +82,7 @@ export class Piece {
 	}
 
 	execute_move(move: Move) {
-		this[move.type.x] = (this[move.type.x] + move.delta + 9) % 9
+		this[move.face.x] = (this[move.face.x] + move.delta + 9) % 9
 	}
 
 	get is_visible() {
