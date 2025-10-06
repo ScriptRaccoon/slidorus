@@ -12,6 +12,7 @@
 	import { COL_KEYS, FACES, ROW_KEYS } from './core/config'
 	import { game } from './core/game.svelte'
 	import { Move } from './core/move'
+	import MoveHistory from './lib/MoveHistory.svelte'
 
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
@@ -162,7 +163,7 @@
 <div class="grid" class:show_torus>
 	<div class="game_container">
 		{#if game.state !== 'editing'}
-			<div class="move_count">{game.move_count} moves</div>
+			<MoveHistory />
 		{/if}
 		<Game />
 	</div>
@@ -229,12 +230,5 @@
 
 	.game_container {
 		position: relative;
-	}
-
-	.move_count {
-		position: absolute;
-		bottom: 100%;
-		color: var(--secondary-font-color);
-		font-size: 0.875rem;
 	}
 </style>

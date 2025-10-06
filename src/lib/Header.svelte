@@ -4,7 +4,7 @@
 
 <style>
 	header {
-		padding-block: 1rem;
+		padding-block: 1rem 2rem;
 	}
 
 	h1 {
@@ -20,7 +20,7 @@
 
 	@media (min-width: 720px) {
 		header {
-			padding-block: 1.5rem;
+			padding-block: 1.5rem 1.75rem;
 		}
 		h1 {
 			font-size: 2.75rem;
