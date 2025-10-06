@@ -43,6 +43,7 @@ export class Encoder {
 				const flags_str = flags.toString(36)
 				return coord_str + flags_str
 			})
+			.sort()
 			.join('')
 	}
 
@@ -117,11 +118,13 @@ export class Encoder {
 			.map((subset) => {
 				let mask = 0
 				for (const n of subset) {
-					if (n < 0 || n > 8) throw new Error('Element out of range 0...8')
+					if (n < 0 || n > 8)
+						throw new Error('Element out of range 0...8')
 					mask |= 1 << n
 				}
 				return mask.toString(36).padStart(2, '0')
 			})
+			.sort()
 			.join('')
 	}
 
@@ -136,7 +139,8 @@ export class Encoder {
 		for (let i = 0; i < encoded.length; i += 2) {
 			const chunk = encoded.slice(i, i + 2)
 			const mask = parseInt(chunk, 36)
-			if (Number.isNaN(mask)) throw new Error(`Invalid base-36 chunk: ${chunk}`)
+			if (Number.isNaN(mask))
+				throw new Error(`Invalid base-36 chunk: ${chunk}`)
 
 			const subset: number[] = []
 
