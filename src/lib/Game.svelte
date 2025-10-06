@@ -9,6 +9,12 @@
 	import { Move } from '../core/move'
 	import { COL_KEYS, FACES, ROW_KEYS } from '../core/config'
 
+	type Props = {
+		finish_move: () => void
+	}
+
+	let { finish_move }: Props = $props()
+
 	let square_element = $state<HTMLDivElement | null>(null)
 	let square_size = $state(0)
 
@@ -65,11 +71,6 @@
 		if (delta != 0) finish_move()
 	}
 
-	function finish_move() {
-		game.update_pieces_array()
-		handle_solved_state()
-	}
-
 	function reset_dragging() {
 		drag_action?.cleanup()
 		drag_action = null
@@ -77,16 +78,6 @@
 		setTimeout(() => {
 			game.state = 'idle'
 		}, 80) // transition duration
-	}
-
-	function handle_solved_state() {
-		const is_solved = game.check_solved()
-		if (is_solved) {
-			send_toast({
-				title: 'Puzzle solved!',
-				variant: 'success',
-			})
-		}
 	}
 
 	function handle_keydown(e: KeyboardEvent) {

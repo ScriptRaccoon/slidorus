@@ -3,11 +3,11 @@
 	import type { Piece } from '../core/piece.svelte'
 
 	type Props = {
-		pieces_array: Piece[][]
+		torus_piece_grid: Piece[][]
 		torus_rotating: boolean
 	}
 
-	let { pieces_array, torus_rotating = $bindable() }: Props = $props()
+	let { torus_piece_grid, torus_rotating = $bindable() }: Props = $props()
 
 	function toggle_rotation() {
 		torus_rotating = !torus_rotating
@@ -30,7 +30,7 @@
 		{#each { length: 9 } as _, i}
 			<div class="slice" style:--num={(i + 7) % 9}>
 				{#each { length: 9 } as _, j}
-					{@const piece = pieces_array[8 - ((j + 4) % 9)][i]}
+					{@const piece = torus_piece_grid[8 - ((j + 4) % 9)][i]}
 					<div
 						class="tile"
 						class:fixed={piece.fixed}

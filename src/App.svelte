@@ -9,16 +9,25 @@
 	import Instructions from './lib/Instructions.svelte'
 	import Challenges from './lib/Challenges.svelte'
 	import { update_URL_param } from './core/utils'
-	import { COL_KEYS, FACES, ROW_KEYS } from './core/config'
 	import { game } from './core/game.svelte'
-	import { Move } from './core/move'
 	import MoveHistory from './lib/MoveHistory.svelte'
+	import type { Piece } from './core/piece.svelte'
 
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
+	let torus_piece_grid = $state<Piece[][]>([])
 
 	function toggle_torus() {
 		show_torus = !show_torus
+	}
+
+	function update_torus_pieces() {
+		const grid: Piece[][] = []
+		for (const piece of game.pieces) {
+			if (!grid[piece.y]) grid[piece.y] = []
+			grid[piece.y][piece.x] = piece
+		}
+		torus_piece_grid = grid
 	}
 
 	function toggle_editing() {
@@ -36,7 +45,7 @@
 				})
 				localStorage.setItem('warning_shown', true.toString())
 			} else {
-				game.reset()
+				reset()
 				game.state = 'editing'
 			}
 		}
@@ -74,6 +83,7 @@
 		if (pieces_config !== null) {
 			try {
 				game.decode_pieces(pieces_config)
+				update_torus_pieces()
 			} catch (err) {
 				console.error(err)
 				send_toast({
@@ -128,11 +138,34 @@
 		)
 	}
 
+	function reset() {
+		game.reset()
+		update_torus_pieces()
+	}
+
+	async function scramble() {
+		await game.scramble()
+		update_torus_pieces()
+	}
+
 	onMount(() => {
 		load_config_from_URL()
 		document.addEventListener('dragover', (e) => e.preventDefault())
 		document.addEventListener('drop', (e) => e.preventDefault())
 	})
+
+	function finish_move() {
+		update_torus_pieces()
+
+		const is_solved = game.check_solved()
+
+		if (is_solved) {
+			send_toast({
+				title: 'Puzzle solved!',
+				variant: 'success',
+			})
+		}
+	}
 </script>
 
 <Header />
@@ -142,12 +175,12 @@
 		{#if game.state !== 'editing'}
 			<MoveHistory />
 		{/if}
-		<Game />
+		<Game {finish_move} />
 	</div>
 
 	<Menu
-		scramble={() => game.scramble()}
-		reset={() => game.reset()}
+		{scramble}
+		{reset}
 		{toggle_torus}
 		{show_torus}
 		{toggle_editing}
@@ -161,7 +194,7 @@
 	{/if}
 
 	{#if show_torus}
-		<Torus pieces_array={game.pieces_array} bind:torus_rotating />
+		<Torus {torus_piece_grid} bind:torus_rotating />
 	{/if}
 
 	{#if game.state !== 'editing'}

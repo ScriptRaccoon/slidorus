@@ -10,7 +10,6 @@ export class Game {
 	state: 'idle' | 'moving' | 'scrambling' | 'editing'
 	row_grouping: Grouping<number>
 	col_grouping: Grouping<number>
-	pieces_array: Piece[][]
 	move_history: Move[]
 
 	constructor() {
@@ -18,7 +17,6 @@ export class Game {
 		this.state = $state('idle')
 		this.row_grouping = $state(new Grouping())
 		this.col_grouping = $state(new Grouping())
-		this.pieces_array = $state(this.create_piece_array())
 		this.move_history = $state([])
 	}
 
@@ -47,22 +45,7 @@ export class Game {
 		for (const piece of this.pieces) {
 			piece.reset_position()
 		}
-		this.update_pieces_array()
 		this.move_history = []
-	}
-
-	create_piece_array(): Piece[][] {
-		const result: Piece[][] = []
-		for (const piece of this.pieces) {
-			if (!result[piece.y]) result[piece.y] = []
-			result[piece.y][piece.x] = piece
-		}
-		return result
-	}
-
-	// used for torus viz
-	update_pieces_array() {
-		this.pieces_array = this.create_piece_array()
 	}
 
 	check_solved(): boolean {
@@ -224,7 +207,6 @@ export class Game {
 		if (this.state !== 'idle') return
 		this.state = 'scrambling'
 		await this.scramble_pieces(10, 100)
-		this.update_pieces_array()
 		this.state = 'idle'
 		this.move_history = []
 	}
@@ -243,7 +225,6 @@ export class Game {
 
 	decode_pieces(pieces_config: string) {
 		this.pieces = Encoder.decode_pieces_config(pieces_config)
-		this.update_pieces_array()
 	}
 
 	decode_rows(rows_config: string) {
