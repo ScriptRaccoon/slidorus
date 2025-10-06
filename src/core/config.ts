@@ -25,6 +25,7 @@ export const COL_KEYS = [
 export const FACES = {
 	ROW: {
 		name: 'Row',
+		notation: 'R',
 		x: 'x',
 		y: 'y',
 		side: 'top',
@@ -32,6 +33,7 @@ export const FACES = {
 	},
 	COL: {
 		name: 'Column',
+		notation: 'C',
 		x: 'y',
 		y: 'x',
 		side: 'left',

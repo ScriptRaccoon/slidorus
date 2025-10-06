@@ -15,6 +15,14 @@ export class Move {
 		return `${this.face.name} ${this.line + 1}`
 	}
 
+	get notation() {
+		if (this.delta === 0) return ''
+		if (this.delta > 0)
+			return `${this.line + 1}${this.face.notation}${this.delta}`
+		if (this.delta < 0)
+			return `${this.line + 1}${this.face.notation}${-this.delta}'`
+	}
+
 	static generate_random_move(): Move {
 		const face = Math.random() < 0.5 ? FACES.ROW : FACES.COL
 		const line = Math.floor(Math.random() * 9)
