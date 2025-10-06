@@ -1,102 +1,63 @@
 <script lang="ts">
-	import { clamp, get_changed_position, get_position, throttle } from '../core/utils'
+	import { get_changed_position, get_position, throttle } from '../core/utils'
 	import Connector from './Connector.svelte'
 	import PieceComponent from './Piece.svelte'
 	import PieceEditor from './PieceEditor.svelte'
 	import { send_toast } from './Toast.svelte'
-	import { type Piece } from '../core/piece.svelte'
 	import { game } from '../core/game.svelte'
-	import { Move } from '../core/move'
+	import { DragAction } from '../core/dragaction'
 
 	let square_element = $state<HTMLDivElement | null>(null)
 	let square_size = $state(0)
-	let clicked_pos: { x: number; y: number } | null = null
-	let move_type: 'row' | 'col' | null = null
-	let moving_pieces: Piece[] = []
-	let moving_lines: number[] = []
+
+	let drag_action: DragAction | null = null
+	let drag_pos: { x: number; y: number } | null = null
 
 	let clicked_row = $state<number | null>(null)
 	let clicked_col = $state<number | null>(null)
 
 	function handle_mouse_down(e: MouseEvent | TouchEvent) {
-		if (game.state !== 'idle') return
-		clicked_pos = get_position(e)
-		game.state = 'moving'
+		if (game.state !== 'idle' || !square_element) return
+		drag_pos = get_position(e)
 	}
 
 	function handle_mouse_move(e: MouseEvent | TouchEvent) {
-		if (game.state !== 'moving' || !clicked_pos) return
+		if (!drag_pos || !square_element) return
 
 		const current_pos = get_position(e)
-		const dx = current_pos.x - clicked_pos.x
-		const dy = current_pos.y - clicked_pos.y
+		const dx = current_pos.x - drag_pos.x
+		const dy = current_pos.y - drag_pos.y
+		const is_far_enough = Math.abs(dx) + Math.abs(dy) > 3
 
-		if (move_type) {
-			for (const piece of moving_pieces) {
-				if (move_type === 'row') {
-					piece.dx = dx
-				} else {
-					piece.dy = dy
-				}
+		if (!drag_action && is_far_enough) {
+			drag_action = new DragAction(
+				drag_pos,
+				square_element.getBoundingClientRect(),
+				square_size,
+				game,
+			)
+			try {
+				drag_action.setup(dx, dy)
+			} catch (err) {
+				send_toast({ variant: 'error', title: (err as Error).message })
+				reset_movement()
+				return
 			}
-		} else {
-			detect_movement(dx, dy)
-		}
-	}
 
-	function detect_movement(dx: number, dy: number) {
-		const too_early = Math.abs(dx) + Math.abs(dy) < 3
-		if (too_early) return
-
-		move_type = Math.abs(dx) > Math.abs(dy) ? 'row' : 'col'
-
-		if (!square_element || !clicked_pos) return
-
-		const square_rect = square_element.getBoundingClientRect()
-
-		const coord = move_type === 'row' ? 'y' : 'x'
-		const rect_side = move_type === 'row' ? 'top' : 'left'
-
-		const moving_line = Math.floor(
-			(clicked_pos[coord] - square_rect[rect_side]) * (9 / square_size),
-		)
-		const valid_line = clamp(moving_line, 0, 8)
-
-		const move = new Move(move_type, valid_line, 0)
-
-		moving_lines = game.get_moving_lines(move)
-
-		let pieces_in_lines: Piece[] = []
-
-		try {
-			pieces_in_lines = game.get_moving_pieces(move)
-		} catch (_) {
-			reset_movement()
-			send_toast({
-				title: `${move.name} is blocked`,
-				variant: 'error',
-			})
-			return
+			game.state = 'moving'
 		}
 
-		game.create_copies(moving_lines, move_type)
-
-		moving_pieces = game.get_pieces_in_lines(moving_lines, coord)
+		drag_action?.apply(dx, dy)
 	}
 
 	function handle_mouse_up(e: MouseEvent | TouchEvent) {
-		if (game.state !== 'moving' || !clicked_pos) return
+		if (game.state !== 'moving' || !drag_action) return
 
 		const current_pos = get_changed_position(e)
-		const coord = move_type === 'row' ? 'x' : 'y'
-		const delta_float = current_pos[coord] - clicked_pos[coord]
-		const delta_int = Math.round(delta_float * (9 / square_size))
-		const delta = clamp(delta_int, -10, 10)
+		const delta = drag_action.compute_delta(current_pos)
 
-		/** TODO: this should be done by move.execute, ok without modulo here ...... */
-		for (const piece of moving_pieces) {
-			piece[coord] += delta
-		}
+		drag_action.commit(delta)
+		drag_action.cleanup()
 
 		reset_movement()
 
@@ -108,12 +69,9 @@
 	}
 
 	function reset_movement() {
-		game.reduce_to_visible_pieces()
-		game.adjust_pieces()
-		clicked_pos = null
-		move_type = null
-		moving_pieces = []
-		moving_lines = []
+		drag_action?.cleanup()
+		drag_action = null
+		drag_pos = null
 		setTimeout(() => {
 			game.state = 'idle'
 		}, 80) // transition duration
@@ -121,12 +79,12 @@
 
 	function handle_solved_state() {
 		const is_solved = game.check_solved()
-		if (!is_solved) return
-
-		send_toast({
-			title: 'Puzzle solved!',
-			variant: 'success',
-		})
+		if (is_solved) {
+			send_toast({
+				title: 'Puzzle solved!',
+				variant: 'success',
+			})
+		}
 	}
 
 	function handle_keydown(e: KeyboardEvent) {

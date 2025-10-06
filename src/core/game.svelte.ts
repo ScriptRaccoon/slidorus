@@ -154,19 +154,19 @@ export class Game {
 		return this.pieces.filter((piece) => lines.includes(piece[coord]))
 	}
 
-	get_moving_pieces(move: Move) {
+	get_moving_pieces_and_lines(move: Move): [Piece[], number[]] {
 		const moving_lines = this.get_moving_lines(move)
 		const moving_pieces = this.get_pieces_in_lines(moving_lines, move.coord)
 
 		const is_blocked = moving_pieces.some((piece) => piece.fixed)
 		if (is_blocked) throw new Error(`${move.name} is blocked`)
 
-		return moving_pieces
+		return [moving_pieces, moving_lines]
 	}
 
 	execute_move(move: Move) {
 		if (move.delta === 0 || move.delta != Math.floor(move.delta)) return
-		const moving_pieces = this.get_moving_pieces(move)
+		const [moving_pieces] = this.get_moving_pieces_and_lines(move)
 		for (const piece of moving_pieces) {
 			piece.execute_move(move)
 		}
