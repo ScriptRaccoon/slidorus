@@ -18,12 +18,12 @@
 	let clicked_row = $state<number | null>(null)
 	let clicked_col = $state<number | null>(null)
 
-	function handle_mouse_down(e: MouseEvent | TouchEvent) {
+	function start_dragging(e: MouseEvent | TouchEvent) {
 		if (game.state !== 'idle' || !square_element) return
 		drag_pos = get_position(e)
 	}
 
-	function handle_mouse_move(e: MouseEvent | TouchEvent) {
+	function handle_dragging(e: MouseEvent | TouchEvent) {
 		if (!drag_pos || !square_element) return
 
 		const current_pos = get_position(e)
@@ -42,7 +42,7 @@
 				drag_action.setup(dx, dy)
 			} catch (err) {
 				send_toast({ variant: 'error', title: (err as Error).message })
-				reset_movement()
+				reset_dragging()
 				return
 			}
 
@@ -52,7 +52,7 @@
 		drag_action?.apply(dx, dy)
 	}
 
-	function handle_mouse_up(e: MouseEvent | TouchEvent) {
+	function stop_dragging(e: MouseEvent | TouchEvent) {
 		if (game.state !== 'moving' || !drag_action) return
 
 		const current_pos = get_changed_position(e)
@@ -60,7 +60,7 @@
 
 		drag_action.commit(delta)
 
-		reset_movement()
+		reset_dragging()
 
 		if (delta != 0) finish_move()
 	}
@@ -70,7 +70,7 @@
 		handle_solved_state()
 	}
 
-	function reset_movement() {
+	function reset_dragging() {
 		drag_action?.cleanup()
 		drag_action = null
 		drag_pos = null
@@ -91,7 +91,7 @@
 
 	function handle_keydown(e: KeyboardEvent) {
 		if (e.key === 'Escape' && game.state === 'moving') {
-			reset_movement()
+			reset_dragging()
 		}
 
 		const delta = e.shiftKey ? -1 : 1
@@ -164,13 +164,13 @@
 		class="square {game.state}"
 		bind:this={square_element}
 		bind:clientWidth={square_size}
-		onmousedown={handle_mouse_down}
-		onmousemove={throttle(handle_mouse_move, 1000 / 60)}
-		onmouseup={handle_mouse_up}
-		onmouseleave={handle_mouse_up}
-		ontouchstart={handle_mouse_down}
-		ontouchmove={throttle(handle_mouse_move, 1000 / 60)}
-		ontouchend={handle_mouse_up}
+		onmousedown={start_dragging}
+		onmousemove={throttle(handle_dragging, 1000 / 60)}
+		onmouseup={stop_dragging}
+		onmouseleave={stop_dragging}
+		ontouchstart={start_dragging}
+		ontouchmove={throttle(handle_dragging, 1000 / 60)}
+		ontouchend={stop_dragging}
 	>
 		{#each game.pieces as piece (piece.id)}
 			<PieceComponent {piece} animated={game.state === 'moving'} />
