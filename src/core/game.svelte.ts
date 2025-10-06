@@ -135,14 +135,14 @@ export class Game {
 		}
 	}
 
-	get_moving_lines(line: number, type: 'row' | 'col'): number[] {
-		const lines = new Set([line])
+	get_moving_lines(move: Move): number[] {
+		const lines = new Set([move.line])
 		let number_connected_lines = 1
 
 		while (lines.size < 9) {
-			this.close_lines_under_bandaging(lines, type === 'row' ? 'up' : 'right')
-			this.close_lines_under_bandaging(lines, type === 'row' ? 'down' : 'left')
-			this.close_lines_under_groupings(lines, type)
+			this.close_lines_under_bandaging(lines, move.type === 'row' ? 'up' : 'right')
+			this.close_lines_under_bandaging(lines, move.type === 'row' ? 'down' : 'left')
+			this.close_lines_under_groupings(lines, move.type)
 			if (lines.size === number_connected_lines) break
 			number_connected_lines = lines.size
 		}
@@ -152,6 +152,24 @@ export class Game {
 
 	get_pieces_in_lines(lines: number[], coord: 'x' | 'y') {
 		return this.pieces.filter((piece) => lines.includes(piece[coord]))
+	}
+
+	get_moving_pieces(move: Move) {
+		const moving_lines = this.get_moving_lines(move)
+		const moving_pieces = this.get_pieces_in_lines(moving_lines, move.coord)
+
+		const is_blocked = moving_pieces.some((piece) => piece.fixed)
+		if (is_blocked) throw new Error(`${move.name} is blocked`)
+
+		return moving_pieces
+	}
+
+	execute_move(move: Move) {
+		if (move.delta === 0 || move.delta != Math.floor(move.delta)) return
+		const moving_pieces = this.get_moving_pieces(move)
+		for (const piece of moving_pieces) {
+			piece.execute_move(move)
+		}
 	}
 
 	create_copies(lines: number[], type: 'row' | 'col') {
@@ -180,22 +198,6 @@ export class Game {
 
 	reduce_to_visible_pieces() {
 		this.pieces = this.pieces.filter((piece) => piece.is_visible)
-	}
-
-	execute_move(move: Move) {
-		if (move.delta === 0 || move.delta != Math.floor(move.delta)) return
-
-		const moving_lines = this.get_moving_lines(move.line, move.type)
-		const moving_pieces = this.pieces.filter((piece) =>
-			moving_lines.includes(piece[move.coord]),
-		)
-
-		const is_blocked = moving_pieces.some((piece) => piece.fixed)
-		if (is_blocked) throw new Error(`${move.name} is blocked`)
-
-		for (const piece of moving_pieces) {
-			piece.execute_move(move)
-		}
 	}
 
 	async scramble_pieces(wait = 0, moves = 100) {

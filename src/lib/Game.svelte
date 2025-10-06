@@ -6,6 +6,7 @@
 	import { send_toast } from './Toast.svelte'
 	import { type Piece } from '../core/piece.svelte'
 	import { game } from '../core/game.svelte'
+	import { Move } from '../core/move'
 
 	let square_element = $state<HTMLDivElement | null>(null)
 	let square_size = $state(0)
@@ -55,23 +56,24 @@
 
 		const coord = move_type === 'row' ? 'y' : 'x'
 		const rect_side = move_type === 'row' ? 'top' : 'left'
-		const name = move_type === 'row' ? 'Row' : 'Column'
 
 		const moving_line = Math.floor(
 			(clicked_pos[coord] - square_rect[rect_side]) * (9 / square_size),
 		)
 		const valid_line = clamp(moving_line, 0, 8)
 
-		moving_lines = game.get_moving_lines(valid_line, move_type)
+		const move = new Move(move_type, valid_line, 0)
 
-		const pieces_in_lines = game.get_pieces_in_lines(moving_lines, coord)
+		moving_lines = game.get_moving_lines(move)
 
-		const is_blocked = pieces_in_lines.some((piece) => piece.fixed)
+		let pieces_in_lines: Piece[] = []
 
-		if (is_blocked) {
+		try {
+			pieces_in_lines = game.get_moving_pieces(move)
+		} catch (_) {
 			reset_movement()
 			send_toast({
-				title: `${name} ${valid_line + 1} is blocked`,
+				title: `${move.name} is blocked`,
 				variant: 'error',
 			})
 			return
@@ -87,17 +89,18 @@
 
 		const current_pos = get_changed_position(e)
 		const coord = move_type === 'row' ? 'x' : 'y'
-		const delta = current_pos[coord] - clicked_pos[coord]
-		const delta_int = Math.round(delta * (9 / square_size))
-		const valid_delta = clamp(delta_int, -10, 10)
+		const delta_float = current_pos[coord] - clicked_pos[coord]
+		const delta_int = Math.round(delta_float * (9 / square_size))
+		const delta = clamp(delta_int, -10, 10)
 
+		/** TODO: this should be done by move.execute, ok without modulo here ...... */
 		for (const piece of moving_pieces) {
-			piece[coord] += valid_delta
+			piece[coord] += delta
 		}
 
 		reset_movement()
 
-		if (valid_delta != 0) {
+		if (delta != 0) {
 			game.move_count++
 			game.update_pieces_array()
 			handle_solved_state()
