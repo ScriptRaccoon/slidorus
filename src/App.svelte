@@ -6,7 +6,7 @@
 	import Toast, { send_toast } from './lib/Toast.svelte'
 	import { onMount } from 'svelte'
 	import Instructions from './lib/Instructions.svelte'
-	import Challenges from './lib/Challenges.svelte'
+	import ChallengeSelector from './lib/ChallengeSelector.svelte'
 	import { update_URL_param } from './core/utils'
 	import { game } from './core/game.svelte'
 	import type { Piece } from './core/piece.svelte'
@@ -201,7 +201,7 @@
 	{/if}
 
 	{#if game.state !== 'editing'}
-		<Challenges
+		<ChallengeSelector
 			load_challenge={(challenge) =>
 				load_challenge(challenge, { update_URL: true })}
 		/>
