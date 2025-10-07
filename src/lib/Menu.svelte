@@ -36,65 +36,80 @@
 
 <menu>
 	{#if game.state !== 'editing'}
-		<button onclick={scramble} disabled={game.state !== 'idle'}>
-			<Shuffle /> Scramble
+		<button
+			onclick={scramble}
+			disabled={game.state !== 'idle'}
+			aria-label="Scramble"
+		>
+			<Shuffle />
 		</button>
-		<button onclick={reset} disabled={game.state !== 'idle'}>
-			<RotateCcw /> Reset
+		<button
+			onclick={reset}
+			disabled={game.state !== 'idle'}
+			aria-label="Reset"
+		>
+			<RotateCcw />
 		</button>
-		<button onclick={undo_move} disabled={game.move_count === 0}>
-			<Undo /> Undo
+		<button
+			onclick={undo_move}
+			disabled={game.move_count === 0}
+			aria-label="Undo"
+		>
+			<Undo />
 		</button>
-		<button onclick={toggle_torus}>
+		<button onclick={toggle_torus} aria-label="Toggle Torus">
 			{#if show_torus}
-				<EyeOff /> Hide Torus
+				<EyeOff />
 			{:else}
-				<Eye /> Show Torus
+				<Eye />
 			{/if}
 		</button>
 
-		<button onclick={toggle_editing} disabled={game.state !== 'idle'}>
-			<SquarePen /> Edit
+		<button
+			onclick={toggle_editing}
+			disabled={game.state !== 'idle'}
+			aria-label="Edit"
+		>
+			<SquarePen />
 		</button>
 
-		<button onclick={share_URL} class="share">
-			<Link2 /> Share
+		<button onclick={share_URL} class="share" aria-label="Share">
+			<Link2 />
 		</button>
 	{:else}
-		<button onclick={revert_edits}>
-			<RotateCcw /> Revert
+		<button onclick={revert_edits} aria-label="Revert">
+			<RotateCcw />
 		</button>
-		<button onclick={toggle_editing}>
-			<CircleCheck /> Done
+		<button onclick={toggle_editing} aria-label="Done">
+			<CircleCheck />
 		</button>
 	{/if}
 </menu>
 
 <style>
 	menu {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
-		justify-content: center;
-		gap: 0.5rem 1rem;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 0.5rem;
+		margin-bottom: 0.5rem;
 	}
 
 	button {
-		padding: 0.3rem 0.75rem;
+		padding: 0.3rem 0.8rem;
 		background-color: var(--btn-color);
 		border-radius: 0.25rem;
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
-		white-space: nowrap;
 	}
 
-	@media (max-width: 720px) {
+	@media (min-width: 500px) {
 		menu {
-			gap: 0.5rem;
+			justify-content: center;
+			gap: 1rem;
 		}
-
 		button {
-			font-size: 0.875rem;
+			padding: 0.35rem 0.9rem;
 		}
 	}
 </style>
