@@ -90,7 +90,7 @@
 	menu {
 		display: flex;
 		flex-wrap: wrap;
-		justify-content: space-between;
+		justify-content: center;
 		gap: 0.5rem;
 		margin-bottom: 0.5rem;
 	}
@@ -101,15 +101,17 @@
 		border-radius: 0.25rem;
 		display: flex;
 		align-items: center;
+		justify-content: center;
+		flex: 1;
 	}
 
 	@media (min-width: 500px) {
 		menu {
-			justify-content: center;
 			gap: 1rem;
 		}
 		button {
 			padding: 0.35rem 0.9rem;
+			flex: unset;
 		}
 	}
 </style>
