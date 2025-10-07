@@ -25,8 +25,9 @@
 	</summary>
 
 	<div>
-		{#each challenges as challenge}
+		{#each challenges as challenge (challenge.name)}
 			<button
+				class:selected={game.challenge?.name === challenge.name}
 				data-difficulty={challenge.difficulty}
 				onclick={() => {
 					load_challenge(challenge)
@@ -78,6 +79,10 @@
 
 		&[data-difficulty='5'] {
 			--color: var(--difficulty-color-5);
+		}
+
+		&.selected {
+			outline: 1px solid var(--font-color);
 		}
 	}
 </style>
