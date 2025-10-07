@@ -1,4 +1,7 @@
-export function throttle<T extends any[]>(fn: (...args: T) => void, delay: number) {
+export function throttle<T extends any[]>(
+	fn: (...args: T) => void,
+	delay: number,
+) {
 	let last = 0
 	return (...args: T) => {
 		const now = Date.now()
@@ -9,7 +12,10 @@ export function throttle<T extends any[]>(fn: (...args: T) => void, delay: numbe
 	}
 }
 
-export function get_position(e: MouseEvent | TouchEvent): { x: number; y: number } {
+export function get_position(e: MouseEvent | TouchEvent): {
+	x: number
+	y: number
+} {
 	if (e instanceof MouseEvent) {
 		return { x: e.clientX, y: e.clientY }
 	}
@@ -27,7 +33,10 @@ export function get_changed_position(e: MouseEvent | TouchEvent): {
 		return { x: e.clientX, y: e.clientY }
 	}
 	if ('changedTouches' in e && e.changedTouches.length > 0) {
-		return { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY }
+		return {
+			x: e.changedTouches[0].clientX,
+			y: e.changedTouches[0].clientY,
+		}
 	}
 	throw new Error('No position found')
 }
@@ -40,7 +49,11 @@ export function sleep(delay: number): Promise<void> {
 	return new Promise((res) => setTimeout(res, delay))
 }
 
-export function update_URL_param(url: URL, key: string, val: string | null) {
+export function update_URL_param(
+	url: URL,
+	key: string,
+	val: string | null | undefined,
+) {
 	if (val) {
 		url.searchParams.set(key, val)
 	} else {

@@ -1,112 +1,82 @@
 [
 	{
 		"name": "Zero",
-		"pieces": "",
-		"rows": "",
-		"cols": "",
 		"difficulty": 1
 	},
 	{
 		"name": "Eye",
 		"pieces": "0u60v50w313a14g15a1cc1d51e9",
-		"rows": "",
-		"cols": "",
 		"difficulty": 1
 	},
 	{
 		"name": "Five Dots",
 		"pieces": "0ag0gg14g1sg1yg",
-		"rows": "",
-		"cols": "",
 		"difficulty": 1
 	},
 	{
 		"name": "Nine Dots",
 		"pieces": "0ag0dg0gg11g14g17g1sg1vg1yg",
-		"rows": "",
-		"cols": "",
 		"difficulty": 1
 	},
 	{
 		"name": "Cross",
 		"pieces": "00g0ag0kg0ug1eg1og1yg28g",
-		"rows": "",
-		"cols": "",
 		"difficulty": 1
 	},
 	{
 		"name": "Gap",
 		"pieces": "10l11l12l13h15k16l17l18l",
-		"rows": "",
-		"cols": "",
 		"difficulty": 1
 	},
 	{
 		"name": "Six Bars",
 		"pieces": "0r40s50t10u20w20x40y50z113a15a1941a51b11c81e81f41g51h1",
-		"rows": "",
-		"cols": "",
 		"difficulty": 2
 	},
 	{
 		"name": "Nine Dominos",
 		"pieces": "0040110340410640710920a20c20d20f20g20i80j80l80m80o80p8",
-		"rows": "",
-		"cols": "",
 		"difficulty": 2
 	},
 	{
 		"name": "Circle",
 		"pieces": "00601702303i05i06607708309e0av0bb0ca0d20ea0fe0gv0hb0ic0jd0k90l80m80n80oc0pd0q90rk0s50t10x40y50zh11412116417119k1a51b11f41g51hh1i61j71k31l21m21n21o61p71q31re1sv1tb1ua1v81wa1xe1yv1zb20c21d22923o25o26c27d289",
-		"rows": "",
-		"cols": "",
 		"difficulty": 2
 	},
 	{
 		"name": "Entrance",
 		"pieces": "0a20d20g20j80m80p80ri0ti0ui0wi0xi0zi10a12a13a15a16a18a19o1bo1co1eo1fo1ho1j21m21p21s81v81y8",
-		"rows": "",
-		"cols": "",
 		"difficulty": 2
 	},
 	{
 		"name": "Pills",
 		"pieces": "0i20j20k20l20m20n20o20p20q20r80s80t80u80v80w80x80y80z81921a21b21c21d21e21f21g21h21i81j81k81l81m81n81o81p81q8",
-		"rows": "",
-		"cols": "",
 		"difficulty": 2
 	},
 	{
 		"name": "Shift",
 		"pieces": "00d01908c0b60c70d30ke0lf0mb0tc0ud0v91561671731ee1ff1gb1nc1od1p91r71s31z620f21b28e",
-		"rows": "",
-		"cols": "",
 		"difficulty": 2
 	},
 	{
 		"name": "Connect",
-		"pieces": "",
 		"rows": "42",
-		"cols": "",
 		"difficulty": 2
 	},
 	{
 		"name": "Flow",
-		"pieces": "",
 		"rows": "42",
 		"cols": "42",
 		"difficulty": 2
 	},
 	{
 		"name": "Main St.",
-		"pieces": "",
 		"rows": "1k",
 		"cols": "1k",
 		"difficulty": 2
 	},
 	{
 		"name": "Pairs",
-		"pieces": "",
 		"rows": "1475",
 		"cols": "1475",
 		"difficulty": 2
@@ -114,48 +84,36 @@
 	{
 		"name": "Port",
 		"pieces": "00m01309c0a90i40j50k10um0v313c1491c41d51e11om1p31xc1y9264275281",
-		"rows": "",
-		"cols": "",
 		"difficulty": 3
 	},
 	{
 		"name": "Flower",
 		"pieces": "00601307608309c0a90gc0h90k60l30n60o30tc0u90wc0x914g1b61c31e61f31kc1l91nc1o91r61s31y61z320c21927c289",
-		"rows": "",
-		"cols": "",
 		"difficulty": 3
 	},
 	{
 		"name": "Elephant",
 		"pieces": "00g08g0a60b30f60g30jc0k90oc0p90u60v70w313e14f15b1cc1dd1e91j61k31o61p31sc1t91xc1y920g28g",
-		"rows": "",
-		"cols": "",
 		"difficulty": 3
 	},
 	{
 		"name": "Bar Housing",
 		"pieces": "0040150210c40d50e10o40p50q10r40s50t11341451511f41g51h11i41j51k11u41v51w1264275281",
-		"rows": "",
-		"cols": "",
 		"difficulty": 3
 	},
 	{
 		"name": "Domino Housing",
 		"pieces": "0040110740810c40d10x40y11441511941a11j41k11u41v11x41y1",
-		"rows": "",
-		"cols": "",
 		"difficulty": 3
 	},
 	{
 		"name": "Secret",
 		"pieces": "0120420720aa0da0ga0j80m80p81j21m21p21sa1va1ya218248278",
 		"rows": "1k",
-		"cols": "",
 		"difficulty": 3
 	},
 	{
 		"name": "Group Pressure",
-		"pieces": "",
 		"rows": "0fdc",
 		"cols": "0fdc",
 		"difficulty": 3
@@ -163,20 +121,15 @@
 	{
 		"name": "Hexagon",
 		"pieces": "04g0ig0qg0s60t30u60v70w30x60y311c12913c14d15916c1791ig1qg24g",
-		"rows": "",
-		"cols": "",
 		"difficulty": 3
 	},
 	{
 		"name": "Full Bar",
 		"pieces": "0040150210320420520640750810940a50b10ca0da0ea0f40g50h10i40j50k10l80m80n80o40p50q10r20s20t20u20v20w20x40y50z110a11a12a13a14a15a1641751811981a81b81c81d81e81f41g51h11i41j51k11l41m51n11o21p21q21r41s51t11u41v51w11xa1ya1za204215221234245251268278288",
-		"rows": "",
-		"cols": "",
 		"difficulty": 3
 	},
 	{
 		"name": "Christmas",
-		"pieces": "",
 		"rows": "4q9h",
 		"cols": "4q9h",
 		"difficulty": 4
@@ -184,22 +137,16 @@
 	{
 		"name": "Bubbles",
 		"pieces": "0160230360430ae0bb0ce0db0f60g70h30jc0k90lc0m90oc0pd0q90v60w30x60y70z310611712314e15b16c17d18919c1ad1b91dc1e91i61j71k31l61m31rc1sd1t91ue1vb1x61y71z323c24926c27d289",
-		"rows": "",
-		"cols": "",
 		"difficulty": 4
 	},
 	{
 		"name": "Caterpillar",
 		"pieces": "00202203205206208209a0ba0ca0ea0fa0ha0i80k80l80n80o80q80r40s50t10x40y50z11941a51b11f41g51h11i21k21l21n21o21q21ra1ta1ua1wa1xa1za208228238258268288",
-		"rows": "",
-		"cols": "",
 		"difficulty": 4
 	},
 	{
 		"name": "Books",
 		"pieces": "0040110220320420520640710820940a10ba0c80d80e80f40g10ha0i40j10k80l40m50n10o40p10q80r40s50t10u40v10w20x20y40z110211212213414115a16a1741811981a81b81c41d11e81f81g41h11i41j51k11l41m11n21o41p51q11r21s21t21u41v11wa1x21y21z2208218228234241258268278288",
-		"rows": "",
-		"cols": "",
 		"difficulty": 4
 	},
 	{
@@ -212,8 +159,6 @@
 	{
 		"name": "Tea",
 		"pieces": "00205206407508109a0a40b10c40d10ea0g20i80n80p80r40s50t10u40v50w10y21121421781a81d81f41g51h11i41j51k11n21o21s21u41v11wa1xa1y41z1218258268",
-		"rows": "",
-		"cols": "",
 		"difficulty": 4
 	},
 	{
@@ -226,50 +171,37 @@
 	{
 		"name": "Bricks",
 		"pieces": "0040110240310440510640710a40b10c40d10e40f10g40h10i40j10k40l10m40n10o40p10s40t10u40v10w40x10y40z11041111241311441511641711a41b11c41d11e41f11g41h11i41j11k41l11m41n11o41p11s41t11u41v11w41x11y41z1204211224231244251264271",
-		"rows": "",
-		"cols": "",
 		"difficulty": 4
 	},
 	{
 		"name": "Block Housing",
 		"pieces": "0960a30c60d30f60g30ic0j90lc0m90oc0p910611313614316617319c1a91cc1d91fc1g91r61s31u61v31x61y320c21923c24926c279",
-		"rows": "",
-		"cols": "",
 		"difficulty": 4
 	},
 	{
 		"name": "No borders",
 		"pieces": "00601302603304605306607309c0a90bc0c90dc0e90fc0g90j60k30l60m30n60o30p60q30sc0t90uc0v90wc0x90yc0z910611312613314615316617319c1a91bc1c91dc1e91fc1g91j61k31l61m31n61o31p61q31sc1t91uc1v91wc1x91yc1z9204211224231244251264271",
-		"rows": "",
-		"cols": "",
 		"difficulty": 4
 	},
 	{
 		"name": "Brain",
 		"pieces": "0120340410620820920a80b20d40e10f80g20h80i80k80l40m10p80s40t10v20x40y11041111321481521741811a41b11c81e81f41g11i21k21m41n11p21r81s21t81u41v11x21y81z2218244251268288",
-		"rows": "",
 		"cols": "75",
 		"difficulty": 5
 	},
 	{
 		"name": "Motherboard",
 		"pieces": "0920ag0b20c20dg0e20f20gg0h20i80k80l80n80o80q80s40t10x40y111g14g17g1a41b11f41g11i21k21l21n21o21q21r81sg1t81u81vg1w81x81yg1z8",
-		"rows": "",
-		"cols": "",
 		"difficulty": 5
 	},
 	{
 		"name": "Impossible",
 		"pieces": "0160230ac0b90d60e30f40g10mc0n90o40p10v20w20z211612314815818a1ac1b91c41d51e11h81m61n31o61p31r61s31vc1w91xc1y920c219234241",
-		"rows": "",
-		"cols": "",
 		"difficulty": 5
 	},
 	{
 		"name": "Madness",
 		"pieces": "00202208209a0ba0d40e10ha0i80k80mg0o40p10q80r20s20u20v40w10y210811813a1441511621781941a11c81f81g41h11j41k11mg1o61p31s21t21v61w31xc1y921822824c259",
-		"rows": "",
-		"cols": "",
 		"difficulty": 5
 	},
 	{

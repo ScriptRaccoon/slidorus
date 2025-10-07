@@ -11,6 +11,7 @@
 	import { game } from './core/game.svelte'
 	import type { Piece } from './core/piece.svelte'
 	import About from './lib/About.svelte'
+	import type { Challenge } from './core/config'
 
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
@@ -23,7 +24,11 @@
 	function toggle_editing() {
 		if (game.state === 'editing') {
 			game.state = 'idle'
-			update_URL(game.pieces_config, game.rows_config, game.cols_config)
+			update_URL({
+				pieces: game.pieces_config,
+				rows: game.rows_config,
+				cols: game.cols_config,
+			})
 		} else if (game.state === 'idle') {
 			const has_shown_warning =
 				localStorage.getItem('warning_shown') === true.toString()
@@ -41,16 +46,12 @@
 		}
 	}
 
-	function update_URL(
-		pieces_config: string | null,
-		rows_config: string | null,
-		cols_config: string | null,
-	) {
+	function update_URL(challenge: Challenge) {
 		const url = new URL(window.location.origin)
 
-		update_URL_param(url, 'pieces', pieces_config)
-		update_URL_param(url, 'rows', rows_config)
-		update_URL_param(url, 'cols', cols_config)
+		update_URL_param(url, 'pieces', challenge.pieces)
+		update_URL_param(url, 'rows', challenge.rows)
+		update_URL_param(url, 'cols', challenge.cols)
 
 		window.history.replaceState({}, '', url)
 	}
@@ -65,14 +66,12 @@
 	}
 
 	function load_challenge(
-		pieces_config: string | null,
-		rows_config: string | null,
-		cols_config: string | null,
+		challenge: Challenge,
 		options: { update_URL: boolean },
 	) {
-		if (pieces_config !== null) {
+		if (challenge.pieces) {
 			try {
-				game.decode_pieces(pieces_config)
+				game.decode_pieces(challenge.pieces)
 			} catch (err) {
 				console.error(err)
 				send_toast({
@@ -83,9 +82,9 @@
 			}
 		}
 
-		if (rows_config !== null) {
+		if (challenge.rows) {
 			try {
-				game.decode_rows(rows_config)
+				game.decode_rows(challenge.rows)
 			} catch (err) {
 				console.error(err)
 				send_toast({
@@ -96,9 +95,9 @@
 			}
 		}
 
-		if (cols_config !== null) {
+		if (challenge.cols) {
 			try {
-				game.decode_cols(cols_config)
+				game.decode_cols(challenge.cols)
 			} catch (err) {
 				console.error(err)
 				send_toast({
@@ -112,7 +111,7 @@
 		game.clear_move_history()
 
 		if (options.update_URL) {
-			update_URL(pieces_config, rows_config, cols_config)
+			update_URL(challenge)
 		}
 	}
 
@@ -121,9 +120,12 @@
 		const pieces_config = url.searchParams.get('pieces')
 		const rows_config = url.searchParams.get('rows')
 		const cols_config = url.searchParams.get('cols')
-		load_challenge(pieces_config, rows_config, cols_config, {
-			update_URL: false,
-		})
+		const challenge: Challenge = {}
+		if (pieces_config) challenge.pieces = pieces_config
+		if (rows_config) challenge.rows = rows_config
+		if (cols_config) challenge.cols = cols_config
+
+		load_challenge(challenge, { update_URL: false })
 	}
 
 	onMount(() => {
@@ -185,10 +187,8 @@
 
 	{#if game.state !== 'editing'}
 		<Challenges
-			load_challenge={(pieces_config, rows_config, cols_config) =>
-				load_challenge(pieces_config, rows_config, cols_config, {
-					update_URL: true,
-				})}
+			load_challenge={(challenge) =>
+				load_challenge(challenge, { update_URL: true })}
 		/>
 		<About />
 	{/if}
