@@ -10,7 +10,7 @@
 	import { game } from './core/game.svelte'
 	import type { Piece } from './core/piece.svelte'
 	import About from './lib/About.svelte'
-	import { update_URL, type ChallengeConfig } from './core/challenge.svelte'
+	import { update_URL } from './core/challenge.svelte'
 
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
@@ -53,13 +53,13 @@
 
 	function load_config_from_URL() {
 		const url = new URL(window.location.href)
-		const pieces_config = url.searchParams.get('pieces')
-		const rows_config = url.searchParams.get('rows')
-		const cols_config = url.searchParams.get('cols')
-		const config: ChallengeConfig = {}
-		if (pieces_config) config.pieces = pieces_config
-		if (rows_config) config.rows = rows_config
-		if (cols_config) config.cols = cols_config
+
+		const config = {
+			pieces: url.searchParams.get('pieces') ?? '',
+			rows: url.searchParams.get('rows') ?? '',
+			cols: url.searchParams.get('cols') ?? '',
+		}
+
 		game.load_from_config(config)
 		game.update_challenge()
 	}

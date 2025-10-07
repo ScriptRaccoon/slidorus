@@ -1,9 +1,9 @@
 import { update_URL_param } from './utils'
 
 export type ChallengeConfig = {
-	pieces?: string
-	rows?: string
-	cols?: string
+	pieces: string
+	rows: string
+	cols: string
 }
 
 export type Challenge = {

@@ -224,9 +224,9 @@ export class Game {
 	}
 
 	load_from_config(config: ChallengeConfig) {
-		this.pieces = Encoder.decode_pieces_config(config.pieces ?? '')
-		this.row_grouping.groups = Encoder.decode_sets(config.rows ?? '')
-		this.col_grouping.groups = Encoder.decode_sets(config.cols ?? '')
+		this.pieces = Encoder.decode_pieces_config(config.pieces)
+		this.row_grouping.groups = Encoder.decode_sets(config.rows)
+		this.col_grouping.groups = Encoder.decode_sets(config.cols)
 		game.clear_move_history()
 	}
 
@@ -237,10 +237,10 @@ export class Game {
 
 	update_challenge() {
 		this.challenge = challenges.find(
-			(c) =>
-				(c.config.pieces ?? '') == this.config.pieces &&
-				(c.config.rows ?? '') == this.config.rows &&
-				(c.config.cols ?? '') == this.config.cols,
+			(challenge) =>
+				challenge.config.pieces == this.config.pieces &&
+				challenge.config.rows == this.config.rows &&
+				challenge.config.cols == this.config.cols,
 		)
 	}
 
