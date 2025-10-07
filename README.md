@@ -16,9 +16,11 @@ An additional option lets you bandage pieces together. This makes the puzzle sig
 
 <img src="/public/screenshot-bandaged.png" width="300" /> <img src="/public/screenshot-bandaged-scrambled.png" width="300" />
 
-Finally, rows and columns can be grouped, meaning they always move together. Any configuration can be shared via a link.
+Finally, rows and columns can be grouped, meaning they always move together.
 
-The app works on both desktop and mobile. Contributions and feedback are welcome!
+Any configuration can be shared via a link. The app works on both desktop and mobile.
+
+Contributions and feedback are welcome!
 
 ## Implementation Details
 
