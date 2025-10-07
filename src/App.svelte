@@ -20,15 +20,6 @@
 		show_torus = !show_torus
 	}
 
-	function update_torus_pieces() {
-		const grid: Piece[][] = []
-		for (const piece of game.pieces) {
-			if (!grid[piece.y]) grid[piece.y] = []
-			grid[piece.y][piece.x] = piece
-		}
-		torus_piece_grid = grid
-	}
-
 	function toggle_editing() {
 		if (game.state === 'editing') {
 			game.state = 'idle'
@@ -44,7 +35,7 @@
 				})
 				localStorage.setItem('warning_shown', true.toString())
 			} else {
-				reset()
+				game.reset()
 				game.state = 'editing'
 			}
 		}
@@ -82,7 +73,6 @@
 		if (pieces_config !== null) {
 			try {
 				game.decode_pieces(pieces_config)
-				update_torus_pieces()
 			} catch (err) {
 				console.error(err)
 				send_toast({
@@ -136,21 +126,6 @@
 		})
 	}
 
-	function reset() {
-		game.reset()
-		update_torus_pieces()
-	}
-
-	async function scramble() {
-		await game.scramble()
-		update_torus_pieces()
-	}
-
-	function undo_move() {
-		game.undo_move()
-		update_torus_pieces()
-	}
-
 	onMount(() => {
 		load_config_from_URL()
 		document.addEventListener('dragover', (e) => e.preventDefault())
@@ -158,8 +133,6 @@
 	})
 
 	function finish_move() {
-		update_torus_pieces()
-
 		const is_solved = game.check_solved()
 
 		if (is_solved) {
@@ -169,6 +142,21 @@
 			})
 		}
 	}
+
+	function update_torus_grid(pieces: Piece[]) {
+		const grid: Piece[][] = []
+		for (const piece of pieces) {
+			if (!grid[piece.y]) grid[piece.y] = []
+			grid[piece.y][piece.x] = piece
+		}
+		torus_piece_grid = grid
+	}
+
+	$effect(() => {
+		if (game.state !== 'scrambling') {
+			update_torus_grid(game.pieces)
+		}
+	})
 </script>
 
 <Header />
@@ -177,14 +165,14 @@
 	<Game {finish_move} />
 
 	<Menu
-		{scramble}
-		{reset}
+		scramble={() => game.scramble()}
+		reset={() => game.reset()}
 		{toggle_torus}
 		{show_torus}
 		{toggle_editing}
 		revert_edits={() => game.revert_edits()}
 		{share_URL}
-		{undo_move}
+		undo_move={() => game.undo_move()}
 	/>
 
 	{#if game.state === 'editing'}
