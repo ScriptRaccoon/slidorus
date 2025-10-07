@@ -30,6 +30,13 @@
 	--difficulty-color-5: #944;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+	html,
+	body {
+		scroll-behavior: smooth;
+	}
+}
+
 body {
 	background-color: var(--bg-color);
 	color: var(--font-color);

@@ -11,9 +11,21 @@
 	}
 
 	let { load_challenge }: Props = $props()
+
+	let details_element = $state<HTMLElement | null>(null)
+	let open = $state(false)
+
+	$effect(() => {
+		if (!details_element) return
+		if (open) {
+			details_element.scrollIntoView({
+				block: 'start',
+			})
+		}
+	})
 </script>
 
-<details>
+<details bind:this={details_element} bind:open>
 	<summary>
 		<Trophy /> Challenges
 	</summary>
@@ -22,12 +34,14 @@
 		{#each challenges as challenge}
 			<button
 				data-difficulty={challenge.difficulty}
-				onclick={() =>
+				onclick={() => {
 					load_challenge(
 						challenge.pieces,
 						challenge.rows,
 						challenge.cols,
-					)}
+					)
+					window.scrollTo({ top: 0 })
+				}}
 			>
 				{challenge.name}
 			</button>
