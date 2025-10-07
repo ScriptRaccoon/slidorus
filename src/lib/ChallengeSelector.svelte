@@ -2,16 +2,11 @@
 	import { CircleCheck, Trophy } from '@lucide/svelte'
 	import challenges from '../data/challenges.json'
 	import { game } from '../core/game.svelte'
-	import {
-		get_recorded_solves,
-		update_URL,
-		type Challenge,
-	} from '../core/challenge'
+	import { update_URL, type Challenge } from '../core/challenge'
+	import { get_solved_challenge_names } from '../core/solves.svelte'
 
 	let details_element = $state<HTMLElement | null>(null)
 	let open = $state(false)
-
-	const solves = get_recorded_solves()
 
 	$effect(() => {
 		if (!details_element) return
@@ -32,8 +27,8 @@
 
 	<div>
 		{#each challenges as challenge (challenge.name)}
-			{@const is_solved = solves.some(
-				(s) => s.challenge_name === challenge.name,
+			{@const is_solved = get_solved_challenge_names().includes(
+				challenge.name,
 			)}
 			<button
 				class:selected={game.challenge?.name === challenge.name}

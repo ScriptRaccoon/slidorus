@@ -1,4 +1,4 @@
-import { record_solve, type Challenge, type ChallengeConfig } from './challenge'
+import { type Challenge, type ChallengeConfig } from './challenge'
 import { FACES, type FACES_TYPE } from './config'
 import { Encoder } from './encoder'
 import { Grouping } from './grouping.svelte'
@@ -6,6 +6,7 @@ import { Move } from './move'
 import { Piece } from './piece.svelte'
 import { sleep } from './utils'
 import challenges from '../data/challenges.json'
+import { record_solve } from './solves.svelte'
 
 export class Game {
 	pieces: Piece[]
