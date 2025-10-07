@@ -77,6 +77,13 @@
 		"difficulty": 2
 	},
 	{
+		"name": "Shift",
+		"pieces": "00d01908c0b60c70d30ke0lf0mb0tc0ud0v91561671731ee1ff1gb1nc1od1p91r71s31z620f21b28e",
+		"rows": "",
+		"cols": "",
+		"difficulty": 2
+	},
+	{
 		"name": "Connect",
 		"pieces": "",
 		"rows": "42",
@@ -103,6 +110,20 @@
 		"rows": "1475",
 		"cols": "1475",
 		"difficulty": 2
+	},
+	{
+		"name": "Port",
+		"pieces": "00m01309c0a90i40j50k10um0v313c1491c41d51e11om1p31xc1y9264275281",
+		"rows": "",
+		"cols": "",
+		"difficulty": 3
+	},
+	{
+		"name": "Flower",
+		"pieces": "00601307608309c0a90gc0h90k60l30n60o30tc0u90wc0x914g1b61c31e61f31kc1l91nc1o91r61s31y61z320c21927c289",
+		"rows": "",
+		"cols": "",
+		"difficulty": 3
 	},
 	{
 		"name": "Elephant",
@@ -152,6 +173,13 @@
 		"rows": "",
 		"cols": "",
 		"difficulty": 3
+	},
+	{
+		"name": "Christmas",
+		"pieces": "",
+		"rows": "4q9h",
+		"cols": "4q9h",
+		"difficulty": 4
 	},
 	{
 		"name": "Bubbles",
@@ -217,11 +245,18 @@
 		"difficulty": 4
 	},
 	{
-		"name": "Kit",
+		"name": "Brain",
+		"pieces": "0120340410620820920a80b20d40e10f80g20h80i80k80l40m10p80s40t10v20x40y11041111321481521741811a41b11c81e81f41g11i21k21m41n11p21r81s21t81u41v11x21y81z2218244251268288",
+		"rows": "",
+		"cols": "75",
+		"difficulty": 5
+	},
+	{
+		"name": "Motherboard",
 		"pieces": "0920ag0b20c20dg0e20f20gg0h20i80k80l80n80o80q80s40t10x40y111g14g17g1a41b11f41g11i21k21l21n21o21q21r81sg1t81u81vg1w81x81yg1z8",
 		"rows": "",
 		"cols": "",
-		"difficulty": 4
+		"difficulty": 5
 	},
 	{
 		"name": "Impossible",
