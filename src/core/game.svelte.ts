@@ -1,4 +1,4 @@
-import { type Challenge, type ChallengeConfig } from './challenge.svelte'
+import { record_solve, type Challenge, type ChallengeConfig } from './challenge'
 import { FACES, type FACES_TYPE } from './config'
 import { Encoder } from './encoder'
 import { Grouping } from './grouping.svelte'
@@ -14,6 +14,7 @@ export class Game {
 	col_grouping: Grouping<number>
 	move_history: Move[]
 	challenge: Challenge | undefined
+	has_scrambled: boolean
 
 	constructor() {
 		this.pieces = $state(this.get_initial_pieces())
@@ -22,6 +23,7 @@ export class Game {
 		this.col_grouping = $state(new Grouping())
 		this.move_history = $state([])
 		this.challenge = $state(undefined)
+		this.has_scrambled = $state(false)
 	}
 
 	get_initial_pieces(): Piece[] {
@@ -50,6 +52,7 @@ export class Game {
 			piece.reset_position()
 		}
 		this.clear_move_history()
+		this.has_scrambled = false
 	}
 
 	check_solved(): boolean {
@@ -68,6 +71,18 @@ export class Game {
 				if (piece_types.size > 1) return false
 			}
 		}
+
+		if (this.challenge && this.has_scrambled) {
+			const solve = {
+				challenge_name: this.challenge.name,
+				moves: this.move_count,
+				date: new Date().toISOString(),
+			}
+			record_solve(solve)
+		}
+
+		this.has_scrambled = false
+
 		return true
 	}
 
@@ -213,6 +228,7 @@ export class Game {
 		await this.scramble_pieces(10, 100)
 		this.state = 'idle'
 		this.clear_move_history()
+		this.has_scrambled = true
 	}
 
 	get config() {

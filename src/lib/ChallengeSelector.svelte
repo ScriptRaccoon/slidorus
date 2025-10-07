@@ -1,11 +1,17 @@
 <script lang="ts">
-	import { Trophy } from '@lucide/svelte'
+	import { CircleCheck, Trophy } from '@lucide/svelte'
 	import challenges from '../data/challenges.json'
 	import { game } from '../core/game.svelte'
-	import { update_URL, type Challenge } from '../core/challenge.svelte'
+	import {
+		get_recorded_solves,
+		update_URL,
+		type Challenge,
+	} from '../core/challenge'
 
 	let details_element = $state<HTMLElement | null>(null)
 	let open = $state(false)
+
+	const solves = get_recorded_solves()
 
 	$effect(() => {
 		if (!details_element) return
@@ -26,6 +32,9 @@
 
 	<div>
 		{#each challenges as challenge (challenge.name)}
+			{@const is_solved = solves.some(
+				(s) => s.challenge_name === challenge.name,
+			)}
 			<button
 				class:selected={game.challenge?.name === challenge.name}
 				data-difficulty={challenge.difficulty}
@@ -34,6 +43,12 @@
 				}}
 			>
 				{challenge.name}
+
+				{#if is_solved}
+					<span class="marker">
+						<CircleCheck />
+					</span>
+				{/if}
 			</button>
 		{/each}
 	</div>
@@ -56,6 +71,7 @@
 		font-size: 0.75rem;
 		background-color: var(--color);
 		white-space: nowrap;
+		position: relative;
 
 		&:not(:hover, :focus-visible) {
 			outline: 1px solid var(--dark-outline-color);
@@ -83,6 +99,17 @@
 
 		&.selected {
 			outline: 1px solid var(--font-color);
+		}
+
+		.marker {
+			position: absolute;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			top: -0.2rem;
+			right: -0.2rem;
+			background-color: var(--color-5);
+			border-radius: 50%;
 		}
 	}
 </style>

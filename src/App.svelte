@@ -10,7 +10,7 @@
 	import { game } from './core/game.svelte'
 	import type { Piece } from './core/piece.svelte'
 	import About from './lib/About.svelte'
-	import { update_URL } from './core/challenge.svelte'
+	import { update_URL } from './core/challenge'
 
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
