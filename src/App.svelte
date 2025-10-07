@@ -146,6 +146,11 @@
 		update_torus_pieces()
 	}
 
+	function undo_move() {
+		game.undo_move()
+		update_torus_pieces()
+	}
+
 	onMount(() => {
 		load_config_from_URL()
 		document.addEventListener('dragover', (e) => e.preventDefault())
@@ -179,7 +184,7 @@
 		{toggle_editing}
 		revert_edits={() => game.revert_edits()}
 		{share_URL}
-		undo_move={() => game.undo_move()}
+		{undo_move}
 	/>
 
 	{#if game.state === 'editing'}
