@@ -1,5 +1,13 @@
 <script lang="ts">
-	import { Info } from '@lucide/svelte'
+	import {
+		Eye,
+		Info,
+		Link2,
+		RotateCcw,
+		Shuffle,
+		SquarePen,
+		Undo,
+	} from '@lucide/svelte'
 </script>
 
 <details>
@@ -20,13 +28,34 @@
 		colored; the exact placement of the blocks does not matter.
 	</p>
 
+	<ul>
+		<li>
+			<span class="btn"><Shuffle /></span> scrambles the puzzle
+		</li>
+		<li>
+			<span class="btn"><RotateCcw /> </span> resets the puzzle
+		</li>
+		<li>
+			<span class="btn"><Undo /></span> undos the last move
+		</li>
+		<li>
+			<span class="btn"><Eye /></span> shows the torus visualization
+		</li>
+		<li>
+			<span class="btn"><SquarePen /></span> enters editing mode
+		</li>
+		<li>
+			<span class="btn"><Link2 /></span> copies the URL
+		</li>
+	</ul>
+
 	<p>
-		An additional option lets you bandage pieces together. This makes the
-		puzzle significantly more complex, especially when many pieces are
-		bandaged. Furthermore, it is possible to make pieces fixed, so that they
-		will not move anymore. This adds yet another level of complexity.
-		Finally, rows and columns can be grouped, meaning they always move
-		together. The configuration can be shared by using the "Share" button.
+		In editing mode, pieces can be bandaged together. This makes the puzzle
+		significantly more complex, especially when many pieces are bandaged.
+		Furthermore, it is possible to make pieces fixed, so that they will not
+		move anymore. This adds yet another level of complexity. Finally, rows
+		and columns can be grouped, meaning they always move together. The
+		configuration can be shared by using the "Share" button.
 	</p>
 
 	<p>
@@ -41,3 +70,23 @@
 		>. Contributions and feedback are welcome!
 	</p>
 </details>
+
+<style>
+	ul {
+		list-style-type: none;
+	}
+
+	li {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		background-color: var(--btn-color);
+		padding: 0.1rem 0.3rem;
+		border-radius: 0.25rem;
+	}
+</style>
