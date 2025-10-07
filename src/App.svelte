@@ -73,43 +73,37 @@
 		challenge: Challenge,
 		options: { update_URL: boolean },
 	) {
-		if (challenge.pieces) {
-			try {
-				game.decode_pieces(challenge.pieces)
-			} catch (err) {
-				console.error(err)
-				send_toast({
-					variant: 'error',
-					title: 'Invalid pieces in URL',
-				})
-				return
-			}
+		try {
+			game.decode_pieces(challenge.pieces ?? '')
+		} catch (err) {
+			console.error(err)
+			send_toast({
+				variant: 'error',
+				title: 'Invalid pieces in URL',
+			})
+			return
 		}
 
-		if (challenge.rows) {
-			try {
-				game.decode_rows(challenge.rows)
-			} catch (err) {
-				console.error(err)
-				send_toast({
-					variant: 'error',
-					title: 'Invalid rows in URL',
-				})
-				return
-			}
+		try {
+			game.decode_rows(challenge.rows ?? '')
+		} catch (err) {
+			console.error(err)
+			send_toast({
+				variant: 'error',
+				title: 'Invalid rows in URL',
+			})
+			return
 		}
 
-		if (challenge.cols) {
-			try {
-				game.decode_cols(challenge.cols)
-			} catch (err) {
-				console.error(err)
-				send_toast({
-					variant: 'error',
-					title: 'Invalid cols in URL',
-				})
-				return
-			}
+		try {
+			game.decode_cols(challenge.cols ?? '')
+		} catch (err) {
+			console.error(err)
+			send_toast({
+				variant: 'error',
+				title: 'Invalid cols in URL',
+			})
+			return
 		}
 
 		game.clear_move_history()
