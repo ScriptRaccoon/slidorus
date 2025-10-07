@@ -7,18 +7,14 @@
 	import { onMount } from 'svelte'
 	import Instructions from './lib/Instructions.svelte'
 	import ChallengeSelector from './lib/ChallengeSelector.svelte'
-	import { update_URL_param } from './core/utils'
 	import { game } from './core/game.svelte'
 	import type { Piece } from './core/piece.svelte'
 	import About from './lib/About.svelte'
-	import type { ChallengeConfig } from './core/config'
-	import challenges from './data/challenges.json'
+	import { update_URL, type ChallengeConfig } from './core/challenge.svelte'
 
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
 	let torus_piece_grid = $state<Piece[][]>([])
-
-	let challenge_name = $state('')
 
 	function toggle_torus() {
 		show_torus = !show_torus
@@ -27,12 +23,8 @@
 	function toggle_editing() {
 		if (game.state === 'editing') {
 			game.state = 'idle'
-			const challenge: ChallengeConfig = {}
-			if (game.pieces_config) challenge.pieces = game.pieces_config
-			if (game.rows_config) challenge.rows = game.rows_config
-			if (game.cols_config) challenge.cols = game.cols_config
-			update_challenge_name(challenge)
-			update_URL(challenge)
+			update_URL(game.config)
+			game.update_challenge()
 		} else if (game.state === 'idle') {
 			const has_shown_warning =
 				localStorage.getItem('warning_shown') === true.toString()
@@ -50,16 +42,6 @@
 		}
 	}
 
-	function update_URL(config: ChallengeConfig) {
-		const url = new URL(window.location.origin)
-
-		update_URL_param(url, 'pieces', config.pieces)
-		update_URL_param(url, 'rows', config.rows)
-		update_URL_param(url, 'cols', config.cols)
-
-		window.history.replaceState({}, '', url)
-	}
-
 	async function share_URL() {
 		await navigator.clipboard.writeText(window.location.href)
 
@@ -67,51 +49,6 @@
 			variant: 'info',
 			title: 'URL copied to clipboard',
 		})
-	}
-
-	function load_challenge(
-		config: ChallengeConfig,
-		options: { update_URL: boolean },
-	) {
-		try {
-			game.decode_pieces(config.pieces ?? '')
-		} catch (err) {
-			console.error(err)
-			send_toast({
-				variant: 'error',
-				title: 'Invalid pieces in URL',
-			})
-			return
-		}
-
-		try {
-			game.decode_rows(config.rows ?? '')
-		} catch (err) {
-			console.error(err)
-			send_toast({
-				variant: 'error',
-				title: 'Invalid rows in URL',
-			})
-			return
-		}
-
-		try {
-			game.decode_cols(config.cols ?? '')
-		} catch (err) {
-			console.error(err)
-			send_toast({
-				variant: 'error',
-				title: 'Invalid cols in URL',
-			})
-			return
-		}
-
-		game.clear_move_history()
-		update_challenge_name(config)
-
-		if (options.update_URL) {
-			update_URL(config)
-		}
 	}
 
 	function load_config_from_URL() {
@@ -123,18 +60,8 @@
 		if (pieces_config) config.pieces = pieces_config
 		if (rows_config) config.rows = rows_config
 		if (cols_config) config.cols = cols_config
-
-		load_challenge(config, { update_URL: false })
-	}
-
-	function update_challenge_name(config: ChallengeConfig) {
-		const saved_challenge = challenges.find(
-			(c) =>
-				c.config.pieces == config.pieces &&
-				c.config.rows == config.rows &&
-				c.config.cols == config.cols,
-		)
-		challenge_name = saved_challenge ? saved_challenge.name : ''
+		game.load_from_config(config)
+		game.update_challenge()
 	}
 
 	onMount(() => {
@@ -170,7 +97,7 @@
 	})
 </script>
 
-<Header {challenge_name} />
+<Header />
 
 <div class="grid" class:show_torus>
 	<Game {finish_move} />
@@ -195,10 +122,7 @@
 	{/if}
 
 	{#if game.state !== 'editing'}
-		<ChallengeSelector
-			load_challenge={(challenge) =>
-				load_challenge(challenge, { update_URL: true })}
-		/>
+		<ChallengeSelector />
 		<About />
 	{/if}
 </div>

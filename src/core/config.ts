@@ -42,9 +42,3 @@ export const FACES = {
 } as const
 
 export type FACES_TYPE = typeof FACES.ROW | typeof FACES.COL
-
-export type ChallengeConfig = {
-	pieces?: string
-	rows?: string
-	cols?: string
-}

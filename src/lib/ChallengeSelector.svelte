@@ -1,25 +1,22 @@
 <script lang="ts">
 	import { Trophy } from '@lucide/svelte'
 	import challenges from '../data/challenges.json'
-	import type { ChallengeConfig } from '../core/config'
-
-	type Props = {
-		load_challenge: (config: ChallengeConfig) => void
-	}
-
-	let { load_challenge }: Props = $props()
+	import { game } from '../core/game.svelte'
+	import { update_URL, type Challenge } from '../core/challenge.svelte'
 
 	let details_element = $state<HTMLElement | null>(null)
 	let open = $state(false)
 
 	$effect(() => {
 		if (!details_element) return
-		if (open) {
-			details_element.scrollIntoView({
-				block: 'start',
-			})
-		}
+		if (open) details_element.scrollIntoView({ block: 'start' })
 	})
+
+	function load_challenge(challenge: Challenge) {
+		game.set_challenge(challenge)
+		update_URL(challenge.config)
+		window.scrollTo({ top: 0 })
+	}
 </script>
 
 <details bind:this={details_element} bind:open>
@@ -32,8 +29,7 @@
 			<button
 				data-difficulty={challenge.difficulty}
 				onclick={() => {
-					load_challenge(challenge.config)
-					window.scrollTo({ top: 0 })
+					load_challenge(challenge)
 				}}
 			>
 				{challenge.name}

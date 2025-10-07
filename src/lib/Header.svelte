@@ -2,22 +2,15 @@
 	import { fade } from 'svelte/transition'
 
 	import { Trophy } from '@lucide/svelte'
-
-	type Props = {
-		challenge_name: string
-	}
-
-	let { challenge_name }: Props = $props()
+	import { game } from '../core/game.svelte'
 </script>
 
 <header>
 	<h1>Slidorus</h1>
 
-	{#if challenge_name}
-		<span class="challenge_name" transition:fade={{ duration: 200 }}
-			><Trophy /> {challenge_name}</span
-		>
-	{/if}
+	<span class="challenge_name" transition:fade={{ duration: 200 }}
+		><Trophy /> {game.challenge?.name ?? 'Custom'}</span
+	>
 </header>
 
 <style>

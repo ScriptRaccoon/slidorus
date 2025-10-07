@@ -1,9 +1,11 @@
+import { type Challenge, type ChallengeConfig } from './challenge.svelte'
 import { FACES, type FACES_TYPE } from './config'
 import { Encoder } from './encoder'
 import { Grouping } from './grouping.svelte'
 import { Move } from './move'
 import { Piece } from './piece.svelte'
 import { sleep } from './utils'
+import challenges from '../data/challenges.json'
 
 export class Game {
 	pieces: Piece[]
@@ -11,6 +13,7 @@ export class Game {
 	row_grouping: Grouping<number>
 	col_grouping: Grouping<number>
 	move_history: Move[]
+	challenge: Challenge | undefined
 
 	constructor() {
 		this.pieces = $state(this.get_initial_pieces())
@@ -18,6 +21,7 @@ export class Game {
 		this.row_grouping = $state(new Grouping())
 		this.col_grouping = $state(new Grouping())
 		this.move_history = $state([])
+		this.challenge = $state(undefined)
 	}
 
 	get_initial_pieces(): Piece[] {
@@ -211,28 +215,33 @@ export class Game {
 		this.clear_move_history()
 	}
 
-	get pieces_config() {
-		return Encoder.encode_pieces(this.pieces)
+	get config() {
+		return {
+			pieces: Encoder.encode_pieces(this.pieces),
+			rows: Encoder.encode_sets(this.row_grouping.groups),
+			cols: Encoder.encode_sets(this.col_grouping.groups),
+		}
 	}
 
-	get rows_config() {
-		return Encoder.encode_sets(this.row_grouping.groups)
+	load_from_config(config: ChallengeConfig) {
+		this.pieces = Encoder.decode_pieces_config(config.pieces ?? '')
+		this.row_grouping.groups = Encoder.decode_sets(config.rows ?? '')
+		this.col_grouping.groups = Encoder.decode_sets(config.cols ?? '')
+		game.clear_move_history()
 	}
 
-	get cols_config() {
-		return Encoder.encode_sets(this.col_grouping.groups)
+	set_challenge(challenge: Challenge) {
+		this.load_from_config(challenge.config)
+		this.challenge = challenge
 	}
 
-	decode_pieces(pieces_config: string) {
-		this.pieces = Encoder.decode_pieces_config(pieces_config)
-	}
-
-	decode_rows(rows_config: string) {
-		this.row_grouping.groups = Encoder.decode_sets(rows_config)
-	}
-
-	decode_cols(cols_config: string) {
-		this.col_grouping.groups = Encoder.decode_sets(cols_config)
+	update_challenge() {
+		this.challenge = challenges.find(
+			(c) =>
+				(c.config.pieces ?? '') == this.config.pieces &&
+				(c.config.rows ?? '') == this.config.rows &&
+				(c.config.cols ?? '') == this.config.cols,
+		)
 	}
 
 	clear_move_history() {
