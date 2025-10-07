@@ -12,10 +12,13 @@
 	import type { Piece } from './core/piece.svelte'
 	import About from './lib/About.svelte'
 	import type { Challenge } from './core/config'
+	import challenges from './data/challenges.json'
 
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
 	let torus_piece_grid = $state<Piece[][]>([])
+
+	let challenge_name = $state('')
 
 	function toggle_torus() {
 		show_torus = !show_torus
@@ -24,11 +27,12 @@
 	function toggle_editing() {
 		if (game.state === 'editing') {
 			game.state = 'idle'
-			update_URL({
-				pieces: game.pieces_config,
-				rows: game.rows_config,
-				cols: game.cols_config,
-			})
+			const challenge: Challenge = {}
+			if (game.pieces_config) challenge.pieces = game.pieces_config
+			if (game.rows_config) challenge.rows = game.rows_config
+			if (game.cols_config) challenge.cols = game.cols_config
+			update_challenge_name(challenge)
+			update_URL(challenge)
 		} else if (game.state === 'idle') {
 			const has_shown_warning =
 				localStorage.getItem('warning_shown') === true.toString()
@@ -109,6 +113,7 @@
 		}
 
 		game.clear_move_history()
+		update_challenge_name(challenge)
 
 		if (options.update_URL) {
 			update_URL(challenge)
@@ -126,6 +131,16 @@
 		if (cols_config) challenge.cols = cols_config
 
 		load_challenge(challenge, { update_URL: false })
+	}
+
+	function update_challenge_name(challenge: Challenge) {
+		const saved_challenge = challenges.find(
+			(c) =>
+				c.pieces == challenge.pieces &&
+				c.rows == challenge.rows &&
+				c.cols == challenge.cols,
+		)
+		challenge_name = saved_challenge ? saved_challenge.name : ''
 	}
 
 	onMount(() => {
@@ -161,7 +176,7 @@
 	})
 </script>
 
-<Header />
+<Header {challenge_name} />
 
 <div class="grid" class:show_torus>
 	<Game {finish_move} />
