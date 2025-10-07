@@ -70,17 +70,6 @@
 		document.addEventListener('drop', (e) => e.preventDefault())
 	})
 
-	function finish_move() {
-		const is_solved = game.check_solved()
-
-		if (is_solved) {
-			send_toast({
-				title: 'Puzzle solved!',
-				variant: 'success',
-			})
-		}
-	}
-
 	function update_torus_grid(pieces: Piece[]) {
 		const grid: Piece[][] = []
 		for (const piece of pieces) {
@@ -100,7 +89,7 @@
 <Header />
 
 <div class="grid" class:show_torus>
-	<Game {finish_move} />
+	<Game />
 
 	<Menu
 		scramble={() => game.scramble()}

@@ -10,12 +10,6 @@
 	import { COL_KEYS, FACES, ROW_KEYS } from '../core/config'
 	import MoveHistory from './MoveHistory.svelte'
 
-	type Props = {
-		finish_move: () => void
-	}
-
-	let { finish_move }: Props = $props()
-
 	let square_element = $state<HTMLDivElement | null>(null)
 	let square_size = $state(0)
 
@@ -79,6 +73,15 @@
 		setTimeout(() => {
 			game.state = 'idle'
 		}, 80) // transition duration
+	}
+
+	function finish_move() {
+		if (game.has_scrambled && game.check_solved()) {
+			send_toast({
+				title: 'Puzzle solved!',
+				variant: 'success',
+			})
+		}
 	}
 
 	function handle_keydown(e: KeyboardEvent) {
