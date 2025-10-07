@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Game from './lib/Game.svelte'
 	import Header from './lib/Header.svelte'
-	import Infos from './lib/Infos.svelte'
 	import Menu from './lib/Menu.svelte'
 	import Torus from './lib/Torus.svelte'
 	import Toast, { send_toast } from './lib/Toast.svelte'
@@ -11,6 +10,7 @@
 	import { update_URL_param } from './core/utils'
 	import { game } from './core/game.svelte'
 	import type { Piece } from './core/piece.svelte'
+	import About from './lib/About.svelte'
 
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
@@ -202,7 +202,7 @@
 					update_URL: true,
 				})}
 		/>
-		<Infos />
+		<About />
 	{/if}
 </div>
 
