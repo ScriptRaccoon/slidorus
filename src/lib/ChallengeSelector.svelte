@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { Trophy } from '@lucide/svelte'
 	import challenges from '../data/challenges.json'
-	import type { Challenge } from '../core/config'
+	import type { ChallengeConfig } from '../core/config'
 
 	type Props = {
-		load_challenge: (challenge: Challenge) => void
+		load_challenge: (config: ChallengeConfig) => void
 	}
 
 	let { load_challenge }: Props = $props()
@@ -32,7 +32,7 @@
 			<button
 				data-difficulty={challenge.difficulty}
 				onclick={() => {
-					load_challenge(challenge)
+					load_challenge(challenge.config)
 					window.scrollTo({ top: 0 })
 				}}
 			>

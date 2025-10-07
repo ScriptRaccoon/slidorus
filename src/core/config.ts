@@ -43,7 +43,7 @@ export const FACES = {
 
 export type FACES_TYPE = typeof FACES.ROW | typeof FACES.COL
 
-export type Challenge = {
+export type ChallengeConfig = {
 	pieces?: string
 	rows?: string
 	cols?: string
