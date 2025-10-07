@@ -13,7 +13,7 @@
 	})
 </script>
 
-<div class="move_display">
+<div class="move_display" class:invisible={game.state === 'editing'}>
 	<div class="move_count">
 		{game.move_count}
 		{#if game.move_count === 1}
@@ -34,15 +34,16 @@
 
 <style>
 	.move_display {
-		position: absolute;
-		bottom: 100%;
-		width: 100%;
-		margin-bottom: 1px;
 		color: var(--secondary-font-color);
 		font-size: 0.875rem;
 		display: grid;
 		grid-template-columns: auto 1fr;
 		gap: 0.5rem;
+		transition: opacity 200ms;
+
+		&.invisible {
+			opacity: 0;
+		}
 
 		@media (max-width: 720px) {
 			padding-right: 1rem;

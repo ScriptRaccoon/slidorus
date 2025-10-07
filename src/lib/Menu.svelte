@@ -75,7 +75,6 @@
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
 		justify-content: center;
-		margin-top: 1.25rem;
 		gap: 0.5rem 1rem;
 	}
 

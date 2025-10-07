@@ -10,7 +10,6 @@
 	import Challenges from './lib/Challenges.svelte'
 	import { update_URL_param } from './core/utils'
 	import { game } from './core/game.svelte'
-	import MoveHistory from './lib/MoveHistory.svelte'
 	import type { Piece } from './core/piece.svelte'
 
 	let show_torus = $state(false)
@@ -170,12 +169,7 @@
 <Header />
 
 <div class="grid" class:show_torus>
-	<div class="game_container">
-		{#if game.state !== 'editing'}
-			<MoveHistory />
-		{/if}
-		<Game {finish_move} />
-	</div>
+	<Game {finish_move} />
 
 	<Menu
 		{scramble}
@@ -236,9 +230,5 @@
 				}
 			}
 		}
-	}
-
-	.game_container {
-		position: relative;
 	}
 </style>

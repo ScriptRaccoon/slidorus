@@ -8,6 +8,7 @@
 	import { DragAction } from '../core/dragaction'
 	import { Move } from '../core/move'
 	import { COL_KEYS, FACES, ROW_KEYS } from '../core/config'
+	import MoveHistory from './MoveHistory.svelte'
 
 	type Props = {
 		finish_move: () => void
@@ -150,6 +151,7 @@
 <svelte:window onkeydown={handle_keydown} />
 
 <div class="game" style:--size="{square_size}px">
+	<MoveHistory />
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
 		class="square {game.state}"
@@ -166,54 +168,74 @@
 		{#each game.pieces as piece (piece.id)}
 			<PieceComponent {piece} animated={game.state === 'moving'} />
 		{/each}
+
+		{#each game.pieces as piece (piece.id)}
+			<PieceEditor
+				disabled={game.state !== 'editing'}
+				{piece}
+				toggle_bandage_down={() => game.toggle_bandage(piece, 'down')}
+				toggle_bandage_right={() => game.toggle_bandage(piece, 'right')}
+			></PieceEditor>
+		{/each}
 	</div>
 
-	{#each game.pieces as piece (piece.id)}
-		<PieceEditor
-			disabled={game.state !== 'editing'}
-			{piece}
-			toggle_bandage_down={() => game.toggle_bandage(piece, 'down')}
-			toggle_bandage_right={() => game.toggle_bandage(piece, 'right')}
-		></PieceEditor>
-	{/each}
+	<div class="row_connectors">
+		{#each { length: 9 } as _, row}
+			<Connector
+				type="row"
+				index={row}
+				disabled={game.state !== 'editing'}
+				active={row === clicked_row}
+				connect={() => connect_row(row)}
+				remove={() => disconnect_row(row)}
+				group={game.row_grouping.get_group_index(row)}
+			/>
+		{/each}
+	</div>
 
-	{#each { length: 9 } as _, row}
-		<Connector
-			type="row"
-			index={row}
-			disabled={game.state !== 'editing'}
-			active={row === clicked_row}
-			connect={() => connect_row(row)}
-			remove={() => disconnect_row(row)}
-			group={game.row_grouping.get_group_index(row)}
-		/>
-	{/each}
-
-	{#each { length: 9 } as _, col}
-		<Connector
-			type="col"
-			index={col}
-			disabled={game.state !== 'editing'}
-			active={col === clicked_col}
-			connect={() => connect_col(col)}
-			remove={() => disconnect_col(col)}
-			group={game.col_grouping.get_group_index(col)}
-		/>
-	{/each}
+	<div class="col_connectors">
+		{#each { length: 9 } as _, col}
+			<Connector
+				type="col"
+				index={col}
+				disabled={game.state !== 'editing'}
+				active={col === clicked_col}
+				connect={() => connect_col(col)}
+				remove={() => disconnect_col(col)}
+				group={game.col_grouping.get_group_index(col)}
+			/>
+		{/each}
+	</div>
 </div>
 
 <style>
 	.game {
-		position: relative;
 		--u: calc(var(--size) / 9);
+		display: grid;
+		grid-template-columns: 1fr auto;
+		grid-template-rows: auto 1fr auto;
+	}
 
-		@media (max-width: 720px) {
-			padding-right: calc(0.25 * var(--u));
-			margin-left: calc(-0.1 * var(--u));
-		}
+	.row_connectors {
+		grid-row: 2;
+		grid-column: 2;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+		padding-left: 0.5rem;
+	}
+
+	.col_connectors {
+		grid-row: 3;
+		grid-column: 1;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		padding-top: 0.5rem;
 	}
 
 	.square {
+		grid-column: 1;
 		position: relative;
 		width: 100%;
 		aspect-ratio: 1;
@@ -221,15 +243,18 @@
 		--border: 1px;
 		cursor: move;
 		touch-action: none;
-		clip-path: inset(var(--border));
-		overflow: hidden;
 
-		@media (min-width: 720px) {
-			--border: 0.1rem;
+		&:not(.editing) {
+			clip-path: inset(var(--border));
+			overflow: hidden;
 		}
 
 		&.editing {
 			cursor: default;
+		}
+
+		@media (min-width: 720px) {
+			--border: 0.1rem;
 		}
 	}
 </style>

@@ -73,7 +73,6 @@
 	}
 
 	button {
-		position: absolute;
 		top: 0.25rem;
 		right: 0.25rem;
 		color: var(--secondary-font-color);
