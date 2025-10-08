@@ -12,6 +12,8 @@ The puzzle is similar to 9×9 [Loopover](https://loopover.xyz/), but with a Rubi
 
 ![screenshot](/public/screenshot-solved.png)
 
+The rows can also be moved by using the keys `1`, `2`, ..., `9`, and the columns by using the keys `q`, `w`, ..., `o`. The shift key toggles the direction.
+
 In editing mode, several options are available to make the puzzle more interesting:
 
 -   Pieces can be bandaged (so they always move together).
