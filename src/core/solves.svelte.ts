@@ -4,12 +4,12 @@ export type Solve = {
 	moves: number
 }
 
-let recorded_solves = $state<Solve[]>(get_recorded_solves())
+let recorded_solves = $state<Solve[]>(get_stored_solves())
 let solved_challenge_names = $derived([
 	...new Set(recorded_solves.map((solve) => solve.challenge_name)),
 ])
 
-function get_recorded_solves(): Solve[] {
+function get_stored_solves(): Solve[] {
 	const solves_str = localStorage.getItem('solves') ?? '[]'
 	return JSON.parse(solves_str)
 }
@@ -21,4 +21,8 @@ export function record_solve(solve: Solve) {
 
 export function get_solved_challenge_names() {
 	return solved_challenge_names
+}
+
+export function get_recorded_solves() {
+	return recorded_solves
 }

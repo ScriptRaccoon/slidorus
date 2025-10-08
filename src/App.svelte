@@ -11,6 +11,7 @@
 	import type { Piece } from './core/piece.svelte'
 	import About from './lib/About.svelte'
 	import { update_URL } from './core/challenge'
+	import Solves from './lib/Solves.svelte'
 
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
@@ -112,6 +113,7 @@
 
 	{#if game.state !== 'editing'}
 		<ChallengeSelector />
+		<Solves />
 		<About />
 	{/if}
 </div>
