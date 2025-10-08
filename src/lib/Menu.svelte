@@ -40,7 +40,10 @@
 <menu>
 	{#if game.state !== 'editing'}
 		<button
-			onclick={open_challenge_selector}
+			onclick={(e) => {
+				e.stopPropagation()
+				open_challenge_selector()
+			}}
 			aria-label="Open list of challenges"
 		>
 			<List />

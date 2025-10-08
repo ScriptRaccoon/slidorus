@@ -2,7 +2,7 @@
 	import { game } from '../core/game.svelte'
 	import challenges from '../data/challenges.json'
 	import { update_URL, type Challenge } from '../core/challenge'
-	import { Check, CheckCircle, X } from '@lucide/svelte'
+	import { Check, X } from '@lucide/svelte'
 	import { get_solved_challenge_names } from '../core/solves.svelte'
 
 	type Props = {
@@ -29,9 +29,16 @@
 	function handle_close() {
 		open = false
 	}
+
+	function detect_outside_click(e: MouseEvent) {
+		const outside = open && !dialog_element?.contains(e.target as Node)
+		if (outside) handle_close()
+	}
 </script>
 
-<dialog id="dialog" bind:this={dialog_element} onclose={handle_close}>
+<svelte:window onclick={detect_outside_click} />
+
+<dialog bind:this={dialog_element} onclose={handle_close}>
 	<button class="close" aria-label="Close" onclick={handle_close}>
 		<X />
 	</button>
@@ -71,6 +78,7 @@
 		overflow-y: scroll;
 
 		&::backdrop {
+			pointer-events: none;
 			background: none;
 		}
 	}
