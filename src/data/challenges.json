@@ -197,24 +197,19 @@
 		}
 	},
 	{
-		"name": "Christmas",
-		"difficulty": 4,
-		"config": { "pieces": "", "rows": "4q9h", "cols": "4q9h" }
+		"name": "Caterpillar",
+		"difficulty": 3,
+		"config": {
+			"pieces": "00202203205206208209a0ba0ca0ea0fa0ha0i80k80l80n80o80q80r40s50t10x40y50z11941a51b11f41g51h11i21k21l21n21o21q21ra1ta1ua1wa1xa1za208228238258268288",
+			"rows": "",
+			"cols": ""
+		}
 	},
 	{
 		"name": "Bubbles",
 		"difficulty": 4,
 		"config": {
 			"pieces": "0160230360430ae0bb0ce0db0f60g70h30jc0k90lc0m90oc0pd0q90v60w30x60y70z310611712314e15b16c17d18919c1ad1b91dc1e91i61j71k31l61m31rc1sd1t91ue1vb1x61y71z323c24926c27d289",
-			"rows": "",
-			"cols": ""
-		}
-	},
-	{
-		"name": "Caterpillar",
-		"difficulty": 4,
-		"config": {
-			"pieces": "00202203205206208209a0ba0ca0ea0fa0ha0i80k80l80n80o80q80r40s50t10x40y50z11941a51b11f41g51h11i21k21l21n21o21q21ra1ta1ua1wa1xa1za208228238258268288",
 			"rows": "",
 			"cols": ""
 		}
@@ -281,6 +276,20 @@
 			"rows": "",
 			"cols": ""
 		}
+	},
+	{
+		"name": "Fortress",
+		"difficulty": 4,
+		"config": {
+			"pieces": "00g08g0a60b30c60d70e30f60g30jc0k90lc0md0n90oc0p90s60t30x60y311e12b16e17b1ac1b91fc1g91j61k31l61m71n31o61p31sc1t91uc1vd1w91xc1y920g28g",
+			"rows": "",
+			"cols": ""
+		}
+	},
+	{
+		"name": "Christmas",
+		"difficulty": 4,
+		"config": { "pieces": "", "rows": "4q9h", "cols": "4q9h" }
 	},
 	{
 		"name": "Brain",
