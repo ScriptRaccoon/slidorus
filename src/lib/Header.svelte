@@ -1,22 +1,34 @@
 <script lang="ts">
+	import { List } from '@lucide/svelte'
+
 	type Props = {
 		challenge_name: string
+		open_challenge_selector: () => void
 	}
 
-	let { challenge_name }: Props = $props()
+	let { challenge_name, open_challenge_selector }: Props = $props()
 </script>
 
 <header>
 	<h1>Slidorus</h1>
-	{#if challenge_name}
+	<div class="subtitle">
 		<h2>{challenge_name}</h2>
-	{/if}
+		<button
+			class="btn small"
+			onclick={(e) => {
+				e.stopPropagation()
+				open_challenge_selector()
+			}}
+			aria-label="Open list of challenges challenge selector"
+		>
+			<List />
+		</button>
+	</div>
 </header>
 
 <style>
 	header {
 		padding-block: 1rem;
-		text-align: center;
 	}
 
 	h1 {
@@ -27,13 +39,20 @@
 		font-weight: 600;
 		color: var(--highlight-color);
 		letter-spacing: 2px;
+		text-align: center;
 	}
 
 	h2 {
-		margin-top: -0.25rem;
 		font-weight: 300;
 		font-size: 0.875rem;
 		font-family: monospace;
+	}
+
+	.subtitle {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 0.5rem;
 	}
 
 	@media (min-width: 720px) {

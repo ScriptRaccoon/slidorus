@@ -84,13 +84,6 @@
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
-	}
-
-	.btn {
-		display: inline-flex;
-		align-items: center;
-		background-color: var(--btn-color);
-		padding: 0.1rem 0.3rem;
-		border-radius: 0.25rem;
+		margin-bottom: 0.25rem;
 	}
 </style>

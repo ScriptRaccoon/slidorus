@@ -4,7 +4,6 @@
 		Eye,
 		EyeOff,
 		Link2,
-		List,
 		RotateCcw,
 		Shuffle,
 		SquarePen,
@@ -13,7 +12,6 @@
 	import { game } from '../core/game.svelte'
 
 	type Props = {
-		open_challenge_selector: () => void
 		scramble: () => void
 		reset: () => void
 		undo_move: () => void
@@ -25,7 +23,6 @@
 	}
 
 	let {
-		open_challenge_selector,
 		scramble,
 		reset,
 		undo_move,
@@ -40,15 +37,7 @@
 <menu>
 	{#if game.state !== 'editing'}
 		<button
-			onclick={(e) => {
-				e.stopPropagation()
-				open_challenge_selector()
-			}}
-			aria-label="Open list of challenges"
-		>
-			<List />
-		</button>
-		<button
+			class="btn"
 			onclick={scramble}
 			disabled={game.state !== 'idle'}
 			aria-label="Scramble"
@@ -56,6 +45,7 @@
 			<Shuffle />
 		</button>
 		<button
+			class="btn"
 			onclick={reset}
 			disabled={game.state !== 'idle'}
 			aria-label="Reset"
@@ -63,13 +53,14 @@
 			<RotateCcw />
 		</button>
 		<button
+			class="btn"
 			onclick={undo_move}
 			disabled={game.move_count === 0}
 			aria-label="Undo"
 		>
 			<Undo />
 		</button>
-		<button onclick={toggle_torus} aria-label="Toggle Torus">
+		<button class="btn" onclick={toggle_torus} aria-label="Toggle Torus">
 			{#if show_torus}
 				<EyeOff />
 			{:else}
@@ -78,6 +69,7 @@
 		</button>
 
 		<button
+			class="btn"
 			onclick={toggle_editing}
 			disabled={game.state !== 'idle'}
 			aria-label="Edit"
@@ -85,14 +77,14 @@
 			<SquarePen />
 		</button>
 
-		<button onclick={share_URL} class="share" aria-label="Share">
+		<button class="btn" onclick={share_URL} aria-label="Share">
 			<Link2 />
 		</button>
 	{:else}
-		<button onclick={revert_edits} aria-label="Revert">
+		<button class="btn" onclick={revert_edits} aria-label="Revert">
 			<RotateCcw />
 		</button>
-		<button onclick={toggle_editing} aria-label="Done">
+		<button class="btn" onclick={toggle_editing} aria-label="Done">
 			<CircleCheck />
 		</button>
 	{/if}
@@ -105,16 +97,6 @@
 		justify-content: center;
 		gap: 0.5rem;
 		margin-bottom: 0.5rem;
-	}
-
-	button {
-		padding: 0.3rem 0.8rem;
-		background-color: var(--btn-color);
-		border-radius: 0.25rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		flex: 1;
 	}
 
 	@media (min-width: 500px) {

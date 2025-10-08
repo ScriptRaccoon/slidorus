@@ -92,13 +92,15 @@
 	})
 </script>
 
-<Header challenge_name={game.challenge?.name ?? 'Custom Challenge'} />
+<Header
+	challenge_name={game.challenge?.name ?? 'Custom Challenge'}
+	{open_challenge_selector}
+/>
 
 <div class="grid" class:show_torus>
 	<Game />
 
 	<Menu
-		{open_challenge_selector}
 		scramble={() => game.scramble()}
 		reset={() => game.reset()}
 		{toggle_torus}
