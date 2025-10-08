@@ -19,15 +19,11 @@
 	let dialog_element = $state<HTMLDialogElement | null>(null)
 
 	$effect(() => {
-		if (open) {
-			dialog_element?.showModal()
-		} else {
-			dialog_element?.close()
-		}
+		if (open) dialog_element?.showModal()
 	})
 
 	function handle_close() {
-		open = false
+		dialog_element?.close()
 	}
 
 	function detect_outside_click(e: MouseEvent) {
@@ -38,7 +34,7 @@
 
 <svelte:window onclick={detect_outside_click} />
 
-<dialog bind:this={dialog_element} onclose={handle_close}>
+<dialog bind:this={dialog_element} onclose={() => (open = false)}>
 	<button class="close" aria-label="Close" onclick={handle_close}>
 		<X />
 	</button>
