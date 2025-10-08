@@ -29,7 +29,36 @@
 		colored; the exact placement of the blocks does not matter.
 	</p>
 
-	<ul>
+	<p>
+		The rows can also be moved by using the keys <kbd>1</kbd>, <kbd>2</kbd>,
+		..., <kbd>9</kbd>, and the columns by using the keys <kbd>q</kbd>,
+		<kbd>w</kbd>, ..., <kbd>o</kbd>. The shift key toggles the direction.
+	</p>
+
+	<p>
+		In editing mode, several options are available to make the puzzle more
+		interesting:
+	</p>
+
+	<ul class="edit-options">
+		<li>Pieces can be bandaged (so they always move together).</li>
+		<li>Pieces can be fixed (so they don't move anymore).</li>
+		<li>Rows and columns can be grouped with each other.</li>
+	</ul>
+
+	<p>
+		Each configuration of pieces, rows and columns leads to a different
+		challenge and is reflected in the URL, which can be shared or
+		bookmarked.
+	</p>
+
+	<p>
+		There is a selection of preconfigured challenges, sorted by difficulty.
+		Your solves for these are recorded in your browser (move count and
+		date).
+	</p>
+
+	<ul class="button-explanation">
 		<li>
 			<span class="btn"><List /> </span> opens the list of challenges
 		</li>
@@ -54,20 +83,6 @@
 	</ul>
 
 	<p>
-		In editing mode, pieces can be bandaged together. This makes the puzzle
-		significantly more complex, especially when many pieces are bandaged.
-		Furthermore, it is possible to make pieces fixed, so that they will not
-		move anymore. This adds yet another level of complexity. Finally, rows
-		and columns can be grouped, meaning they always move together. The
-		configuration can be shared by using the "Share" button.
-	</p>
-
-	<p>
-		The rows can also be moved by using the keys 1,2,...,9, and the columns
-		by using the keys q,w,...,o. The shift key toggles the direction.
-	</p>
-
-	<p>
 		The code for this application can be found on
 		<a href="https://github.com/ScriptRaccoon/slidorus" target="_blank"
 			>GitHub</a
@@ -76,14 +91,18 @@
 </details>
 
 <style>
-	ul {
+	.button-explanation {
 		list-style-type: none;
+
+		li {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			margin-bottom: 0.25rem;
+		}
 	}
 
-	li {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		margin-bottom: 0.25rem;
+	.edit-options {
+		padding-left: 2rem;
 	}
 </style>
