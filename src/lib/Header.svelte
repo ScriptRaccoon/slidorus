@@ -1,24 +1,22 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition'
+	type Props = {
+		challenge_name: string
+	}
 
-	import { Trophy } from '@lucide/svelte'
-	import { game } from '../core/game.svelte'
+	let { challenge_name }: Props = $props()
 </script>
 
 <header>
 	<h1>Slidorus</h1>
-
-	<span class="challenge_name" transition:fade={{ duration: 200 }}
-		><Trophy /> {game.challenge?.name ?? 'Custom'}</span
-	>
+	{#if challenge_name}
+		<h2>{challenge_name}</h2>
+	{/if}
 </header>
 
 <style>
 	header {
 		padding-block: 1rem;
 		text-align: center;
-		display: flex;
-		justify-content: space-between;
 	}
 
 	h1 {
@@ -31,12 +29,11 @@
 		letter-spacing: 2px;
 	}
 
-	.challenge_name {
+	h2 {
+		margin-top: -0.25rem;
+		font-weight: 300;
+		font-size: 0.875rem;
 		font-family: monospace;
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		font-size: 0.75rem;
 	}
 
 	@media (min-width: 720px) {
@@ -46,18 +43,10 @@
 
 		h1 {
 			font-size: 2.5rem;
-			flex: 1;
 		}
 
-		.challenge_name {
-			background-color: var(--btn-color);
-			position: absolute;
-			top: 0;
-			right: 0;
-			border-bottom-left-radius: 0.5rem;
-			box-shadow: 0 0 1rem #0004;
-			padding: 0.5rem 1rem;
-			font-size: 1rem;
+		h2 {
+			font-size: 1.125rem;
 		}
 	}
 </style>

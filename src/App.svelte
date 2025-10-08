@@ -92,7 +92,7 @@
 	})
 </script>
 
-<Header />
+<Header challenge_name={game.challenge?.name ?? 'Custom Challenge'} />
 
 <div class="grid" class:show_torus>
 	<Game />
