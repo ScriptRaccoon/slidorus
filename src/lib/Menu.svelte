@@ -4,6 +4,7 @@
 		Eye,
 		EyeOff,
 		Link2,
+		List,
 		RotateCcw,
 		Shuffle,
 		SquarePen,
@@ -12,30 +13,38 @@
 	import { game } from '../core/game.svelte'
 
 	type Props = {
+		open_challenge_selector: () => void
 		scramble: () => void
 		reset: () => void
+		undo_move: () => void
 		toggle_torus: () => void
 		show_torus: boolean
 		toggle_editing: () => void
 		revert_edits: () => void
 		share_URL: () => void
-		undo_move: () => void
 	}
 
 	let {
+		open_challenge_selector,
 		scramble,
 		reset,
+		undo_move,
 		toggle_torus,
 		show_torus,
 		toggle_editing,
 		revert_edits,
 		share_URL,
-		undo_move,
 	}: Props = $props()
 </script>
 
 <menu>
 	{#if game.state !== 'editing'}
+		<button
+			onclick={open_challenge_selector}
+			aria-label="Open list of challenges"
+		>
+			<List />
+		</button>
 		<button
 			onclick={scramble}
 			disabled={game.state !== 'idle'}

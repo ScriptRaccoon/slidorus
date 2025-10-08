@@ -3,6 +3,7 @@
 		Eye,
 		Info,
 		Link2,
+		List,
 		RotateCcw,
 		Shuffle,
 		SquarePen,
@@ -29,6 +30,9 @@
 	</p>
 
 	<ul>
+		<li>
+			<span class="btn"><List /> </span> opens the list of challenges
+		</li>
 		<li>
 			<span class="btn"><Shuffle /></span> scrambles the puzzle
 		</li>

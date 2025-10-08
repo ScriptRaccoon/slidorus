@@ -6,16 +6,17 @@
 	import Toast, { send_toast } from './lib/Toast.svelte'
 	import { onMount } from 'svelte'
 	import Instructions from './lib/Instructions.svelte'
-	import ChallengeSelector from './lib/ChallengeSelector.svelte'
 	import { game } from './core/game.svelte'
 	import type { Piece } from './core/piece.svelte'
 	import About from './lib/About.svelte'
 	import { update_URL } from './core/challenge'
 	import Solves from './lib/Solves.svelte'
+	import ChallengeSelector from './lib/ChallengeSelector.svelte'
 
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
 	let torus_piece_grid = $state<Piece[][]>([])
+	let show_challenge_selector = $state(false)
 
 	function toggle_torus() {
 		show_torus = !show_torus
@@ -80,6 +81,10 @@
 		torus_piece_grid = grid
 	}
 
+	function open_challenge_selector() {
+		show_challenge_selector = true
+	}
+
 	$effect(() => {
 		if (game.state !== 'scrambling') {
 			update_torus_grid(game.pieces)
@@ -93,14 +98,15 @@
 	<Game />
 
 	<Menu
+		{open_challenge_selector}
 		scramble={() => game.scramble()}
 		reset={() => game.reset()}
 		{toggle_torus}
-		{show_torus}
+		undo_move={() => game.undo_move()}
 		{toggle_editing}
+		{show_torus}
 		revert_edits={() => game.revert_edits()}
 		{share_URL}
-		undo_move={() => game.undo_move()}
 	/>
 
 	{#if game.state === 'editing'}
@@ -112,7 +118,7 @@
 	{/if}
 
 	{#if game.state !== 'editing'}
-		<ChallengeSelector />
+		<ChallengeSelector bind:open={show_challenge_selector} />
 		<Solves />
 		<About />
 	{/if}

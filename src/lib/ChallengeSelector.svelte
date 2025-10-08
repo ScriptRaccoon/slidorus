@@ -1,75 +1,100 @@
 <script lang="ts">
-	import { CircleCheck, Trophy } from '@lucide/svelte'
-	import challenges from '../data/challenges.json'
 	import { game } from '../core/game.svelte'
+	import challenges from '../data/challenges.json'
 	import { update_URL, type Challenge } from '../core/challenge'
+	import { Check, CheckCircle, X } from '@lucide/svelte'
 	import { get_solved_challenge_names } from '../core/solves.svelte'
 
-	let details_element = $state<HTMLElement | null>(null)
-	let open = $state(false)
+	type Props = {
+		open: boolean
+	}
 
-	$effect(() => {
-		if (!details_element) return
-		if (open) details_element.scrollIntoView({ block: 'start' })
-	})
+	let { open = $bindable() }: Props = $props()
 
 	function load_challenge(challenge: Challenge) {
 		game.set_challenge(challenge)
 		update_URL(challenge.config)
-		window.scrollTo({ top: 0 })
+	}
+
+	let dialog_element = $state<HTMLDialogElement | null>(null)
+
+	$effect(() => {
+		if (open) {
+			dialog_element?.showModal()
+		} else {
+			dialog_element?.close()
+		}
+	})
+
+	function handle_close() {
+		open = false
 	}
 </script>
 
-<details bind:this={details_element} bind:open>
-	<summary>
-		<Trophy /> Challenges
-	</summary>
+<dialog id="dialog" bind:this={dialog_element} onclose={handle_close}>
+	<button class="close" aria-label="Close" onclick={handle_close}>
+		<X />
+	</button>
 
-	<div>
-		{#each challenges as challenge (challenge.name)}
+	<div class="list">
+		{#each challenges as challenge}
 			{@const is_solved = get_solved_challenge_names().includes(
 				challenge.name,
 			)}
 			<button
-				class:selected={game.challenge?.name === challenge.name}
+				class="challenge"
+				onclick={() => load_challenge(challenge)}
 				data-difficulty={challenge.difficulty}
-				onclick={() => {
-					load_challenge(challenge)
-				}}
+				class:selected={game.challenge?.name === challenge.name}
 			>
-				{challenge.name}
-
+				<span>{challenge.name}</span>
 				{#if is_solved}
-					<span class="marker">
-						<CircleCheck />
-					</span>
+					<Check />
 				{/if}
 			</button>
 		{/each}
 	</div>
-</details>
+</dialog>
 
 <style>
-	div {
-		margin-top: 1rem;
-		list-style-type: none;
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
-		gap: 0.6rem;
+	dialog {
+		border: none;
+		color: var(--font-color);
+		background-color: var(--bg-color);
+		box-shadow: 0 0 2rem #000a;
+		padding-block: 1rem;
+		position: fixed;
+		top: 0;
+		height: 100vh;
+		left: auto;
+		right: 0;
+		overflow-y: scroll;
+
+		&::backdrop {
+			background: none;
+		}
 	}
 
-	button {
-		font-family: monospace;
-		text-transform: uppercase;
-		border-radius: 0.25rem;
-		padding-block: 0.2rem;
-		font-size: 0.75rem;
-		background-color: var(--color);
-		white-space: nowrap;
-		position: relative;
+	.list {
+		margin-top: 1rem;
+		display: grid;
+	}
 
-		&:not(:hover, :focus-visible) {
-			outline: 1px solid var(--dark-outline-color);
+	.challenge {
+		padding: 0.25rem 1rem;
+		font-family: monospace;
+		border: 1px solid transparent;
+		background-color: var(--color, transparent);
+		outline: none;
+		text-align: left;
+		display: inline-flex;
+		justify-content: space-between;
+		gap: 1rem;
+
+		&:hover,
+		&:focus-visible,
+		&.selected {
+			border-color: var(--font-color);
 		}
 
 		&[data-difficulty='1'] {
@@ -91,20 +116,15 @@
 		&[data-difficulty='5'] {
 			--color: var(--difficulty-color-5);
 		}
+	}
 
-		&.selected {
-			outline: 1px solid var(--font-color);
-		}
-
-		.marker {
-			position: absolute;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			top: -0.2rem;
-			right: -0.2rem;
-			background-color: var(--color-5);
-			border-radius: 50%;
-		}
+	button.close {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		justify-self: center;
+		border-radius: 50%;
+		width: 2rem;
+		aspect-ratio: 1;
 	}
 </style>
