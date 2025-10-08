@@ -35,9 +35,12 @@
 <svelte:window onclick={detect_outside_click} />
 
 <dialog bind:this={dialog_element} onclose={() => (open = false)}>
-	<button class="close" aria-label="Close" onclick={handle_close}>
-		<X />
-	</button>
+	<header>
+		<h2>Challenges</h2>
+		<button class="close" aria-label="Close" onclick={handle_close}>
+			<X />
+		</button>
+	</header>
 
 	<div class="list">
 		{#each challenges as challenge}
@@ -63,15 +66,15 @@
 	dialog {
 		border: none;
 		color: var(--font-color);
-		background-color: var(--bg-color);
-		box-shadow: 0 0 2rem #000a;
-		padding-block: 1rem;
+		background-color: var(--secondary-bg-color);
+		box-shadow: 0 0 3rem #000b;
 		position: fixed;
 		top: 0;
-		height: 100vh;
+		height: 75vh;
 		left: auto;
 		right: 0;
 		overflow-y: scroll;
+		border-bottom-left-radius: 0.5rem;
 
 		&::backdrop {
 			pointer-events: none;
@@ -113,7 +116,6 @@
 	}
 
 	.list {
-		margin-top: 1rem;
 		display: grid;
 	}
 
@@ -155,13 +157,25 @@
 		}
 	}
 
+	header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding-block: 1rem;
+		padding-inline: 1rem;
+	}
+
+	h2 {
+		font-weight: 500;
+		font-size: 1rem;
+	}
+
 	button.close {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		justify-self: center;
 		border-radius: 50%;
-		width: 2rem;
+		width: 1.5rem;
 		aspect-ratio: 1;
 	}
 </style>
