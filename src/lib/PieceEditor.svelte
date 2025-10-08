@@ -58,7 +58,6 @@
 		transform: translate(-50%, -50%);
 
 		opacity: 0;
-		transition: opacity 200ms;
 
 		&:not(:disabled) {
 			opacity: 0.15;

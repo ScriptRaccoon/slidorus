@@ -32,7 +32,6 @@
 		aspect-ratio: 1;
 		border-radius: 50%;
 		background-color: var(--color, var(--btn-color));
-		transition: opacity 200ms;
 		z-index: 1;
 
 		&.active:not(:disabled) {
