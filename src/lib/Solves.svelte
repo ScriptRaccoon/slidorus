@@ -1,13 +1,11 @@
 <script lang="ts">
 	import { ListCheck } from '@lucide/svelte'
 	import { get_recorded_solves } from '../core/solves.svelte'
-
-	//
 </script>
 
 <details>
 	<summary>
-		<ListCheck /> Solves
+		<ListCheck /> Your solves
 	</summary>
 
 	<table>
