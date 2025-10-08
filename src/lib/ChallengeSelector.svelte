@@ -79,6 +79,39 @@
 		}
 	}
 
+	@media (prefers-reduced-motion: no-preference) {
+		dialog {
+			--speed: 180ms;
+			transition:
+				display var(--speed) allow-discrete,
+				overlay var(--speed) allow-discrete;
+
+			animation: close var(--speed) forwards ease-in;
+
+			&[open] {
+				animation: open var(--speed) forwards ease-out;
+			}
+		}
+	}
+
+	@keyframes open {
+		from {
+			transform: translateX(100%);
+		}
+		to {
+			transform: translateX(0);
+		}
+	}
+
+	@keyframes close {
+		from {
+			transform: translateX(0);
+		}
+		to {
+			transform: translateX(100%);
+		}
+	}
+
 	.list {
 		margin-top: 1rem;
 		display: grid;
