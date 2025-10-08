@@ -22,6 +22,8 @@ export const COL_KEYS = [
 	'KeyO',
 ]
 
+export const TRANSITION_DURATION = 80
+
 export const FACES = {
 	ROW: {
 		name: 'Row',

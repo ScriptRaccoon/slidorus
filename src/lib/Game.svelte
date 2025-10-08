@@ -7,7 +7,12 @@
 	import { game } from '../core/game.svelte'
 	import { DragAction } from '../core/dragaction'
 	import { Move } from '../core/move'
-	import { COL_KEYS, FACES, ROW_KEYS } from '../core/config'
+	import {
+		COL_KEYS,
+		FACES,
+		ROW_KEYS,
+		TRANSITION_DURATION,
+	} from '../core/config'
 	import MoveHistory from './MoveHistory.svelte'
 
 	let square_element = $state<HTMLDivElement | null>(null)
@@ -72,7 +77,7 @@
 		drag_pos = null
 		setTimeout(() => {
 			game.state = 'idle'
-		}, 80) // transition duration
+		}, TRANSITION_DURATION)
 	}
 
 	function finish_move() {
