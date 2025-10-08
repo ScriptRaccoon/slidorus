@@ -24,11 +24,11 @@
 	--highlight-color: yellow;
 	--error-color: red;
 	--success-color: green;
-	--difficulty-color-1: #023;
-	--difficulty-color-2: #223;
-	--difficulty-color-3: #523;
-	--difficulty-color-4: #824;
-	--difficulty-color-5: #944;
+	--difficulty-color-1: hsl(240, 95%, 30%);
+	--difficulty-color-2: hsl(270, 95%, 30%);
+	--difficulty-color-3: hsl(300, 95%, 30%);
+	--difficulty-color-4: hsl(330, 95%, 30%);
+	--difficulty-color-5: hsl(360, 95%, 30%);
 }
 
 @media (prefers-reduced-motion: no-preference) {
