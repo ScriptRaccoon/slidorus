@@ -1,10 +1,10 @@
-import { type Challenge, type ChallengeConfig } from './challenge'
+import { type Challenge, type GameConfig } from './challenge'
 import { FACES, type FACES_TYPE } from './config'
 import { Encoder } from './encoder'
 import { Grouping } from './grouping.svelte'
 import { Move } from './move'
 import { Piece } from './piece.svelte'
-import { sleep } from './utils'
+import { equal_objects, sleep } from './utils'
 import challenges from '../data/challenges.json'
 import { record_solve } from './solves.svelte'
 
@@ -232,18 +232,58 @@ export class Game {
 		this.has_scrambled = true
 	}
 
-	get config() {
+	get_piece_coords_with_flag(
+		flag:
+			| 'fixed'
+			| 'bandaged_up'
+			| 'bandaged_right'
+			| 'bandaged_down'
+			| 'bandaged_left',
+	): number[] {
+		return this.pieces
+			.filter((piece) => piece[flag])
+			.map((p) => p.coord_index)
+	}
+
+	get_config() {
+		const fixed_coords = this.get_piece_coords_with_flag('fixed')
+		const up_coords = this.get_piece_coords_with_flag('bandaged_up')
+		const right_coords = this.get_piece_coords_with_flag('bandaged_right')
+		const down_coords = this.get_piece_coords_with_flag('bandaged_down')
+		const left_coords = this.get_piece_coords_with_flag('bandaged_left')
+
+		const rows_groups = this.row_grouping.groups
+		const cols_groups = this.col_grouping.groups
+
 		return {
-			pieces: Encoder.encode_pieces(this.pieces),
-			rows: Encoder.encode_sets(this.row_grouping.groups),
-			cols: Encoder.encode_sets(this.col_grouping.groups),
+			fixed: Encoder.encode_subset(fixed_coords),
+			up: Encoder.encode_subset(up_coords),
+			right: Encoder.encode_subset(right_coords),
+			down: Encoder.encode_subset(down_coords),
+			left: Encoder.encode_subset(left_coords),
+			rows: Encoder.encode_subsets(rows_groups),
+			cols: Encoder.encode_subsets(cols_groups),
 		}
 	}
 
-	load_from_config(config: ChallengeConfig) {
-		this.pieces = Encoder.decode_pieces_config(config.pieces)
-		this.row_grouping.groups = Encoder.decode_sets(config.rows)
-		this.col_grouping.groups = Encoder.decode_sets(config.cols)
+	load_from_config(config: GameConfig): void {
+		const fixed_coords = Encoder.decode_subset(config.fixed)
+		const up_coords = Encoder.decode_subset(config.up)
+		const right_coords = Encoder.decode_subset(config.right)
+		const down_coords = Encoder.decode_subset(config.down)
+		const left_coords = Encoder.decode_subset(config.left)
+
+		for (const piece of this.pieces) {
+			piece.fixed = fixed_coords.includes(piece.coord_index)
+			piece.bandaged_up = up_coords.includes(piece.coord_index)
+			piece.bandaged_right = right_coords.includes(piece.coord_index)
+			piece.bandaged_down = down_coords.includes(piece.coord_index)
+			piece.bandaged_left = left_coords.includes(piece.coord_index)
+		}
+
+		this.row_grouping.groups = Encoder.decode_subsets(config.rows)
+		this.col_grouping.groups = Encoder.decode_subsets(config.cols)
+
 		game.clear_move_history()
 	}
 
@@ -253,11 +293,9 @@ export class Game {
 	}
 
 	update_challenge() {
-		this.challenge = challenges.find(
-			(challenge) =>
-				challenge.config.pieces == this.config.pieces &&
-				challenge.config.rows == this.config.rows &&
-				challenge.config.cols == this.config.cols,
+		const config = this.get_config()
+		this.challenge = challenges.find((challenge) =>
+			equal_objects(challenge.config, config),
 		)
 	}
 

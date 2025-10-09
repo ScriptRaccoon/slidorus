@@ -24,7 +24,7 @@ In editing mode, several options are available to make the puzzle more interesti
 
 Each configuration of pieces, rows and columns leads to a different
 challenge and is reflected in the URL, which can be shared or
-bookmarked ([Example](https://slidorus.xyz/?pieces=0r40s50t10u20w20x40y50z113a15a1941a51b11c81e81f41g51h1))
+bookmarked.
 
 There is a selection of preconfigured challenges, sorted by difficulty.
 

@@ -2,232 +2,376 @@
 	{
 		"name": "Zero",
 		"difficulty": 1,
-		"config": { "pieces": "", "rows": "", "cols": "" }
+		"config": {
+			"fixed": "0",
+			"up": "0",
+			"right": "0",
+			"down": "0",
+			"left": "0",
+			"rows": "0",
+			"cols": "0"
+		}
 	},
 	{
 		"name": "Eye",
 		"difficulty": 1,
 		"config": {
-			"pieces": "0u60v50w313a14g15a1cc1d51e9",
-			"rows": "",
-			"cols": ""
+			"fixed": "e13wu1og",
+			"up": "dvuhv8etc0",
+			"right": "8bboxqtuyo",
+			"down": "z58kh6o0",
+			"left": "gmndvhnpxc",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Five Dots",
 		"difficulty": 1,
-		"config": { "pieces": "0ag0gg14g1sg1yg", "rows": "", "cols": "" }
+		"config": {
+			"fixed": "711qbvay6k9se8",
+			"up": "0",
+			"right": "0",
+			"down": "0",
+			"left": "0",
+			"rows": "0",
+			"cols": "0"
+		}
 	},
 	{
 		"name": "Nine Dots",
 		"difficulty": 1,
 		"config": {
-			"pieces": "0ag0dg0gg11g14g17g1sg1vg1yg",
-			"rows": "",
-			"cols": ""
+			"fixed": "7w6xg6pfjwvtog",
+			"up": "0",
+			"right": "0",
+			"down": "0",
+			"left": "0",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Cross",
 		"difficulty": 1,
 		"config": {
-			"pieces": "00g0ag0kg0ug1eg1og1yg28g",
-			"rows": "",
-			"cols": ""
+			"fixed": "5h205yv3qqzegdtt",
+			"up": "0",
+			"right": "0",
+			"down": "0",
+			"left": "0",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Gap",
 		"difficulty": 1,
 		"config": {
-			"pieces": "10l11l12l13h15k16l17l18l",
-			"rows": "",
-			"cols": ""
+			"fixed": "c22ss2kg0",
+			"up": "0",
+			"right": "bv28tnjls",
+			"down": "0",
+			"left": "ba0kyeh34",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Six Bars",
 		"difficulty": 2,
 		"config": {
-			"pieces": "0r40s50t10u20w20x40y50z113a15a1941a51b11c81e81f41g51h1",
-			"rows": "",
-			"cols": ""
+			"fixed": "0",
+			"up": "dvuhv8etc0",
+			"right": "1vk0i46hm2o",
+			"down": "z58kh6o0",
+			"left": "3r4108cz85c",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Nine Dominos",
 		"difficulty": 2,
 		"config": {
-			"pieces": "0040110340410640710920a20c20d20f20g20i80j80l80m80o80p8",
-			"rows": "",
-			"cols": ""
+			"fixed": "0",
+			"up": "y6hhc",
+			"right": "21",
+			"down": "2eio",
+			"left": "42",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Circle",
 		"difficulty": 2,
 		"config": {
-			"pieces": "00601702303i05i06607708309e0av0bb0ca0d20ea0fe0gv0hb0ic0jd0k90l80m80n80oc0pd0q90rk0s50t10x40y50zh11412116417119k1a51b11f41g51hh1i61j71k31l21m21n21o61p71q31re1sv1tb1ua1v81wa1xe1yv1zb20c21d22923o25o26c27d289",
-			"rows": "",
-			"cols": ""
+			"fixed": "uyduv5prz4pcco8",
+			"up": "alf5nxpz8l0lmyo0",
+			"right": "468x915enzanhv43",
+			"down": "qtgzppqdtlp59r",
+			"left": "8chui2atbylazq86",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Entrance",
 		"difficulty": 2,
 		"config": {
-			"pieces": "0a20d20g20j80m80p80ri0ti0ui0wi0xi0zi10a12a13a15a16a18a19o1bo1co1eo1fo1ho1j21m21p21s81v81y8",
-			"rows": "",
-			"cols": ""
+			"fixed": "3ig8br7j4e8",
+			"up": "7w70ys96hurk00",
+			"right": "0",
+			"down": "jzdabjrqkg00",
+			"left": "0",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Pills",
 		"difficulty": 2,
 		"config": {
-			"pieces": "0i20j20k20l20m20n20o20p20q20r80s80t80u80v80w80x80y80z81921a21b21c21d21e21f21g21h21i81j81k81l81m81n81o81p81q8",
-			"rows": "",
-			"cols": ""
+			"fixed": "0",
+			"up": "1xxrmyu5xq800",
+			"right": "0",
+			"down": "4x13l0fls00",
+			"left": "0",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Shift",
 		"difficulty": 2,
 		"config": {
-			"pieces": "00d01908c0b60c70d30ke0lf0mb0tc0ud0v91561671731ee1ff1gb1nc1od1p91r71s31z620f21b28e",
-			"rows": "",
-			"cols": ""
+			"fixed": "0",
+			"up": "5j65hbe2h8a2j37n",
+			"right": "5i0o0cjkhzqb04ch",
+			"down": "5jk4s1oh9tabuo00",
+			"left": "2b8fj814gp5fhmr",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Connect",
 		"difficulty": 2,
-		"config": { "pieces": "", "rows": "42", "cols": "" }
+		"config": {
+			"fixed": "0",
+			"up": "0",
+			"right": "0",
+			"down": "0",
+			"left": "0",
+			"rows": "42",
+			"cols": "0"
+		}
 	},
 	{
 		"name": "Flow",
 		"difficulty": 2,
-		"config": { "pieces": "", "rows": "42", "cols": "42" }
+		"config": {
+			"fixed": "0",
+			"up": "0",
+			"right": "0",
+			"down": "0",
+			"left": "0",
+			"rows": "42",
+			"cols": "42"
+		}
 	},
 	{
 		"name": "Main St.",
 		"difficulty": 2,
-		"config": { "pieces": "", "rows": "1k", "cols": "1k" }
+		"config": {
+			"fixed": "0",
+			"up": "0",
+			"right": "0",
+			"down": "0",
+			"left": "0",
+			"rows": "1k",
+			"cols": "1k"
+		}
 	},
 	{
 		"name": "Pairs",
 		"difficulty": 2,
-		"config": { "pieces": "", "rows": "1475", "cols": "1475" }
+		"config": {
+			"fixed": "0",
+			"up": "0",
+			"right": "0",
+			"down": "0",
+			"left": "0",
+			"rows": "14-75",
+			"cols": "14-75"
+		}
 	},
 	{
 		"name": "Port",
 		"difficulty": 3,
 		"config": {
-			"pieces": "00m01309c0a90i40j50k10um0v313c1491c41d51e11om1p31xc1y9264275281",
-			"rows": "",
-			"cols": ""
+			"fixed": "8rc4kbvn2sjl",
+			"up": "adqdereu0n5vk0",
+			"right": "43qrw9qwo71adji9",
+			"down": "qa0dozmx8dmr",
+			"left": "87hjsjhtce2kr30i",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Flower",
 		"difficulty": 3,
 		"config": {
-			"pieces": "00601307608309c0a90gc0h90k60l30n60o30tc0u90wc0x914g1b61c31e61f31kc1l91nc1o91r61s31y61z320c21927c289",
-			"rows": "",
-			"cols": ""
+			"fixed": "e13wu1og",
+			"up": "89lof6trmb3iao00",
+			"right": "2re78q98lavm7n29",
+			"down": "kxazxy5ljcc96r",
+			"left": "5isehgih6lr8fa4i",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Elephant",
 		"difficulty": 3,
 		"config": {
-			"pieces": "00g08g0a60b30f60g30jc0k90oc0p90u60v70w313e14f15b1cc1dd1e91j61k31o61p31sc1t91xc1y920g28g",
-			"rows": "",
-			"cols": ""
+			"fixed": "5hmrdy1dqgjbww01",
+			"up": "apeu49p9i5reo0",
+			"right": "3kpza5l6gzexhc",
+			"down": "r3kohk22olc0",
+			"left": "75fykb6cxytuyo",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Bar Housing",
 		"difficulty": 3,
 		"config": {
-			"pieces": "0040150210c40d50e10o40p50q10r40s50t11341451511f41g51h11i41j51k11u41v51w1264275281",
-			"rows": "",
-			"cols": ""
+			"fixed": "0",
+			"up": "0",
+			"right": "43olsz0jvyjw71mr",
+			"down": "0",
+			"left": "87d7ly13rx3se39i",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Domino Housing",
 		"difficulty": 3,
 		"config": {
-			"pieces": "0040110740810c40d10x40y11441511941a11j41k11u41v11x41y1",
-			"rows": "",
-			"cols": ""
+			"fixed": "0",
+			"up": "0",
+			"right": "3w5nw52fircsxt",
+			"down": "0",
+			"left": "7sbbsa4v1iplvm",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Secret",
 		"difficulty": 3,
 		"config": {
-			"pieces": "0120420720aa0da0ga0j80m80p81j21m21p21sa1va1ya218248278",
+			"fixed": "0",
+			"up": "34hqqm8vypy6zuo0",
+			"right": "0",
+			"down": "7wqwt4k8wrfogi",
+			"left": "0",
 			"rows": "1k",
-			"cols": ""
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Group Pressure",
 		"difficulty": 3,
-		"config": { "pieces": "", "rows": "0fdc", "cols": "0fdc" }
+		"config": {
+			"fixed": "0",
+			"up": "0",
+			"right": "0",
+			"down": "0",
+			"left": "0",
+			"rows": "f-dc",
+			"cols": "f-dc"
+		}
 	},
 	{
 		"name": "Hexagon",
 		"difficulty": 3,
 		"config": {
-			"pieces": "04g0ig0qg0s60t30u60v70w30x60y311c12913c14d15916c1791ig1qg24g",
-			"rows": "",
-			"cols": ""
+			"fixed": "caywef0grt4plao",
+			"up": "66qllqznk",
+			"right": "272sa2o00",
+			"down": "fnt2xog",
+			"left": "4e5kk5c00",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Full Bar",
 		"difficulty": 3,
 		"config": {
-			"pieces": "0040150210320420520640750810940a50b10ca0da0ea0f40g50h10i40j50k10l80m80n80o40p50q10r20s20t20u20v20w20x40y50z110a11a12a13a14a15a1641751811981a81b81c81d81e81f41g51h11i41j51k11l41m51n11o21p21q21r41s51t11u41v51w11xa1ya1za204215221234245251268278288",
-			"rows": "",
-			"cols": ""
+			"fixed": "0",
+			"up": "9l6lvvvvp4q5mo00",
+			"right": "ksxel4v698agxc3",
+			"down": "o9qunc32lzl7i0",
+			"left": "15lut69qcigkxuo6",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Caterpillar",
 		"difficulty": 3,
 		"config": {
-			"pieces": "00202203205206208209a0ba0ca0ea0fa0ha0i80k80l80n80o80q80r40s50t10x40y50z11941a51b11f41g51h11i21k21l21n21o21q21ra1ta1ua1wa1xa1za208228238258268288",
-			"rows": "",
-			"cols": ""
+			"fixed": "0",
+			"up": "7t8cujm7wsvhhmo0",
+			"right": "1vk0i46hm2o",
+			"down": "jrva0tem9wl759",
+			"left": "3r4108cz85c",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Bubbles",
 		"difficulty": 4,
 		"config": {
-			"pieces": "0160230360430ae0bb0ce0db0f60g70h30jc0k90lc0m90oc0pd0q90v60w30x60y70z310611712314e15b16c17d18919c1ad1b91dc1e91i61j71k31l61m31rc1sd1t91ue1vb1x61y71z323c24926c27d289",
-			"rows": "",
-			"cols": ""
+			"fixed": "0",
+			"up": "a30h2ia4sanhjx8g",
+			"right": "4a3r817vupmwh9u2",
+			"down": "pivkph0wd4gpb2",
+			"left": "8k7ig2frpf9syjo4",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Books",
 		"difficulty": 4,
 		"config": {
-			"pieces": "0040110220320420520640710820940a10ba0c80d80e80f40g10ha0i40j10k80l40m50n10o40p10q80r40s50t10u40v10w20x20y40z110211212213414115a16a1741811981a81b81c41d11e81f81g41h11i41j51k11l41m11n21o41p51q11r21s21t21u41v11wa1x21y21z2208218228234241258268278288",
-			"rows": "",
-			"cols": ""
+			"fixed": "0",
+			"up": "aejsbhtbav3rjugw",
+			"right": "65xb15ewfdowim9",
+			"down": "qc2u23gtqdhem4",
+			"left": "cbum2atsurdt18i",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Corner",
 		"difficulty": 4,
 		"config": {
-			"pieces": "00201402103404105209a0a40b10c40d10ea0i80j40k10l40m10n80r20s40t10u40v10w210a11412113414115a1981a41b11c41d11e8",
+			"fixed": "0",
+			"up": "bgdgjm0000",
+			"right": "3gyn31rimi",
+			"down": "sztki529",
+			"left": "6xxa63j190",
 			"rows": "cg",
 			"cols": "cg"
 		}
@@ -236,16 +380,24 @@
 		"name": "Tea",
 		"difficulty": 4,
 		"config": {
-			"pieces": "00205206407508109a0a40b10c40d10ea0g20i80n80p80r40s50t10u40v50w10y21121421781a81d81f41g51h11i41j51k11n21o21s21u41v11wa1xa1y41z1218258268",
-			"rows": "",
-			"cols": ""
+			"fixed": "0",
+			"up": "23i7n793xdqcffuo",
+			"right": "7cqn4lb26yz35s",
+			"down": "5b4h3lqfkddt7l",
+			"left": "epha96m4dxy6bk",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Windmill",
 		"difficulty": 4,
 		"config": {
-			"pieces": "0520ea0gg0n80r40s50t114g1f41g51h11l21sg1ua238",
+			"fixed": "3w5e1f3a1nx1c",
+			"up": "65wj7mofpl7l6o0",
+			"right": "1uil7ufot1c",
+			"down": "floz4os3rnbc0",
+			"left": "3p16fovdm2o",
 			"rows": "14",
 			"cols": "14"
 		}
@@ -254,49 +406,77 @@
 		"name": "Bricks",
 		"difficulty": 4,
 		"config": {
-			"pieces": "0040110240310440510640710a40b10c40d10e40f10g40h10i40j10k40l10m40n10o40p10s40t10u40v10w40x10y40z11041111241311441511641711a41b11c41d11e41f11g41h11i41j11k41l11m41n11o41p11s41t11u41v11w41x11y41z1204211224231244251264271",
-			"rows": "",
-			"cols": ""
+			"fixed": "0",
+			"up": "0",
+			"right": "1tmby62o8kzunl1x",
+			"down": "0",
+			"left": "3n8nwc5ch5zpb63u",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Block Housing",
 		"difficulty": 4,
 		"config": {
-			"pieces": "0960a30c60d30f60g30ic0j90lc0m90oc0p910611313614316617319c1a91cc1d91fc1g91r61s31u61v31x61y320c21923c24926c279",
-			"rows": "",
-			"cols": ""
+			"fixed": "0",
+			"up": "4oertlb2jstix5hc",
+			"right": "1k8vdbts7bdsqyo0",
+			"down": "buae6a25bvbqio",
+			"left": "34hqqnnkemrlhxc0",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "No borders",
 		"difficulty": 4,
 		"config": {
-			"pieces": "00601302603304605306607309c0a90bc0c90dc0e90fc0g90j60k30l60m30n60o30p60q30sc0t90uc0v90wc0x90yc0z910611312613314615316617319c1a91bc1c91dc1e91fc1g91j61k31l61m31n61o31p61q31sc1t91uc1v91wc1x91yc1z9204211224231244251264271",
-			"rows": "",
-			"cols": ""
+			"fixed": "0",
+			"up": "rkq8tmujmi9og0",
+			"right": "1tmc9s29p1sr91ed",
+			"down": "1xsufl0gkfchr",
+			"left": "3n8ojk4je3lii2sq",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Fortress",
 		"difficulty": 4,
 		"config": {
-			"pieces": "00g08g0a60b30c60d70e30f60g30jc0k90lc0md0n90oc0p90s60t30x60y311e12b16e17b1ac1b91fc1g91j61k31l61m71n31o61p31sc1t91uc1vd1w91xc1y920g28g",
-			"rows": "",
-			"cols": ""
+			"fixed": "5hmrdy1dqgjbww01",
+			"up": "dqf2eczewt3pc0",
+			"right": "4vj2m4htc7q22o",
+			"down": "yrhvy3m54ao0",
+			"left": "9r2588zmofg45c",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Christmas",
 		"difficulty": 4,
-		"config": { "pieces": "", "rows": "4q9h", "cols": "4q9h" }
+		"config": {
+			"fixed": "0",
+			"up": "0",
+			"right": "0",
+			"down": "0",
+			"left": "0",
+			"rows": "4q-9h",
+			"cols": "4q-9h"
+		}
 	},
 	{
 		"name": "Brain",
 		"difficulty": 5,
 		"config": {
-			"pieces": "0120340410620820920a80b20d40e10f80g20h80i80k80l40m10p80s40t10v20x40y11041111321481521741811a41b11c81e81f41g11i21k21m41n11p21r81s21t81u41v11x21y81z2218244251268288",
-			"rows": "",
+			"fixed": "0",
+			"up": "6vtel55zjlxib85c",
+			"right": "cbdk1686jcpgw7c",
+			"down": "hfab1rpa3idxz6",
+			"left": "omr42cgd2pexseo",
+			"rows": "0",
 			"cols": "75"
 		}
 	},
@@ -304,32 +484,52 @@
 		"name": "Motherboard",
 		"difficulty": 5,
 		"config": {
-			"pieces": "0920ag0b20c20dg0e20f20gg0h20i80k80l80n80o80q80s40t10x40y111g14g17g1a41b11f41g11i21k21l21n21o21q21r81sg1t81u81vg1w81x81yg1z8",
-			"rows": "",
-			"cols": ""
+			"fixed": "7w6xg6pfjwvtog",
+			"up": "jqhbm7vi4v9xc0",
+			"right": "mv55kss45c",
+			"down": "1dyelj46ma2o0",
+			"left": "19qab5lk8ao",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Impossible",
 		"difficulty": 5,
 		"config": {
-			"pieces": "0160230ac0b90d60e30f40g10mc0n90o40p10v20w20z211612314815818a1ac1b91c41d51e11h81m61n31o61p31r61s31vc1w91xc1y920c219234241",
-			"rows": "",
-			"cols": ""
+			"fixed": "0",
+			"up": "2o110kd6bfj1ts0",
+			"right": "71jjyj7km7j5ds2",
+			"down": "6r2lp21um6oli",
+			"left": "e333x2f58f2ark4",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Madness",
 		"difficulty": 5,
 		"config": {
-			"pieces": "00202208209a0ba0d40e10ha0i80k80mg0o40p10q80r20s20u20v40w10y210811813a1441511621781941a11c81f81g41h11j41k11mg1o61p31s21t21v61w31xc1y921822824c259",
-			"rows": "",
-			"cols": ""
+			"fixed": "26u152ujg3cw",
+			"up": "15tb8133c1zpb01s",
+			"right": "cf9wa5urzju4f7k",
+			"down": "2xubj78ybe1hxh",
+			"left": "oujskbpjz3o8uf4",
+			"rows": "0",
+			"cols": "0"
 		}
 	},
 	{
 		"name": "Entropy",
 		"difficulty": 5,
-		"config": { "pieces": "14g", "rows": "dr", "cols": "dr" }
+		"config": {
+			"fixed": "e13wu1og",
+			"up": "0",
+			"right": "0",
+			"down": "0",
+			"left": "0",
+			"rows": "dr",
+			"cols": "dr"
+		}
 	}
 ]

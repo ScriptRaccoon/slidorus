@@ -9,7 +9,7 @@
 	import { game } from './core/game.svelte'
 	import type { Piece } from './core/piece.svelte'
 	import About from './lib/About.svelte'
-	import { update_URL } from './core/challenge'
+	import { get_config_from_URL, update_URL } from './core/challenge'
 	import Solves from './lib/Solves.svelte'
 	import ChallengeSelector from './lib/ChallengeSelector.svelte'
 
@@ -25,7 +25,7 @@
 	function toggle_editing() {
 		if (game.state === 'editing') {
 			game.state = 'idle'
-			update_URL(game.config)
+			update_URL(game.get_config())
 			game.update_challenge()
 		} else if (game.state === 'idle') {
 			const has_shown_warning =
@@ -54,14 +54,7 @@
 	}
 
 	function load_config_from_URL() {
-		const url = new URL(window.location.href)
-
-		const config = {
-			pieces: url.searchParams.get('pieces') ?? '',
-			rows: url.searchParams.get('rows') ?? '',
-			cols: url.searchParams.get('cols') ?? '',
-		}
-
+		const config = get_config_from_URL()
 		game.load_from_config(config)
 		game.update_challenge()
 	}

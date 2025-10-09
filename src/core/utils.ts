@@ -60,3 +60,15 @@ export function update_URL_param(
 		url.searchParams.delete(key)
 	}
 }
+
+export function equal_objects(obj1: any, obj2: any) {
+	for (const key in obj1) {
+		if (obj1[key] !== obj2[key]) return false
+	}
+
+	for (const key in obj2) {
+		if (obj1[key] !== obj2[key]) return false
+	}
+
+	return true
+}

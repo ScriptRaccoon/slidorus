@@ -42,6 +42,10 @@ export class Piece {
 		this.bandaged_left = $state(bandaged_left)
 	}
 
+	get coord_index() {
+		return this.original_y * 9 + this.original_x
+	}
+
 	get_copy(): Piece {
 		return new Piece(
 			this.x,
