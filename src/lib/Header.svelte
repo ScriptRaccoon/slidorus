@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { List } from '@lucide/svelte'
+	import { game } from '../core/game.svelte'
 
 	type Props = {
 		challenge_name: string
@@ -15,6 +16,7 @@
 		<h2>{challenge_name}</h2>
 		<button
 			class="btn small"
+			disabled={game.state !== 'idle'}
 			onclick={(e) => {
 				e.stopPropagation()
 				open_challenge_selector()

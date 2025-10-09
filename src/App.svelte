@@ -75,6 +75,7 @@
 	}
 
 	function open_challenge_selector() {
+		if (game.state !== 'idle') return
 		show_challenge_selector = true
 	}
 
