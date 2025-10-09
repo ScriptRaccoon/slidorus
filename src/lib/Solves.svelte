@@ -1,38 +1,42 @@
 <script lang="ts">
 	import { ListCheck } from '@lucide/svelte'
 	import { get_recorded_solves } from '../core/solves.svelte'
+
+	let solves = $derived([...get_recorded_solves()].reverse())
 </script>
 
-<details>
-	<summary>
-		<ListCheck /> Your solves
-	</summary>
+{#if solves.length > 0}
+	<details>
+		<summary>
+			<ListCheck /> Your solves
+		</summary>
 
-	<table>
-		<thead>
-			<tr>
-				<th>Challenge</th>
-				<th>Moves</th>
-				<th>Date</th>
-			</tr>
-		</thead>
-		<tbody>
-			{#each [...get_recorded_solves()].reverse() as solve}
+		<table>
+			<thead>
 				<tr>
-					<td>
-						{solve.challenge_name}
-					</td>
-					<td>
-						{solve.moves}
-					</td>
-					<td>
-						{new Date(solve.date).toLocaleDateString('en-CA')}
-					</td>
+					<th>Challenge</th>
+					<th>Moves</th>
+					<th>Date</th>
 				</tr>
-			{/each}
-		</tbody>
-	</table>
-</details>
+			</thead>
+			<tbody>
+				{#each solves as solve}
+					<tr>
+						<td>
+							{solve.challenge_name}
+						</td>
+						<td>
+							{solve.moves}
+						</td>
+						<td>
+							{new Date(solve.date).toLocaleDateString('en-CA')}
+						</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	</details>
+{/if}
 
 <style>
 	table {
