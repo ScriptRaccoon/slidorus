@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { game } from '../core/game.svelte'
-	import challenges from '../data/challenges.json'
 	import { update_URL, type Challenge } from '../core/challenge'
 	import { Check, X } from '@lucide/svelte'
 	import { get_solved_challenge_names } from '../core/solves.svelte'
+	import { CHALLENGES } from '../data/challenges'
 
 	type Props = {
 		open: boolean
@@ -43,7 +43,7 @@
 	</header>
 
 	<div class="list">
-		{#each challenges as challenge}
+		{#each CHALLENGES as challenge}
 			{@const is_solved = get_solved_challenge_names().includes(
 				challenge.name,
 			)}

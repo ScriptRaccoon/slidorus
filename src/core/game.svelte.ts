@@ -5,8 +5,8 @@ import { Grouping } from './grouping.svelte'
 import { Move } from './move'
 import { Piece } from './piece.svelte'
 import { equal_objects, sleep } from './utils'
-import challenges from '../data/challenges.json'
 import { record_solve } from './solves.svelte'
+import { CHALLENGES } from '../data/challenges'
 
 export class Game {
 	pieces: Piece[]
@@ -294,7 +294,7 @@ export class Game {
 
 	update_challenge() {
 		const config = this.get_config()
-		this.challenge = challenges.find((challenge) =>
+		this.challenge = CHALLENGES.find((challenge) =>
 			equal_objects(challenge.config, config),
 		)
 	}

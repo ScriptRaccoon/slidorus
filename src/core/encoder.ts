@@ -1,5 +1,7 @@
 export class Encoder {
 	static encode_subset(subset: number[]): string {
+		if (!subset.length) return ''
+
 		let bitfield = 0n
 
 		for (const n of subset) {
@@ -10,6 +12,8 @@ export class Encoder {
 	}
 
 	static decode_subset(str: string): number[] {
+		if (!str) return []
+
 		let bitfield = 0n
 		const chars = str.split('')
 

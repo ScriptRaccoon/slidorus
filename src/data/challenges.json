@@ -1,17 +1,5 @@
 [
-	{
-		"name": "Zero",
-		"difficulty": 1,
-		"config": {
-			"fixed": "0",
-			"up": "0",
-			"right": "0",
-			"down": "0",
-			"left": "0",
-			"rows": "0",
-			"cols": "0"
-		}
-	},
+	{ "name": "Zero", "difficulty": 1, "config": {} },
 	{
 		"name": "Eye",
 		"difficulty": 1,
@@ -20,88 +8,47 @@
 			"up": "dvuhv8etc0",
 			"right": "8bboxqtuyo",
 			"down": "z58kh6o0",
-			"left": "gmndvhnpxc",
-			"rows": "0",
-			"cols": "0"
+			"left": "gmndvhnpxc"
 		}
 	},
 	{
 		"name": "Five Dots",
 		"difficulty": 1,
-		"config": {
-			"fixed": "711qbvay6k9se8",
-			"up": "0",
-			"right": "0",
-			"down": "0",
-			"left": "0",
-			"rows": "0",
-			"cols": "0"
-		}
+		"config": { "fixed": "711qbvay6k9se8" }
 	},
 	{
 		"name": "Nine Dots",
 		"difficulty": 1,
-		"config": {
-			"fixed": "7w6xg6pfjwvtog",
-			"up": "0",
-			"right": "0",
-			"down": "0",
-			"left": "0",
-			"rows": "0",
-			"cols": "0"
-		}
+		"config": { "fixed": "7w6xg6pfjwvtog" }
 	},
 	{
 		"name": "Cross",
 		"difficulty": 1,
-		"config": {
-			"fixed": "5h205yv3qqzegdtt",
-			"up": "0",
-			"right": "0",
-			"down": "0",
-			"left": "0",
-			"rows": "0",
-			"cols": "0"
-		}
+		"config": { "fixed": "5h205yv3qqzegdtt" }
 	},
 	{
 		"name": "Gap",
 		"difficulty": 1,
 		"config": {
 			"fixed": "c22ss2kg0",
-			"up": "0",
 			"right": "bv28tnjls",
-			"down": "0",
-			"left": "ba0kyeh34",
-			"rows": "0",
-			"cols": "0"
+			"left": "ba0kyeh34"
 		}
 	},
 	{
 		"name": "Six Bars",
 		"difficulty": 2,
 		"config": {
-			"fixed": "0",
 			"up": "dvuhv8etc0",
 			"right": "1vk0i46hm2o",
 			"down": "z58kh6o0",
-			"left": "3r4108cz85c",
-			"rows": "0",
-			"cols": "0"
+			"left": "3r4108cz85c"
 		}
 	},
 	{
 		"name": "Nine Dominos",
 		"difficulty": 2,
-		"config": {
-			"fixed": "0",
-			"up": "y6hhc",
-			"right": "21",
-			"down": "2eio",
-			"left": "42",
-			"rows": "0",
-			"cols": "0"
-		}
+		"config": { "up": "y6hhc", "right": "21", "down": "2eio", "left": "42" }
 	},
 	{
 		"name": "Circle",
@@ -111,9 +58,7 @@
 			"up": "alf5nxpz8l0lmyo0",
 			"right": "468x915enzanhv43",
 			"down": "qtgzppqdtlp59r",
-			"left": "8chui2atbylazq86",
-			"rows": "0",
-			"cols": "0"
+			"left": "8chui2atbylazq86"
 		}
 	},
 	{
@@ -122,90 +67,39 @@
 		"config": {
 			"fixed": "3ig8br7j4e8",
 			"up": "7w70ys96hurk00",
-			"right": "0",
-			"down": "jzdabjrqkg00",
-			"left": "0",
-			"rows": "0",
-			"cols": "0"
+			"down": "jzdabjrqkg00"
 		}
 	},
 	{
 		"name": "Pills",
 		"difficulty": 2,
-		"config": {
-			"fixed": "0",
-			"up": "1xxrmyu5xq800",
-			"right": "0",
-			"down": "4x13l0fls00",
-			"left": "0",
-			"rows": "0",
-			"cols": "0"
-		}
+		"config": { "up": "1xxrmyu5xq800", "down": "4x13l0fls00" }
 	},
 	{
 		"name": "Shift",
 		"difficulty": 2,
 		"config": {
-			"fixed": "0",
 			"up": "5j65hbe2h8a2j37n",
 			"right": "5i0o0cjkhzqb04ch",
 			"down": "5jk4s1oh9tabuo00",
-			"left": "2b8fj814gp5fhmr",
-			"rows": "0",
-			"cols": "0"
+			"left": "2b8fj814gp5fhmr"
 		}
 	},
-	{
-		"name": "Connect",
-		"difficulty": 2,
-		"config": {
-			"fixed": "0",
-			"up": "0",
-			"right": "0",
-			"down": "0",
-			"left": "0",
-			"rows": "42",
-			"cols": "0"
-		}
-	},
+	{ "name": "Connect", "difficulty": 2, "config": { "rows": "42" } },
 	{
 		"name": "Flow",
 		"difficulty": 2,
-		"config": {
-			"fixed": "0",
-			"up": "0",
-			"right": "0",
-			"down": "0",
-			"left": "0",
-			"rows": "42",
-			"cols": "42"
-		}
+		"config": { "rows": "42", "cols": "42" }
 	},
 	{
 		"name": "Main St.",
 		"difficulty": 2,
-		"config": {
-			"fixed": "0",
-			"up": "0",
-			"right": "0",
-			"down": "0",
-			"left": "0",
-			"rows": "1k",
-			"cols": "1k"
-		}
+		"config": { "rows": "1k", "cols": "1k" }
 	},
 	{
 		"name": "Pairs",
 		"difficulty": 2,
-		"config": {
-			"fixed": "0",
-			"up": "0",
-			"right": "0",
-			"down": "0",
-			"left": "0",
-			"rows": "14-75",
-			"cols": "14-75"
-		}
+		"config": { "rows": "14-75", "cols": "14-75" }
 	},
 	{
 		"name": "Port",
@@ -215,9 +109,7 @@
 			"up": "adqdereu0n5vk0",
 			"right": "43qrw9qwo71adji9",
 			"down": "qa0dozmx8dmr",
-			"left": "87hjsjhtce2kr30i",
-			"rows": "0",
-			"cols": "0"
+			"left": "87hjsjhtce2kr30i"
 		}
 	},
 	{
@@ -228,9 +120,7 @@
 			"up": "89lof6trmb3iao00",
 			"right": "2re78q98lavm7n29",
 			"down": "kxazxy5ljcc96r",
-			"left": "5isehgih6lr8fa4i",
-			"rows": "0",
-			"cols": "0"
+			"left": "5isehgih6lr8fa4i"
 		}
 	},
 	{
@@ -241,62 +131,32 @@
 			"up": "apeu49p9i5reo0",
 			"right": "3kpza5l6gzexhc",
 			"down": "r3kohk22olc0",
-			"left": "75fykb6cxytuyo",
-			"rows": "0",
-			"cols": "0"
+			"left": "75fykb6cxytuyo"
 		}
 	},
 	{
 		"name": "Bar Housing",
 		"difficulty": 3,
-		"config": {
-			"fixed": "0",
-			"up": "0",
-			"right": "43olsz0jvyjw71mr",
-			"down": "0",
-			"left": "87d7ly13rx3se39i",
-			"rows": "0",
-			"cols": "0"
-		}
+		"config": { "right": "43olsz0jvyjw71mr", "left": "87d7ly13rx3se39i" }
 	},
 	{
 		"name": "Domino Housing",
 		"difficulty": 3,
-		"config": {
-			"fixed": "0",
-			"up": "0",
-			"right": "3w5nw52fircsxt",
-			"down": "0",
-			"left": "7sbbsa4v1iplvm",
-			"rows": "0",
-			"cols": "0"
-		}
+		"config": { "right": "3w5nw52fircsxt", "left": "7sbbsa4v1iplvm" }
 	},
 	{
 		"name": "Secret",
 		"difficulty": 3,
 		"config": {
-			"fixed": "0",
 			"up": "34hqqm8vypy6zuo0",
-			"right": "0",
 			"down": "7wqwt4k8wrfogi",
-			"left": "0",
-			"rows": "1k",
-			"cols": "0"
+			"rows": "1k"
 		}
 	},
 	{
 		"name": "Group Pressure",
 		"difficulty": 3,
-		"config": {
-			"fixed": "0",
-			"up": "0",
-			"right": "0",
-			"down": "0",
-			"left": "0",
-			"rows": "f-dc",
-			"cols": "f-dc"
-		}
+		"config": { "rows": "f-dc", "cols": "f-dc" }
 	},
 	{
 		"name": "Hexagon",
@@ -306,68 +166,53 @@
 			"up": "66qllqznk",
 			"right": "272sa2o00",
 			"down": "fnt2xog",
-			"left": "4e5kk5c00",
-			"rows": "0",
-			"cols": "0"
+			"left": "4e5kk5c00"
 		}
 	},
 	{
 		"name": "Full Bar",
 		"difficulty": 3,
 		"config": {
-			"fixed": "0",
 			"up": "9l6lvvvvp4q5mo00",
 			"right": "ksxel4v698agxc3",
 			"down": "o9qunc32lzl7i0",
-			"left": "15lut69qcigkxuo6",
-			"rows": "0",
-			"cols": "0"
+			"left": "15lut69qcigkxuo6"
 		}
 	},
 	{
 		"name": "Caterpillar",
 		"difficulty": 3,
 		"config": {
-			"fixed": "0",
 			"up": "7t8cujm7wsvhhmo0",
 			"right": "1vk0i46hm2o",
 			"down": "jrva0tem9wl759",
-			"left": "3r4108cz85c",
-			"rows": "0",
-			"cols": "0"
+			"left": "3r4108cz85c"
 		}
 	},
 	{
 		"name": "Bubbles",
 		"difficulty": 4,
 		"config": {
-			"fixed": "0",
 			"up": "a30h2ia4sanhjx8g",
 			"right": "4a3r817vupmwh9u2",
 			"down": "pivkph0wd4gpb2",
-			"left": "8k7ig2frpf9syjo4",
-			"rows": "0",
-			"cols": "0"
+			"left": "8k7ig2frpf9syjo4"
 		}
 	},
 	{
 		"name": "Books",
 		"difficulty": 4,
 		"config": {
-			"fixed": "0",
 			"up": "aejsbhtbav3rjugw",
 			"right": "65xb15ewfdowim9",
 			"down": "qc2u23gtqdhem4",
-			"left": "cbum2atsurdt18i",
-			"rows": "0",
-			"cols": "0"
+			"left": "cbum2atsurdt18i"
 		}
 	},
 	{
 		"name": "Corner",
 		"difficulty": 4,
 		"config": {
-			"fixed": "0",
 			"up": "bgdgjm0000",
 			"right": "3gyn31rimi",
 			"down": "sztki529",
@@ -380,13 +225,10 @@
 		"name": "Tea",
 		"difficulty": 4,
 		"config": {
-			"fixed": "0",
 			"up": "23i7n793xdqcffuo",
 			"right": "7cqn4lb26yz35s",
 			"down": "5b4h3lqfkddt7l",
-			"left": "epha96m4dxy6bk",
-			"rows": "0",
-			"cols": "0"
+			"left": "epha96m4dxy6bk"
 		}
 	},
 	{
@@ -405,40 +247,26 @@
 	{
 		"name": "Bricks",
 		"difficulty": 4,
-		"config": {
-			"fixed": "0",
-			"up": "0",
-			"right": "1tmby62o8kzunl1x",
-			"down": "0",
-			"left": "3n8nwc5ch5zpb63u",
-			"rows": "0",
-			"cols": "0"
-		}
+		"config": { "right": "1tmby62o8kzunl1x", "left": "3n8nwc5ch5zpb63u" }
 	},
 	{
 		"name": "Block Housing",
 		"difficulty": 4,
 		"config": {
-			"fixed": "0",
 			"up": "4oertlb2jstix5hc",
 			"right": "1k8vdbts7bdsqyo0",
 			"down": "buae6a25bvbqio",
-			"left": "34hqqnnkemrlhxc0",
-			"rows": "0",
-			"cols": "0"
+			"left": "34hqqnnkemrlhxc0"
 		}
 	},
 	{
 		"name": "No borders",
 		"difficulty": 4,
 		"config": {
-			"fixed": "0",
 			"up": "rkq8tmujmi9og0",
 			"right": "1tmc9s29p1sr91ed",
 			"down": "1xsufl0gkfchr",
-			"left": "3n8ojk4je3lii2sq",
-			"rows": "0",
-			"cols": "0"
+			"left": "3n8ojk4je3lii2sq"
 		}
 	},
 	{
@@ -449,34 +277,22 @@
 			"up": "dqf2eczewt3pc0",
 			"right": "4vj2m4htc7q22o",
 			"down": "yrhvy3m54ao0",
-			"left": "9r2588zmofg45c",
-			"rows": "0",
-			"cols": "0"
+			"left": "9r2588zmofg45c"
 		}
 	},
 	{
 		"name": "Christmas",
 		"difficulty": 4,
-		"config": {
-			"fixed": "0",
-			"up": "0",
-			"right": "0",
-			"down": "0",
-			"left": "0",
-			"rows": "4q-9h",
-			"cols": "4q-9h"
-		}
+		"config": { "rows": "4q-9h", "cols": "4q-9h" }
 	},
 	{
 		"name": "Brain",
 		"difficulty": 5,
 		"config": {
-			"fixed": "0",
 			"up": "6vtel55zjlxib85c",
 			"right": "cbdk1686jcpgw7c",
 			"down": "hfab1rpa3idxz6",
 			"left": "omr42cgd2pexseo",
-			"rows": "0",
 			"cols": "75"
 		}
 	},
@@ -488,22 +304,17 @@
 			"up": "jqhbm7vi4v9xc0",
 			"right": "mv55kss45c",
 			"down": "1dyelj46ma2o0",
-			"left": "19qab5lk8ao",
-			"rows": "0",
-			"cols": "0"
+			"left": "19qab5lk8ao"
 		}
 	},
 	{
 		"name": "Impossible",
 		"difficulty": 5,
 		"config": {
-			"fixed": "0",
 			"up": "2o110kd6bfj1ts0",
 			"right": "71jjyj7km7j5ds2",
 			"down": "6r2lp21um6oli",
-			"left": "e333x2f58f2ark4",
-			"rows": "0",
-			"cols": "0"
+			"left": "e333x2f58f2ark4"
 		}
 	},
 	{
@@ -514,22 +325,12 @@
 			"up": "15tb8133c1zpb01s",
 			"right": "cf9wa5urzju4f7k",
 			"down": "2xubj78ybe1hxh",
-			"left": "oujskbpjz3o8uf4",
-			"rows": "0",
-			"cols": "0"
+			"left": "oujskbpjz3o8uf4"
 		}
 	},
 	{
 		"name": "Entropy",
 		"difficulty": 5,
-		"config": {
-			"fixed": "e13wu1og",
-			"up": "0",
-			"right": "0",
-			"down": "0",
-			"left": "0",
-			"rows": "dr",
-			"cols": "dr"
-		}
+		"config": { "fixed": "e13wu1og", "rows": "dr", "cols": "dr" }
 	}
 ]
