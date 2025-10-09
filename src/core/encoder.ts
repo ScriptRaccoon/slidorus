@@ -32,7 +32,10 @@ export class Encoder {
 	}
 
 	static encode_subsets(subsets: number[][]): string {
-		return subsets.map((subset) => Encoder.encode_subset(subset)).join('-')
+		return subsets
+			.map((subset) => Encoder.encode_subset(subset))
+			.sort()
+			.join('-')
 	}
 
 	static decode_subsets(subsets_str: string): number[][] {

@@ -156,7 +156,7 @@
 	{
 		"name": "Group Pressure",
 		"difficulty": 3,
-		"config": { "rows": "f-dc", "cols": "f-dc" }
+		"config": { "rows": "dc-f", "cols": "dc-f" }
 	},
 	{
 		"name": "Hexagon",
