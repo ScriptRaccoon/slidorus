@@ -42,6 +42,13 @@
 		border-radius: 15%;
 		display: flex;
 
+		&.circular {
+			border-top-left-radius: 50%;
+			border-top-right-radius: 50%;
+			border-bottom-left-radius: 50%;
+			border-bottom-right-radius: 50%;
+		}
+
 		&.bandaged_right {
 			border-right: none;
 			border-top-right-radius: 0;
@@ -66,10 +73,6 @@
 			border-top: none;
 			border-top-left-radius: 0;
 			border-top-right-radius: 0;
-		}
-
-		&.circular {
-			border-radius: 50%;
 		}
 	}
 </style>
