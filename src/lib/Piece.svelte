@@ -19,6 +19,7 @@
 	class:bandaged_down={piece.bandaged_down}
 	class:bandaged_left={piece.bandaged_left}
 	class:bandaged_up={piece.bandaged_up}
+	class:circular={piece.circular}
 	class:animated
 	style:--x={piece.x}
 	style:--y={piece.y}
@@ -40,8 +41,6 @@
 		border: var(--border) solid var(--bg-color);
 		border-radius: 15%;
 		display: flex;
-		justify-content: center;
-		align-items: center;
 
 		&.bandaged_right {
 			border-right: none;
@@ -67,6 +66,10 @@
 			border-top: none;
 			border-top-left-radius: 0;
 			border-top-right-radius: 0;
+		}
+
+		&.circular {
+			border-radius: 50%;
 		}
 	}
 </style>

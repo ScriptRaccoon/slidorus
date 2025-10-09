@@ -14,6 +14,7 @@ export class Piece {
 	bandaged_right: boolean
 	bandaged_down: boolean
 	bandaged_left: boolean
+	circular: boolean
 
 	constructor(
 		x: number,
@@ -26,6 +27,7 @@ export class Piece {
 		bandaged_right = false,
 		bandaged_down = false,
 		bandaged_left = false,
+		circular = false,
 	) {
 		this.id = crypto.randomUUID()
 		this.x = $state(x)
@@ -40,6 +42,7 @@ export class Piece {
 		this.bandaged_right = $state(bandaged_right)
 		this.bandaged_down = $state(bandaged_down)
 		this.bandaged_left = $state(bandaged_left)
+		this.circular = $state(circular)
 	}
 
 	get coord_index() {
@@ -58,11 +61,25 @@ export class Piece {
 			this.bandaged_right,
 			this.bandaged_down,
 			this.bandaged_left,
+			this.circular,
 		)
 	}
 
-	toggle_fixed() {
-		this.fixed = !this.fixed
+	toggle_fixed_circular() {
+		if (!this.circular && !this.fixed) {
+			this.fixed = true
+			this.circular = false
+		} else if (!this.circular) {
+			this.fixed = false
+			this.circular = true
+		} else {
+			this.circular = false
+			this.fixed = false
+		}
+	}
+
+	toggle_circular() {
+		this.circular = !this.circular
 	}
 
 	reset_position() {
@@ -78,6 +95,7 @@ export class Piece {
 		this.bandaged_left = false
 		this.bandaged_up = false
 		this.fixed = false
+		this.circular = false
 	}
 
 	adjust() {

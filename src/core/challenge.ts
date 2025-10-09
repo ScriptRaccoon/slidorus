@@ -8,6 +8,7 @@ export type GameConfig = {
 	left: string
 	rows: string
 	cols: string
+	circular: string
 }
 
 export type Challenge = {
@@ -20,6 +21,7 @@ export function update_URL(config: GameConfig) {
 	const url = new URL(window.location.origin)
 
 	update_URL_param(url, 'fixed', config.fixed)
+	update_URL_param(url, 'circular', config.circular)
 	update_URL_param(url, 'up', config.up)
 	update_URL_param(url, 'right', config.right)
 	update_URL_param(url, 'down', config.down)
@@ -35,6 +37,7 @@ export function get_config_from_URL() {
 
 	return {
 		fixed: url.searchParams.get('fixed') ?? '',
+		circular: url.searchParams.get('circular') ?? '',
 		up: url.searchParams.get('up') ?? '',
 		right: url.searchParams.get('right') ?? '',
 		down: url.searchParams.get('down') ?? '',

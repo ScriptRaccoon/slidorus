@@ -41,10 +41,9 @@
 <button
 	{disabled}
 	class="fixer"
-	onclick={() => piece.toggle_fixed()}
-	aria-label="fix piece"
-	role="switch"
-	aria-checked={piece.fixed}
+	onclick={() => piece.toggle_fixed_circular()}
+	aria-label="make piece fixed or circular"
+	class:checked={piece.fixed}
 	style:--x={piece.x}
 	style:--y={piece.y}
 >
@@ -63,7 +62,8 @@
 			opacity: 0.15;
 		}
 
-		&[aria-checked='true'] {
+		&[aria-checked='true'],
+		&.checked {
 			opacity: 1;
 		}
 

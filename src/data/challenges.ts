@@ -13,6 +13,7 @@ export const CHALLENGES: Challenge[] = challenges.map((challenge) => {
 			left: challenge.config.left ?? '',
 			rows: challenge.config.rows ?? '',
 			cols: challenge.config.cols ?? '',
+			circular: challenge.config.circular ?? '',
 		},
 	}
 })
