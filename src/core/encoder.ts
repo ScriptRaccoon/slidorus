@@ -15,18 +15,17 @@ export class Encoder {
 		if (!str) return []
 
 		let bitfield = 0n
-		const chars = str.split('')
-
-		for (const c of chars) {
+		for (const c of str) {
 			const digit = BigInt(parseInt(c, 36))
 			bitfield = bitfield * 36n + digit
 		}
 
 		const subset: number[] = []
-		for (let i = 0; i <= 80; i++) {
-			if ((bitfield & (1n << BigInt(i))) !== 0n) {
-				subset.push(i)
-			}
+		let index = 0
+		while (bitfield !== 0n) {
+			if ((bitfield & 1n) !== 0n) subset.push(index)
+			bitfield >>= 1n
+			index++
 		}
 
 		return subset
