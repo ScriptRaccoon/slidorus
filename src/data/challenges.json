@@ -1,13 +1,6 @@
 [
 	{ "name": "Zero", "difficulty": 1, "config": {} },
 	{
-		"name": "Circle",
-		"difficulty": 0,
-		"config": {
-			"circular": "e13wu1og"
-		}
-	},
-	{
 		"name": "Eye",
 		"difficulty": 1,
 		"config": {

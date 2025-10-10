@@ -65,6 +65,10 @@ export class Piece {
 		)
 	}
 
+	toggle_fixed() {
+		this.fixed = !this.fixed
+	}
+
 	toggle_fixed_circular() {
 		if (!this.circular && !this.fixed) {
 			this.fixed = true

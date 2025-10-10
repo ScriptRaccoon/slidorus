@@ -41,8 +41,8 @@
 <button
 	{disabled}
 	class="fixer"
-	onclick={() => piece.toggle_fixed_circular()}
-	aria-label="make piece fixed or circular"
+	onclick={() => piece.toggle_fixed()}
+	aria-label="make piece fixed"
 	class:checked={piece.fixed}
 	style:--x={piece.x}
 	style:--y={piece.y}
