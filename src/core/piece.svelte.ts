@@ -1,6 +1,3 @@
-import type { Move } from './move'
-import { mod } from './utils'
-
 export class Piece {
 	id: string
 	x: number
@@ -31,9 +28,9 @@ export class Piece {
 		this.id = crypto.randomUUID()
 		this.x = $state(x)
 		this.y = $state(y)
-		this.type = type
 		this.dx = $state(0)
 		this.dy = $state(0)
+		this.type = type
 		this.original_x = original_x
 		this.original_y = original_y
 		this.fixed = $state(fixed)
@@ -69,8 +66,6 @@ export class Piece {
 	reset_position() {
 		this.x = this.original_x
 		this.y = this.original_y
-		this.dx = 0
-		this.dy = 0
 	}
 
 	revert_edits() {
@@ -79,15 +74,6 @@ export class Piece {
 		this.bandaged_left = false
 		this.bandaged_up = false
 		this.fixed = false
-	}
-
-	adjust() {
-		this.dx = 0
-		this.dy = 0
-	}
-
-	execute_move(move: Move) {
-		this[move.face.x] = mod(this[move.face.x] + move.delta, 9)
 	}
 
 	get is_visible() {

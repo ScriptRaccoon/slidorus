@@ -5,9 +5,11 @@
 	type Props = {
 		piece: PieceType
 		animated: boolean
+		dx: number
+		dy: number
 	}
 
-	let { piece, animated }: Props = $props()
+	let { piece, animated, dx, dy }: Props = $props()
 </script>
 
 <div
@@ -22,8 +24,8 @@
 	class:animated
 	style:--x={piece.x}
 	style:--y={piece.y}
-	style:--dx={piece.dx}
-	style:--dy={piece.dy}
+	style:--dx={dx}
+	style:--dy={dy}
 	style:--transition-duration={animated ? `${TRANSITION_DURATION}ms` : '0ms'}
 ></div>
 

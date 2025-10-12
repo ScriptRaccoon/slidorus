@@ -1,11 +1,15 @@
 <script lang="ts">
-	import { get_changed_position, get_position, throttle } from '../core/utils'
+	import {
+		clamp,
+		get_changed_position,
+		get_position,
+		throttle,
+	} from '../core/utils'
 	import Connector from './Connector.svelte'
 	import PieceComponent from './Piece.svelte'
 	import PieceEditor from './PieceEditor.svelte'
 	import { send_toast } from './Toast.svelte'
 	import { game } from '../core/game.svelte'
-	import { DragAction } from '../core/dragaction'
 	import { Move } from '../core/move'
 	import {
 		COL_KEYS,
@@ -18,66 +22,90 @@
 	let square_element = $state<HTMLDivElement | null>(null)
 	let square_size = $state(0)
 
-	let drag_action: DragAction | null = null
-	let drag_pos: { x: number; y: number } | null = null
+	let move_pos: { x: number; y: number } | null = null
+	let current_move = $state<Move | null>(null)
 
 	let clicked_row = $state<number | null>(null)
 	let clicked_col = $state<number | null>(null)
 
 	function start_dragging(e: MouseEvent | TouchEvent) {
-		if (game.state !== 'idle' || !square_element) return
-		drag_pos = get_position(e)
+		if (game.state !== 'idle' || !square_element || current_move) return
+		move_pos = get_position(e)
 	}
 
 	function handle_dragging(e: MouseEvent | TouchEvent) {
-		if (!drag_pos || !square_element) return
+		if (!move_pos || !square_element) return
 
 		const current_pos = get_position(e)
-		const dx = current_pos.x - drag_pos.x
-		const dy = current_pos.y - drag_pos.y
+		const dx = current_pos.x - move_pos.x
+		const dy = current_pos.y - move_pos.y
+
 		const is_far_enough = Math.abs(dx) + Math.abs(dy) > 3
 
-		if (!drag_action && is_far_enough) {
-			drag_action = new DragAction(
-				drag_pos,
-				square_element.getBoundingClientRect(),
-				square_size,
-				game,
-			)
-			try {
-				drag_action.setup(dx, dy)
-			} catch (err) {
-				send_toast({ variant: 'error', title: (err as Error).message })
-				reset_dragging()
-				return
-			}
-
-			game.state = 'moving'
+		if (!current_move && is_far_enough) {
+			initialize_move(dx, dy)
 		}
 
-		drag_action?.apply(dx, dy)
+		const offset = current_move?.face === FACES.ROW ? dx : dy
+
+		if (current_move) {
+			game.update_offsets(current_move, offset)
+		}
+	}
+
+	function initialize_move(dx: number, dy: number) {
+		if (current_move || !move_pos || !square_element) return
+
+		const face = Math.abs(dx) > Math.abs(dy) ? FACES.ROW : FACES.COL
+		const square_rect = square_element.getBoundingClientRect()
+		const moving_line = Math.floor(
+			(move_pos[face.y] - square_rect[face.side]) * (9 / square_size),
+		)
+		const line = clamp(moving_line, 0, 8)
+		const move = new Move(face, line, 0)
+
+		const { error } = game.prepare_move(move)
+
+		if (error) {
+			send_toast({ variant: 'error', title: error })
+			reset_dragging()
+			return
+		}
+
+		game.state = 'moving'
+		current_move = move
+
+		game.create_copies(move)
 	}
 
 	function stop_dragging(e: MouseEvent | TouchEvent) {
-		if (game.state !== 'moving' || !drag_action) return
+		if (game.state !== 'moving' || !move_pos || !current_move) return
 
 		const current_pos = get_changed_position(e)
-		const delta = drag_action.compute_delta(current_pos)
 
-		drag_action.commit(delta)
+		const delta_float =
+			current_pos[current_move.face.x] - move_pos[current_move.face.x]
+		const delta_int = Math.round(delta_float * (9 / square_size))
+		const delta = clamp(delta_int, -10, 10)
+		current_move.delta = delta
 
-		reset_dragging()
+		const delta_upscaled = delta * (square_size / 9)
 
-		if (delta != 0) finish_move()
+		game.update_offsets(current_move, delta_upscaled)
+
+		setTimeout(() => {
+			if (current_move) game.execute_move(current_move)
+			reset_dragging()
+			if (delta != 0) finish_move()
+		}, TRANSITION_DURATION)
 	}
 
 	function reset_dragging() {
-		drag_action?.cleanup()
-		drag_action = null
-		drag_pos = null
-		setTimeout(() => {
-			game.state = 'idle'
-		}, TRANSITION_DURATION)
+		if (current_move) game.update_offsets(current_move, 0)
+		current_move = null
+		move_pos = null
+		game.reduce_to_visible_pieces()
+		game.state = 'idle'
 	}
 
 	function finish_move() {
@@ -103,20 +131,23 @@
 		const col = COL_KEYS.findIndex((col) => col === e.code)
 		if (row < 0 && col < 0) return
 
-		try {
-			const move =
-				row >= 0
-					? new Move(FACES.ROW, row, delta)
-					: new Move(FACES.COL, col, delta)
+		const move =
+			row >= 0
+				? new Move(FACES.ROW, row, delta)
+				: new Move(FACES.COL, col, delta)
 
-			game.execute_move(move)
-			finish_move()
-		} catch (err) {
+		const { error } = game.prepare_move(move)
+
+		if (error) {
 			send_toast({
 				variant: 'error',
-				title: (err as Error).message,
+				title: error,
 			})
+			return
 		}
+
+		game.execute_move(move)
+		finish_move()
 	}
 
 	function connect_row(row: number) {
@@ -178,7 +209,12 @@
 		ontouchend={stop_dragging}
 	>
 		{#each game.pieces as piece (piece.id)}
-			<PieceComponent {piece} animated={game.state === 'moving'} />
+			<PieceComponent
+				{piece}
+				animated={game.state === 'moving'}
+				dx={piece.dx}
+				dy={piece.dy}
+			/>
 		{/each}
 
 		{#each game.pieces as piece (piece.id)}

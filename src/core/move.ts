@@ -4,18 +4,20 @@ export class Move {
 	face: FACES_TYPE
 	line: number
 	delta: number
+	moving_lines: number[]
 
 	constructor(face: FACES_TYPE, line: number, delta: number) {
 		this.face = face
 		this.line = line
 		this.delta = delta
+		this.moving_lines = []
 	}
 
 	get name() {
 		return `${this.face.name} ${this.line + 1}`
 	}
 
-	get is_valid() {
+	get is_relevant() {
 		return this.delta != 0 && this.delta == Math.floor(this.delta)
 	}
 

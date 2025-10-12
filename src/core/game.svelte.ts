@@ -94,12 +94,6 @@ export class Game {
 		this.col_grouping.reset()
 	}
 
-	adjust_pieces() {
-		for (const piece of this.pieces) {
-			piece.adjust()
-		}
-	}
-
 	toggle_bandage(piece: Piece, direction: 'right' | 'down') {
 		const other_direction = direction === 'right' ? 'left' : 'up'
 		const x = direction === 'right' ? 'x' : 'y'
@@ -139,7 +133,7 @@ export class Game {
 		}
 	}
 
-	get_moving_lines(move: Move): number[] {
+	prepare_move(move: Move) {
 		const lines = new Set([move.line])
 		let number_connected_lines = 1
 
@@ -152,55 +146,67 @@ export class Game {
 			number_connected_lines = lines.size
 		}
 
-		return Array.from(lines)
+		move.moving_lines = Array.from(lines)
+
+		return this.verify_move(move)
 	}
 
-	get_pieces_in_lines(lines: number[], coord: 'x' | 'y') {
-		return this.pieces.filter((piece) => lines.includes(piece[coord]))
-	}
+	verify_move(move: Move): { error: string | null } {
+		for (const piece of this.pieces) {
+			if (piece.fixed && move.moving_lines.includes(piece[move.face.y])) {
+				return { error: `${move.name} is blocked` }
+			}
+		}
 
-	get_moving_pieces_and_lines(move: Move): [Piece[], number[]] {
-		const moving_lines = this.get_moving_lines(move)
-		const moving_pieces = this.get_pieces_in_lines(
-			moving_lines,
-			move.face.y,
-		)
-
-		const is_blocked = moving_pieces.some((piece) => piece.fixed)
-		if (is_blocked) throw new Error(`${move.name} is blocked`)
-
-		return [moving_pieces, moving_lines]
+		return { error: null }
 	}
 
 	execute_move(move: Move, add_to_history = true) {
-		if (!move.is_valid) return
-		const [moving_pieces] = this.get_moving_pieces_and_lines(move)
-		for (const piece of moving_pieces) {
-			piece.execute_move(move)
+		if (!move.is_relevant) return
+
+		for (const piece of this.pieces) {
+			const is_moving = move.moving_lines.includes(piece[move.face.y])
+			if (is_moving) {
+				piece[move.face.x] = mod(piece[move.face.x] + move.delta, 9)
+			}
 		}
 		if (add_to_history) this.move_history.push(move)
 	}
 
-	create_copies(lines: number[], face: FACES_TYPE) {
+	create_copies(move: Move) {
 		const copies: Piece[] = []
 		const offsets = [1, 2, -1, -2]
 
-		for (let i = 0; i < 9; i++) {
-			for (const line of lines) {
+		for (let x = 0; x < 9; x++) {
+			for (const y of move.moving_lines) {
 				const piece = this.pieces.find(
-					(piece) => piece[face.x] === i && piece[face.y] === line,
+					(piece) =>
+						piece[move.face.x] === x && piece[move.face.y] === y,
 				)
-				if (piece) {
-					for (const offset of offsets) {
-						const copy = piece.get_copy()
-						copy[face.x] += offset * 9
-						copies.push(copy)
-					}
+				if (!piece) continue
+				for (const offset of offsets) {
+					const copy = piece.get_copy()
+					copy[move.face.x] += offset * 9
+					copies.push(copy)
 				}
 			}
 		}
 
 		this.pieces = this.pieces.concat(copies)
+	}
+
+	update_offsets(move: Move, offset: number) {
+		if (move.face === FACES.ROW) {
+			for (const piece of this.pieces) {
+				const is_moved = move.moving_lines.includes(piece.y)
+				if (is_moved) piece.dx = offset
+			}
+		} else {
+			for (const piece of this.pieces) {
+				const is_moved = move.moving_lines.includes(piece.x)
+				if (is_moved) piece.dy = offset
+			}
+		}
 	}
 
 	reduce_to_visible_pieces() {
@@ -211,12 +217,13 @@ export class Game {
 		let attempts = 0
 		for (let i = 0; i < moves; i++) {
 			attempts++
-			try {
-				const move = Move.generate_random_move()
+			const move = Move.generate_random_move()
+			const { error } = this.prepare_move(move)
+			if (error && attempts < moves * 100) {
+				i--
+			} else {
 				this.execute_move(move, false)
 				await sleep(wait)
-			} catch (_) {
-				if (attempts < moves * 100) i--
 			}
 		}
 	}
@@ -264,7 +271,7 @@ export class Game {
 		}
 	}
 
-	load_from_config(config: GameConfig): void {
+	load_from_config(config: GameConfig) {
 		this.reset()
 		const fixed_coords = Encoder.decode_subset(config.fixed)
 		const up_coords = Encoder.decode_subset(config.up)
