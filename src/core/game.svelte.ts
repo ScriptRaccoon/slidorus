@@ -207,17 +207,14 @@ export class Game {
 	}
 
 	async scramble_pieces(wait = 0, moves = 100) {
-		let attempts = 0
-		for (let i = 0; i < moves; i++) {
-			attempts++
+		let moves_made = 0
+		while (moves_made < moves) {
 			const move = Move.generate_random_move()
 			const { error } = this.prepare_move(move)
-			if (error && attempts < moves * 100) {
-				i--
-			} else {
-				this.execute_move(move, false)
-				await sleep(wait)
-			}
+			if (error) continue
+			this.execute_move(move, false)
+			moves_made++
+			await sleep(wait)
 		}
 	}
 
