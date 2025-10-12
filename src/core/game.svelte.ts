@@ -148,14 +148,16 @@ export class Game {
 
 		move.moving_lines = Array.from(lines)
 
+		move.moving_pieces = this.pieces.filter((piece) =>
+			move.moving_lines.includes(piece[move.face.y]),
+		)
+
 		return this.verify_move(move)
 	}
 
 	verify_move(move: Move): { error: string | null } {
-		for (const piece of this.pieces) {
-			if (piece.fixed && move.moving_lines.includes(piece[move.face.y])) {
-				return { error: `${move.name} is blocked` }
-			}
+		for (const piece of move.moving_pieces) {
+			if (piece.fixed) return { error: `${move.name} is blocked` }
 		}
 
 		return { error: null }
@@ -164,12 +166,10 @@ export class Game {
 	execute_move(move: Move, add_to_history = true) {
 		if (!move.is_relevant) return
 
-		for (const piece of this.pieces) {
-			const is_moving = move.moving_lines.includes(piece[move.face.y])
-			if (is_moving) {
-				piece[move.face.x] = mod(piece[move.face.x] + move.delta, 9)
-			}
+		for (const piece of move.moving_pieces) {
+			piece[move.face.x] = mod(piece[move.face.x] + move.delta, 9)
 		}
+
 		if (add_to_history) this.move_history.push(move)
 	}
 
@@ -179,7 +179,7 @@ export class Game {
 
 		for (let x = 0; x < 9; x++) {
 			for (const y of move.moving_lines) {
-				const piece = this.pieces.find(
+				const piece = move.moving_pieces.find(
 					(piece) =>
 						piece[move.face.x] === x && piece[move.face.y] === y,
 				)
@@ -192,20 +192,13 @@ export class Game {
 			}
 		}
 
-		this.pieces = this.pieces.concat(copies)
+		this.pieces.push(...copies)
+		move.moving_pieces.push(...copies)
 	}
 
 	update_offsets(move: Move, offset: number) {
-		if (move.face === FACES.ROW) {
-			for (const piece of this.pieces) {
-				const is_moved = move.moving_lines.includes(piece.y)
-				if (is_moved) piece.dx = offset
-			}
-		} else {
-			for (const piece of this.pieces) {
-				const is_moved = move.moving_lines.includes(piece.x)
-				if (is_moved) piece.dy = offset
-			}
+		for (const piece of move.moving_pieces) {
+			piece[move.face.dx] = offset
 		}
 	}
 

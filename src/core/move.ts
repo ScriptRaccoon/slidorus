@@ -1,16 +1,19 @@
 import { FACES, type FACES_TYPE } from './config'
+import type { Piece } from './piece.svelte'
 
 export class Move {
 	face: FACES_TYPE
 	line: number
 	delta: number
 	moving_lines: number[]
+	moving_pieces: Piece[]
 
 	constructor(face: FACES_TYPE, line: number, delta: number) {
 		this.face = face
 		this.line = line
 		this.delta = delta
 		this.moving_lines = []
+		this.moving_pieces = []
 	}
 
 	get name() {
