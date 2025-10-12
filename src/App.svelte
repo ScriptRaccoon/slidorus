@@ -84,6 +84,11 @@
 			update_torus_grid(game.pieces)
 		}
 	})
+
+	function undo_move() {
+		const { error } = game.undo_move()
+		if (error) send_toast({ variant: 'error', title: error })
+	}
 </script>
 
 <Header
@@ -98,7 +103,7 @@
 		scramble={() => game.scramble()}
 		reset={() => game.reset()}
 		{toggle_torus}
-		undo_move={() => game.undo_move()}
+		{undo_move}
 		{toggle_editing}
 		{show_torus}
 		revert_edits={() => game.revert_edits()}

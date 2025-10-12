@@ -308,9 +308,11 @@ export class Game {
 
 	undo_move() {
 		const last_move = this.move_history.pop()
-		if (!last_move) return
+		if (!last_move) return { error: null }
 		const opposite_move = last_move.get_opposite()
-		this.execute_move(opposite_move, false)
+		const { error } = this.prepare_move(opposite_move)
+		if (!error) this.execute_move(opposite_move, false)
+		return { error }
 	}
 }
 
