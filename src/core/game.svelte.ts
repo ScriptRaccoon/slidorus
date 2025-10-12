@@ -265,6 +265,7 @@ export class Game {
 	}
 
 	load_from_config(config: GameConfig): void {
+		this.reset()
 		const fixed_coords = Encoder.decode_subset(config.fixed)
 		const up_coords = Encoder.decode_subset(config.up)
 		const right_coords = Encoder.decode_subset(config.right)
