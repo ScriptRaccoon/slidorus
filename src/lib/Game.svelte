@@ -37,19 +37,20 @@
 		if (!move_pos || !square_element) return
 
 		const current_pos = get_position(e)
-		const dx = current_pos.x - move_pos.x
-		const dy = current_pos.y - move_pos.y
 
-		const is_far_enough = Math.abs(dx) + Math.abs(dy) > 3
-
-		if (!current_move && is_far_enough) {
-			initialize_move(dx, dy)
+		const offset = {
+			x: current_pos.x - move_pos.x,
+			y: current_pos.y - move_pos.y,
 		}
 
-		const offset = current_move?.face === FACES.ROW ? dx : dy
+		const is_far_enough = Math.abs(offset.x) + Math.abs(offset.y) > 3
+
+		if (!current_move && is_far_enough) {
+			initialize_move(offset.x, offset.y)
+		}
 
 		if (current_move) {
-			game.update_offsets(current_move, offset)
+			game.update_offsets(current_move, offset[current_move.face.x])
 		}
 	}
 
@@ -57,6 +58,7 @@
 		if (current_move || !move_pos || !square_element) return
 
 		const face = Math.abs(dx) > Math.abs(dy) ? FACES.ROW : FACES.COL
+
 		const square_rect = square_element.getBoundingClientRect()
 		const moving_line = Math.floor(
 			(move_pos[face.y] - square_rect[face.side]) * (9 / square_size),
@@ -89,9 +91,7 @@
 		const delta = clamp(delta_int, -10, 10)
 		current_move.delta = delta
 
-		const delta_upscaled = delta * (square_size / 9)
-
-		game.update_offsets(current_move, delta_upscaled)
+		game.update_offsets(current_move, delta * (square_size / 9))
 
 		setTimeout(() => {
 			if (current_move) game.execute_move(current_move)

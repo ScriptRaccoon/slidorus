@@ -135,15 +135,15 @@ export class Game {
 
 	prepare_move(move: Move) {
 		const lines = new Set([move.line])
-		let number_connected_lines = 1
+		let line_count = 1
 
 		while (lines.size < 9) {
 			for (const side of move.face.sides) {
 				this.close_lines_under_bandaging(lines, side)
 			}
 			this.close_lines_under_groupings(lines, move.face)
-			if (lines.size === number_connected_lines) break
-			number_connected_lines = lines.size
+			if (lines.size === line_count) break
+			line_count = lines.size
 		}
 
 		move.moving_lines = Array.from(lines)
