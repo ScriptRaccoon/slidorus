@@ -15,6 +15,10 @@ export class Move {
 		return `${this.face.name} ${this.line + 1}`
 	}
 
+	get is_valid() {
+		return this.delta != 0 && this.delta == Math.floor(this.delta)
+	}
+
 	get_opposite(): Move {
 		return new Move(this.face, this.line, -this.delta)
 	}

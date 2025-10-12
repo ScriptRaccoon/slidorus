@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Pause, Play } from '@lucide/svelte'
 	import type { Piece } from '../core/piece.svelte'
+	import { mod } from '../core/utils'
 
 	type Props = {
 		torus_piece_grid: Piece[][]
@@ -28,9 +29,9 @@
 
 	<div class="torus" class:paused={!torus_rotating}>
 		{#each { length: 9 } as _, i}
-			<div class="slice" style:--num={(i + 7) % 9}>
+			<div class="slice" style:--num={mod(i + 7, 9)}>
 				{#each { length: 9 } as _, j}
-					{@const piece = torus_piece_grid[8 - ((j + 4) % 9)][i]}
+					{@const piece = torus_piece_grid[mod(4 - j, 9)][i]}
 					<div
 						class="tile"
 						class:fixed={piece.fixed}

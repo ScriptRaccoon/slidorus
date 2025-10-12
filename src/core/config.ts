@@ -1,3 +1,5 @@
+export const TRANSITION_DURATION = 80
+
 export const ROW_KEYS = [
 	'Digit1',
 	'Digit2',
@@ -21,8 +23,6 @@ export const COL_KEYS = [
 	'KeyI',
 	'KeyO',
 ]
-
-export const TRANSITION_DURATION = 80
 
 export const FACES = {
 	ROW: {

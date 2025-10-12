@@ -81,7 +81,11 @@
 	}
 
 	function finish_move() {
-		if (game.has_scrambled && game.check_solved()) {
+		if (!game.has_scrambled) return
+		const is_solved = game.check_solved()
+
+		if (is_solved) {
+			game.save_solve()
 			send_toast({
 				title: 'Puzzle solved!',
 				variant: 'success',

@@ -72,3 +72,7 @@ export function equal_objects(obj1: any, obj2: any) {
 
 	return true
 }
+
+export function mod(x: number, n: number) {
+	return ((x % n) + n) % n
+}

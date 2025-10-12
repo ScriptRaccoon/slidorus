@@ -1,4 +1,5 @@
 import type { Move } from './move'
+import { mod } from './utils'
 
 export class Piece {
 	id: string
@@ -86,7 +87,7 @@ export class Piece {
 	}
 
 	execute_move(move: Move) {
-		this[move.face.x] = (this[move.face.x] + move.delta + 9) % 9
+		this[move.face.x] = mod(this[move.face.x] + move.delta, 9)
 	}
 
 	get is_visible() {

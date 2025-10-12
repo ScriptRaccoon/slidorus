@@ -4,7 +4,7 @@ import { Encoder } from './encoder'
 import { Grouping } from './grouping.svelte'
 import { Move } from './move'
 import { Piece } from './piece.svelte'
-import { equal_objects, sleep } from './utils'
+import { equal_objects, mod, sleep } from './utils'
 import { record_solve } from './solves.svelte'
 import { CHALLENGES } from '../data/challenges'
 
@@ -30,17 +30,13 @@ export class Game {
 	get_initial_pieces(): Piece[] {
 		const pieces: Piece[] = []
 
-		for (let row = 0; row < 3; row++) {
-			for (let col = 0; col < 3; col++) {
-				const piece_type = 3 * row + col
-				for (let y = 0; y < 3; y++) {
-					for (let x = 0; x < 3; x++) {
-						const piece_x = 3 * col + x
-						const piece_y = 3 * row + y
-						const piece = new Piece(piece_x, piece_y, piece_type)
-						pieces.push(piece)
-					}
-				}
+		for (let x = 0; x < 9; x++) {
+			for (let y = 0; y < 9; y++) {
+				const block_x = Math.floor(x / 3)
+				const block_y = Math.floor(y / 3)
+				const type = 3 * block_y + block_x
+				const piece = new Piece(x, y, type)
+				pieces.push(piece)
 			}
 		}
 
@@ -57,14 +53,14 @@ export class Game {
 	}
 
 	check_solved(): boolean {
-		for (let row = 0; row < 3; row++) {
-			for (let col = 0; col < 3; col++) {
+		for (let block_x = 0; block_x < 9; block_x += 3) {
+			for (let block_y = 0; block_y < 9; block_y += 3) {
 				const block_pieces = this.pieces.filter(
 					(piece) =>
-						piece.x >= 3 * col &&
-						piece.x < 3 * (col + 1) &&
-						piece.y >= 3 * row &&
-						piece.y < 3 * (row + 1),
+						piece.x >= block_x &&
+						piece.x < block_x + 3 &&
+						piece.y >= block_y &&
+						piece.y < block_y + 3,
 				)
 				const piece_types = new Set(
 					block_pieces.map((piece) => piece.type),
@@ -73,6 +69,10 @@ export class Game {
 			}
 		}
 
+		return true
+	}
+
+	save_solve() {
 		if (this.challenge && this.has_scrambled) {
 			const solve = {
 				challenge_name: this.challenge.name,
@@ -83,8 +83,6 @@ export class Game {
 		}
 
 		this.has_scrambled = false
-
-		return true
 	}
 
 	revert_edits() {
@@ -109,7 +107,7 @@ export class Game {
 
 		piece[`bandaged_${direction}`] = !piece[`bandaged_${direction}`]
 		const adjacent_piece = this.pieces.find(
-			(p) => p[x] === (piece[x] + 1) % 9 && p[y] === piece[y],
+			(p) => p[x] === mod(piece[x] + 1, 9) && p[y] === piece[y],
 		)
 
 		if (adjacent_piece) {
@@ -128,9 +126,9 @@ export class Game {
 			(piece) =>
 				piece[`bandaged_${direction}`] &&
 				lines.has(piece[coord]) &&
-				!lines.has((piece[coord] + delta + 9) % 9),
+				!lines.has(mod(piece[coord] + delta, 9)),
 		)
-		if (piece) lines.add((piece[coord] + delta + 9) % 9)
+		if (piece) lines.add(mod(piece[coord] + delta, 9))
 	}
 
 	close_lines_under_groupings(lines: Set<number>, face: FACES_TYPE) {
@@ -175,7 +173,7 @@ export class Game {
 	}
 
 	execute_move(move: Move, add_to_history = true) {
-		if (move.delta === 0 || move.delta != Math.floor(move.delta)) return
+		if (!move.is_valid) return
 		const [moving_pieces] = this.get_moving_pieces_and_lines(move)
 		for (const piece of moving_pieces) {
 			piece.execute_move(move)

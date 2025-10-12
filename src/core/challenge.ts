@@ -1,14 +1,18 @@
 import { update_URL_param } from './utils'
 
-export type GameConfig = {
-	fixed: string
-	up: string
-	right: string
-	down: string
-	left: string
-	rows: string
-	cols: string
-}
+const CONFIG_KEYS = [
+	'fixed',
+	'up',
+	'right',
+	'down',
+	'left',
+	'rows',
+	'cols',
+] as const
+
+export type CONFIG_KEY = (typeof CONFIG_KEYS)[number]
+
+export type GameConfig = Record<CONFIG_KEY, string>
 
 export type Challenge = {
 	name: string
@@ -19,27 +23,17 @@ export type Challenge = {
 export function update_URL(config: GameConfig) {
 	const url = new URL(window.location.origin)
 
-	update_URL_param(url, 'fixed', config.fixed)
-	update_URL_param(url, 'up', config.up)
-	update_URL_param(url, 'right', config.right)
-	update_URL_param(url, 'down', config.down)
-	update_URL_param(url, 'left', config.left)
-	update_URL_param(url, 'rows', config.rows)
-	update_URL_param(url, 'cols', config.cols)
+	for (const key of CONFIG_KEYS) {
+		update_URL_param(url, key, config[key])
+	}
 
 	window.history.replaceState({}, '', url)
 }
 
-export function get_config_from_URL() {
+export function get_config_from_URL(): GameConfig {
 	const url = new URL(window.location.href)
 
-	return {
-		fixed: url.searchParams.get('fixed') ?? '',
-		up: url.searchParams.get('up') ?? '',
-		right: url.searchParams.get('right') ?? '',
-		down: url.searchParams.get('down') ?? '',
-		left: url.searchParams.get('left') ?? '',
-		rows: url.searchParams.get('rows') ?? '',
-		cols: url.searchParams.get('cols') ?? '',
-	}
+	return Object.fromEntries(
+		CONFIG_KEYS.map((key) => [key, url.searchParams.get(key) ?? '']),
+	) as GameConfig
 }
