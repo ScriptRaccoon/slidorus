@@ -49,7 +49,7 @@
 			initialize_move(offset.x, offset.y)
 		}
 
-		if (current_move) {
+		if (current_move && current_move.delta === 0) {
 			game.update_offsets(current_move, offset[current_move.face.x])
 		}
 	}
