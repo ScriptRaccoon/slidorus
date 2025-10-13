@@ -173,37 +173,10 @@ export class Game {
 		if (add_to_history) this.move_history.push(move)
 	}
 
-	create_copies(move: Move) {
-		const copies: Piece[] = []
-		const offsets = [1, 2, -1, -2]
-
-		for (let x = 0; x < 9; x++) {
-			for (const y of move.moving_lines) {
-				const piece = move.moving_pieces.find(
-					(piece) =>
-						piece[move.face.x] === x && piece[move.face.y] === y,
-				)
-				if (!piece) continue
-				for (const offset of offsets) {
-					const copy = piece.get_copy()
-					copy[move.face.x] += offset * 9
-					copies.push(copy)
-				}
-			}
-		}
-
-		this.pieces.push(...copies)
-		move.moving_pieces.push(...copies)
-	}
-
 	update_offsets(move: Move, offset: number) {
-		for (const piece of move.moving_pieces) {
+		for (const piece of [...move.moving_copies, ...move.moving_pieces]) {
 			piece[move.face.dx] = offset
 		}
-	}
-
-	reduce_to_visible_pieces() {
-		this.pieces = this.pieces.filter((piece) => piece.is_visible)
 	}
 
 	async scramble_pieces(wait = 0, moves = 100) {

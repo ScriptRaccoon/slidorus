@@ -7,6 +7,7 @@ export class Move {
 	delta: number
 	moving_lines: number[]
 	moving_pieces: Piece[]
+	moving_copies: Piece[]
 
 	constructor(face: FACES_TYPE, line: number, delta: number) {
 		this.face = face
@@ -14,6 +15,7 @@ export class Move {
 		this.delta = delta
 		this.moving_lines = []
 		this.moving_pieces = []
+		this.moving_copies = []
 	}
 
 	get name() {
@@ -42,5 +44,20 @@ export class Move {
 		let delta = Math.floor(Math.random() * 17) - 8
 		if (delta === 0) delta = 1
 		return new Move(face, line, delta)
+	}
+
+	create_copies() {
+		const copies: Piece[] = []
+		const offsets = [1, 2, -1, -2]
+
+		for (const piece of this.moving_pieces) {
+			for (const offset of offsets) {
+				const copy = piece.get_copy()
+				copy[this.face.x] += offset * 9
+				copies.push(copy)
+			}
+		}
+
+		this.moving_copies = copies
 	}
 }

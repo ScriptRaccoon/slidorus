@@ -76,8 +76,7 @@
 
 		game.state = 'moving'
 		current_move = move
-
-		game.create_copies(move)
+		move.create_copies()
 	}
 
 	function stop_dragging(e: MouseEvent | TouchEvent) {
@@ -101,10 +100,11 @@
 	}
 
 	function reset_dragging() {
-		if (current_move) game.update_offsets(current_move, 0)
+		if (current_move) {
+			game.update_offsets(current_move, 0)
+		}
 		current_move = null
 		move_pos = null
-		game.reduce_to_visible_pieces()
 		game.state = 'idle'
 	}
 
@@ -208,7 +208,7 @@
 		ontouchmove={throttle(handle_dragging, 1000 / 60)}
 		ontouchend={stop_dragging}
 	>
-		{#each game.pieces as piece (piece.id)}
+		{#each [...game.pieces, ...(current_move?.moving_copies ?? [])] as piece (piece.id)}
 			<PieceComponent
 				{piece}
 				animated={game.state === 'moving'}
