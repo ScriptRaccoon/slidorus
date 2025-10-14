@@ -26,7 +26,7 @@
 	let current_move = $state<Move | null>(null)
 
 	function start_dragging(e: MouseEvent | TouchEvent) {
-		if (game.state !== 'idle' || !square_element || current_move) return
+		if (game.state !== 'idle' || current_move) return
 		move_pos = get_position(e)
 	}
 
