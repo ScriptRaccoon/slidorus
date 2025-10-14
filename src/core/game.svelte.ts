@@ -1,5 +1,5 @@
 import { type Challenge, type GameConfig } from './challenge'
-import { FACES, type FACES_TYPE } from './config'
+import { AXES, type AXIS } from './config'
 import { Encoder } from './encoder'
 import { Grouping } from './grouping.svelte'
 import { Move } from './move'
@@ -125,8 +125,8 @@ export class Game {
 		if (piece) lines.add(mod(piece[coord] + delta, 9))
 	}
 
-	close_lines_under_groupings(lines: Set<number>, face: FACES_TYPE) {
-		if (face === FACES.ROW) {
+	close_lines_under_groupings(lines: Set<number>, axis: AXIS) {
+		if (axis === AXES.HORIZONTAL) {
 			this.row_grouping.close(lines)
 		} else {
 			this.col_grouping.close(lines)
@@ -138,10 +138,10 @@ export class Game {
 		let line_count = 1
 
 		while (lines.size < 9) {
-			for (const side of move.face.sides) {
+			for (const side of move.axis.sides) {
 				this.close_lines_under_bandaging(lines, side)
 			}
-			this.close_lines_under_groupings(lines, move.face)
+			this.close_lines_under_groupings(lines, move.axis)
 			if (lines.size === line_count) break
 			line_count = lines.size
 		}
@@ -149,7 +149,7 @@ export class Game {
 		move.moving_lines = Array.from(lines)
 
 		move.moving_pieces = this.pieces.filter((piece) =>
-			move.moving_lines.includes(piece[move.face.y]),
+			move.moving_lines.includes(piece[move.axis.cross]),
 		)
 
 		return this.verify_move(move)
@@ -167,7 +167,7 @@ export class Game {
 		if (!move.is_relevant) return
 
 		for (const piece of move.moving_pieces) {
-			piece[move.face.x] = mod(piece[move.face.x] + move.delta, 9)
+			piece[move.axis.main] = mod(piece[move.axis.main] + move.delta, 9)
 		}
 
 		if (add_to_history) this.move_history.push(move)
@@ -175,7 +175,7 @@ export class Game {
 
 	update_offsets(move: Move, offset: number) {
 		for (const piece of [...move.moving_copies, ...move.moving_pieces]) {
-			piece[move.face.dx] = offset
+			piece[move.axis.delta] = offset
 		}
 	}
 

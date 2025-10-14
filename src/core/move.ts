@@ -1,16 +1,16 @@
-import { FACES, type FACES_TYPE } from './config'
+import { AXES, type AXIS } from './config'
 import type { Piece } from './piece.svelte'
 
 export class Move {
-	face: FACES_TYPE
+	axis: AXIS
 	line: number
 	delta: number
 	moving_lines: number[]
 	moving_pieces: Piece[]
 	moving_copies: Piece[]
 
-	constructor(face: FACES_TYPE, line: number, delta: number) {
-		this.face = face
+	constructor(axis: AXIS, line: number, delta: number) {
+		this.axis = axis
 		this.line = line
 		this.delta = delta
 		this.moving_lines = []
@@ -19,7 +19,7 @@ export class Move {
 	}
 
 	get name() {
-		return `${this.face.name} ${this.line + 1}`
+		return `${this.axis.name} ${this.line + 1}`
 	}
 
 	get is_relevant() {
@@ -27,23 +27,23 @@ export class Move {
 	}
 
 	get_opposite(): Move {
-		return new Move(this.face, this.line, -this.delta)
+		return new Move(this.axis, this.line, -this.delta)
 	}
 
 	get notation() {
 		if (this.delta === 0) return ''
 		if (this.delta > 0)
-			return `${this.line + 1}${this.face.notation}${this.delta}`
+			return `${this.line + 1}${this.axis.notation}${this.delta}`
 		if (this.delta < 0)
-			return `${this.line + 1}${this.face.notation}${-this.delta}'`
+			return `${this.line + 1}${this.axis.notation}${-this.delta}'`
 	}
 
 	static generate_random_move(): Move {
-		const face = Math.random() < 0.5 ? FACES.ROW : FACES.COL
+		const axis = Math.random() < 0.5 ? AXES.HORIZONTAL : AXES.VERTICAL
 		const line = Math.floor(Math.random() * 9)
 		let delta = Math.floor(Math.random() * 17) - 8
 		if (delta === 0) delta = 1
-		return new Move(face, line, delta)
+		return new Move(axis, line, delta)
 	}
 
 	create_copies() {
@@ -53,7 +53,7 @@ export class Move {
 		for (const piece of this.moving_pieces) {
 			for (const offset of offsets) {
 				const copy = piece.get_copy()
-				copy[this.face.x] += offset * 9
+				copy[this.axis.main] += offset * 9
 				copies.push(copy)
 			}
 		}

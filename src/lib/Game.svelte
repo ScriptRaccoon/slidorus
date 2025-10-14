@@ -13,7 +13,7 @@
 	import { Move } from '../core/move'
 	import {
 		COL_KEYS,
-		FACES,
+		AXES,
 		ROW_KEYS,
 		TRANSITION_DURATION,
 	} from '../core/config'
@@ -50,21 +50,22 @@
 		}
 
 		if (current_move && current_move.delta === 0) {
-			game.update_offsets(current_move, offset[current_move.face.x])
+			game.update_offsets(current_move, offset[current_move.axis.main])
 		}
 	}
 
 	function initialize_move(dx: number, dy: number) {
 		if (current_move || !move_pos || !square_element) return
 
-		const face = Math.abs(dx) > Math.abs(dy) ? FACES.ROW : FACES.COL
+		const axis =
+			Math.abs(dx) > Math.abs(dy) ? AXES.HORIZONTAL : AXES.VERTICAL
 
 		const square_rect = square_element.getBoundingClientRect()
 		const moving_line = Math.floor(
-			(move_pos[face.y] - square_rect[face.side]) * (9 / square_size),
+			(move_pos[axis.cross] - square_rect[axis.side]) * (9 / square_size),
 		)
 		const line = clamp(moving_line, 0, 8)
-		const move = new Move(face, line, 0)
+		const move = new Move(axis, line, 0)
 
 		const { error } = game.prepare_move(move)
 
@@ -85,7 +86,8 @@
 		const current_pos = get_changed_position(e)
 
 		const delta_float =
-			current_pos[current_move.face.x] - move_pos[current_move.face.x]
+			current_pos[current_move.axis.main] -
+			move_pos[current_move.axis.main]
 		const delta_int = Math.round(delta_float * (9 / square_size))
 		const delta = clamp(delta_int, -10, 10)
 		current_move.delta = delta
@@ -133,8 +135,8 @@
 
 		const move =
 			row >= 0
-				? new Move(FACES.ROW, row, delta)
-				: new Move(FACES.COL, col, delta)
+				? new Move(AXES.HORIZONTAL, row, delta)
+				: new Move(AXES.VERTICAL, col, delta)
 
 		const { error } = game.prepare_move(move)
 

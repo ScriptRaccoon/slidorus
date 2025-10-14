@@ -24,25 +24,25 @@ export const COL_KEYS = [
 	'KeyO',
 ]
 
-export const FACES = {
-	ROW: {
+export const AXES = {
+	HORIZONTAL: {
 		name: 'Row',
 		notation: 'R',
-		x: 'x',
-		y: 'y',
-		dx: 'dx',
+		main: 'x',
+		cross: 'y',
+		delta: 'dx',
 		side: 'top',
 		sides: ['up', 'down'],
 	},
-	COL: {
+	VERTICAL: {
 		name: 'Column',
 		notation: 'C',
-		x: 'y',
-		y: 'x',
-		dx: 'dy',
+		main: 'y',
+		cross: 'x',
+		delta: 'dy',
 		side: 'left',
 		sides: ['left', 'right'],
 	},
 } as const
 
-export type FACES_TYPE = typeof FACES.ROW | typeof FACES.COL
+export type AXIS = (typeof AXES)[keyof typeof AXES]
