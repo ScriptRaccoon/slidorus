@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { ListCheck } from '@lucide/svelte'
-	import { get_recorded_solves } from '../core/solves.svelte'
-
-	let solves = $derived([...get_recorded_solves()].reverse())
+	import { solves_storage } from '../core/solves.svelte'
 </script>
 
-{#if solves.length > 0}
+{#if solves_storage.solves.length > 0}
 	<details>
 		<summary>
 			<ListCheck /> Your solves
@@ -20,7 +18,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each solves as solve}
+				{#each [...solves_storage.solves].reverse() as solve}
 					<tr>
 						<td>
 							{solve.challenge_name}

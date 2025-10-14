@@ -2,8 +2,8 @@
 	import { game } from '../core/game.svelte'
 	import { update_URL, type Challenge } from '../core/challenge'
 	import { Check, X } from '@lucide/svelte'
-	import { get_solved_challenge_names } from '../core/solves.svelte'
 	import { CHALLENGES } from '../data/challenges'
+	import { solves_storage } from '../core/solves.svelte'
 
 	type Props = {
 		open: boolean
@@ -44,9 +44,6 @@
 
 	<div class="list">
 		{#each CHALLENGES as challenge}
-			{@const is_solved = get_solved_challenge_names().includes(
-				challenge.name,
-			)}
 			<button
 				class="challenge"
 				onclick={() => load_challenge(challenge)}
@@ -54,7 +51,7 @@
 				class:selected={game.challenge?.name === challenge.name}
 			>
 				<span>{challenge.name}</span>
-				{#if is_solved}
+				{#if solves_storage.has(challenge)}
 					<Check />
 				{/if}
 			</button>

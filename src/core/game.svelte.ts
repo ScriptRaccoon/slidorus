@@ -5,8 +5,8 @@ import { Grouping } from './grouping.svelte'
 import { Move } from './move'
 import { Piece } from './piece.svelte'
 import { equal_objects, mod, sleep } from './utils'
-import { record_solve } from './solves.svelte'
 import { CHALLENGES } from '../data/challenges'
+import { solves_storage } from './solves.svelte'
 
 export class Game {
 	pieces: Piece[]
@@ -79,7 +79,7 @@ export class Game {
 				moves: this.move_count,
 				date: new Date().toISOString(),
 			}
-			record_solve(solve)
+			solves_storage.store(solve)
 		}
 
 		this.has_scrambled = false
