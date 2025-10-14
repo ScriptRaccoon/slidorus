@@ -31,7 +31,7 @@
 	}
 
 	function handle_dragging(e: MouseEvent | TouchEvent) {
-		if (!move_pos || !square_element) return
+		if (!move_pos) return
 
 		const current_pos = get_position(e)
 
@@ -44,38 +44,39 @@
 
 		if (!current_move && is_far_enough) {
 			initialize_move(offset.x, offset.y)
-		}
-
-		if (current_move && current_move.delta === 0) {
+		} else if (current_move?.delta === 0) {
 			game.update_offsets(current_move, offset[current_move.axis.main])
 		}
 	}
 
 	function initialize_move(dx: number, dy: number) {
-		if (current_move || !move_pos || !square_element) return
-
-		const axis =
-			Math.abs(dx) > Math.abs(dy) ? AXES.HORIZONTAL : AXES.VERTICAL
-
-		const square_rect = square_element.getBoundingClientRect()
-		const moving_line = Math.floor(
-			(move_pos[axis.cross] - square_rect[axis.side]) * (9 / square_size),
-		)
-		const line = clamp(moving_line, 0, 8)
-		const move = new Move(axis, line, 0)
+		const move = generate_move_from_dragging(dx, dy)
+		if (!move) return
 
 		const { error } = game.prepare_move(move)
 
 		if (error) {
 			send_toast({ variant: 'error', title: error })
-			reset_move()
+			reset_current_move()
 			return
 		}
 
-		set_move(move)
+		set_current_move(move)
 	}
 
-	function set_move(move: Move) {
+	function generate_move_from_dragging(dx: number, dy: number): Move | null {
+		if (!move_pos || !square_element) return null
+		const axis =
+			Math.abs(dx) > Math.abs(dy) ? AXES.HORIZONTAL : AXES.VERTICAL
+		const square_rect = square_element.getBoundingClientRect()
+		const moving_line = Math.floor(
+			(move_pos[axis.cross] - square_rect[axis.side]) * (9 / square_size),
+		)
+		const line = clamp(moving_line, 0, 8)
+		return new Move(axis, line, 0)
+	}
+
+	function set_current_move(move: Move) {
 		game.state = 'moving'
 		current_move = move
 		move.create_copies()
@@ -83,16 +84,8 @@
 
 	function stop_dragging(e: MouseEvent | TouchEvent) {
 		if (game.state !== 'moving' || !move_pos || !current_move) return
-
 		const current_pos = get_changed_position(e)
-
-		const delta_float =
-			current_pos[current_move.axis.main] -
-			move_pos[current_move.axis.main]
-		const delta_int = Math.round(delta_float * (9 / square_size))
-		const delta = clamp(delta_int, -10, 10)
-		current_move.delta = delta
-
+		current_move.compute_delta(move_pos, current_pos, 9 / square_size)
 		animate_move(current_move)
 	}
 
@@ -101,12 +94,12 @@
 
 		setTimeout(() => {
 			game.execute_move(move)
-			reset_move()
+			reset_current_move()
 			if (move.delta != 0) finish_move()
 		}, TRANSITION_DURATION)
 	}
 
-	function reset_move() {
+	function reset_current_move() {
 		if (current_move) game.update_offsets(current_move, 0)
 		current_move = null
 		move_pos = null
@@ -115,6 +108,7 @@
 
 	function finish_move() {
 		if (!game.has_scrambled) return
+
 		const is_solved = game.check_solved()
 
 		if (is_solved) {
@@ -128,20 +122,13 @@
 
 	function handle_keydown(e: KeyboardEvent) {
 		if (e.key === 'Escape' && game.state === 'moving') {
-			reset_move()
+			reset_current_move()
 		}
 
 		if (current_move || game.state !== 'idle') return
 
-		const delta = e.shiftKey ? -1 : 1
-		const row = ROW_KEYS.findIndex((row) => row === e.code)
-		const col = COL_KEYS.findIndex((col) => col === e.code)
-		if (row < 0 && col < 0) return
-
-		const move =
-			row >= 0
-				? new Move(AXES.HORIZONTAL, row, delta)
-				: new Move(AXES.VERTICAL, col, delta)
+		const move = create_move_from_key(e)
+		if (!move) return
 
 		const { error } = game.prepare_move(move)
 
@@ -153,11 +140,22 @@
 			return
 		}
 
-		set_move(move)
+		set_current_move(move)
 
 		setTimeout(() => {
 			animate_move(move)
 		}, 0)
+	}
+
+	function create_move_from_key(e: KeyboardEvent) {
+		const delta = e.shiftKey ? -1 : 1
+		const row = ROW_KEYS.findIndex((row) => row === e.code)
+		const col = COL_KEYS.findIndex((col) => col === e.code)
+		if (row < 0 && col < 0) return null
+
+		return row >= 0
+			? new Move(AXES.HORIZONTAL, row, delta)
+			: new Move(AXES.VERTICAL, col, delta)
 	}
 </script>
 

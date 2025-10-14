@@ -1,5 +1,6 @@
 import { AXES, type AXIS } from './config'
 import type { Piece } from './piece.svelte'
+import { clamp } from './utils'
 
 export class Move {
 	axis: AXIS
@@ -59,5 +60,15 @@ export class Move {
 		}
 
 		this.moving_copies = copies
+	}
+
+	compute_delta(
+		start: { x: number; y: number },
+		end: { x: number; y: number },
+		scale: number,
+	) {
+		const delta_float = end[this.axis.main] - start[this.axis.main]
+		const delta_int = Math.round(delta_float * scale)
+		this.delta = clamp(delta_int, -10, 10)
 	}
 }
