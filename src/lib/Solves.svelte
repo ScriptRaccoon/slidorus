@@ -1,12 +1,25 @@
 <script lang="ts">
 	import { ListCheck } from '@lucide/svelte'
 	import { solves_storage } from '../core/solves.svelte'
+
+	let show_best = $state(false)
+
+	let displayed_solves = $derived(
+		show_best
+			? [...solves_storage.get_best_solves()].reverse()
+			: [...solves_storage.solves].reverse(),
+	)
 </script>
 
 {#if solves_storage.solves.length > 0}
 	<details>
 		<summary>
-			<ListCheck /> Your solves
+			<ListCheck />
+			{#if show_best}
+				Your best solves
+			{:else}
+				Your solves
+			{/if}
 		</summary>
 
 		<table>
@@ -18,7 +31,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each [...solves_storage.solves].reverse() as solve}
+				{#each displayed_solves as solve}
 					<tr>
 						<td>
 							{solve.challenge_name}
@@ -33,12 +46,17 @@
 				{/each}
 			</tbody>
 		</table>
+
+		<label>
+			Show best solves per challenge
+			<input type="checkbox" bind:checked={show_best} />
+		</label>
 	</details>
 {/if}
 
 <style>
 	table {
-		margin-top: 1rem;
+		margin-block: 1rem;
 		width: 100%;
 		border-spacing: 0;
 	}
@@ -61,5 +79,11 @@
 		tr:nth-child(2n) {
 			background-color: var(--secondary-bg-color);
 		}
+	}
+
+	label {
+		display: inline-flex;
+		gap: 0.5rem;
+		align-items: center;
 	}
 </style>

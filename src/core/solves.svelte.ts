@@ -28,6 +28,23 @@ class SolvesStorage {
 		localStorage.setItem('solves', JSON.stringify(this.solves))
 	}
 
+	get_best_solves(): Solve[] {
+		const best_solves: Record<string, Solve> = {}
+
+		for (const solve of this.solves) {
+			const current_record = best_solves[solve.challenge_name]
+			if (current_record) {
+				if (solve.moves < current_record.moves) {
+					best_solves[solve.challenge_name] = solve
+				}
+			} else {
+				best_solves[solve.challenge_name] = solve
+			}
+		}
+
+		return Object.values(best_solves)
+	}
+
 	private static is_valid_solve(obj: unknown): obj is Solve {
 		if (typeof obj !== 'object' || obj === null) return false
 		const o = obj as Record<string, unknown>

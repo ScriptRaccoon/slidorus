@@ -94,6 +94,10 @@ button {
 	}
 }
 
+input[type='checkbox'] {
+	accent-color: var(--highlight-color);
+}
+
 :is(.piece, .tile) {
 	&[data-color-id='0'] {
 		--color: var(--color-0);
