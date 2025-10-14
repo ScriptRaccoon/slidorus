@@ -61,10 +61,10 @@
 
 		&:not(:disabled) {
 			opacity: 0.15;
-		}
 
-		&[aria-checked='true'] {
-			opacity: 1;
+			&[aria-checked='true'] {
+				opacity: 1;
+			}
 		}
 
 		&:hover,
@@ -82,10 +82,6 @@
 
 	.bandager {
 		border-radius: 10%;
-
-		&:disabled {
-			opacity: 0;
-		}
 
 		&[data-direction='right'] {
 			width: 3.75%;

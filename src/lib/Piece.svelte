@@ -6,9 +6,10 @@
 		animated: boolean
 		dx: number
 		dy: number
+		editing: boolean
 	}
 
-	let { piece, animated, dx, dy }: Props = $props()
+	let { piece, animated, dx, dy, editing }: Props = $props()
 </script>
 
 <div
@@ -20,6 +21,7 @@
 	class:bandaged_down={piece.bandaged_down}
 	class:bandaged_left={piece.bandaged_left}
 	class:bandaged_up={piece.bandaged_up}
+	class:fixed={piece.fixed && !editing}
 	class:animated
 	style:--x={piece.x}
 	style:--y={piece.y}
@@ -44,6 +46,14 @@
 
 		&.animated {
 			transition: transform var(--speed) ease-out;
+		}
+
+		&.fixed::before {
+			content: '';
+			width: 20%;
+			aspect-ratio: 1;
+			border-radius: 50%;
+			background-color: var(--bg-color);
 		}
 
 		&.bandaged_right {

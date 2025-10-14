@@ -177,6 +177,7 @@
 			animated={game.state === 'moving'}
 			dx={piece.dx}
 			dy={piece.dy}
+			editing={game.state === 'editing'}
 		/>
 	{/each}
 
