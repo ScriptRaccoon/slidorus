@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Game from './lib/Game.svelte'
 	import Header from './lib/Header.svelte'
 	import Menu from './lib/Menu.svelte'
 	import Torus from './lib/Torus.svelte'
@@ -12,11 +11,15 @@
 	import { get_config_from_URL, update_URL } from './core/challenge'
 	import Solves from './lib/Solves.svelte'
 	import ChallengeSelector from './lib/ChallengeSelector.svelte'
+	import MoveHistory from './lib/MoveHistory.svelte'
+	import PieceGrid from './lib/PieceGrid.svelte'
+	import Connectors from './lib/Connectors.svelte'
 
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
 	let torus_piece_grid = $state<Piece[][]>([])
 	let show_challenge_selector = $state(false)
+	let square_size = $state(0)
 
 	function toggle_torus() {
 		show_torus = !show_torus
@@ -97,7 +100,11 @@
 />
 
 <div class="grid" class:show_torus>
-	<Game />
+	<div class="game" style:--size="{square_size}px">
+		<MoveHistory />
+		<PieceGrid bind:square_size />
+		<Connectors />
+	</div>
 
 	<Menu
 		scramble={() => game.scramble()}
@@ -154,5 +161,12 @@
 				}
 			}
 		}
+	}
+
+	.game {
+		--u: calc(var(--size) / 9);
+		display: grid;
+		grid-template-columns: 1fr auto;
+		grid-template-rows: auto 1fr auto;
 	}
 </style>

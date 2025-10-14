@@ -1,27 +1,26 @@
 <script lang="ts">
 	import {
+		AXES,
+		COL_KEYS,
+		ROW_KEYS,
+		TRANSITION_DURATION,
+	} from '../core/config'
+	import { game } from '../core/game.svelte'
+	import { Move } from '../core/move'
+	import {
 		clamp,
 		get_changed_position,
 		get_position,
 		throttle,
 	} from '../core/utils'
-	import Connector from './Connector.svelte'
+
 	import PieceComponent from './Piece.svelte'
 	import PieceEditor from './PieceEditor.svelte'
 	import { send_toast } from './Toast.svelte'
-	import { game } from '../core/game.svelte'
-	import { Move } from '../core/move'
-	import {
-		COL_KEYS,
-		AXES,
-		ROW_KEYS,
-		TRANSITION_DURATION,
-	} from '../core/config'
-	import MoveHistory from './MoveHistory.svelte'
-	import Connectors from './Connectors.svelte'
+
+	let { square_size = $bindable() }: { square_size: number } = $props()
 
 	let square_element = $state<HTMLDivElement | null>(null)
-	let square_size = $state(0)
 
 	let move_pos: { x: number; y: number } | null = null
 	let current_move = $state<Move | null>(null)
@@ -153,52 +152,40 @@
 
 <svelte:window onkeydown={handle_keydown} />
 
-<div class="game" style:--size="{square_size}px">
-	<MoveHistory />
-	<!-- svelte-ignore a11y_no_static_element_interactions -->
-	<div
-		class="square {game.state}"
-		bind:this={square_element}
-		bind:clientWidth={square_size}
-		onmousedown={start_dragging}
-		onmousemove={throttle(handle_dragging, 1000 / 60)}
-		onmouseup={stop_dragging}
-		onmouseleave={stop_dragging}
-		ontouchstart={start_dragging}
-		ontouchmove={throttle(handle_dragging, 1000 / 60)}
-		ontouchend={stop_dragging}
-	>
-		{#each [...game.pieces, ...(current_move?.moving_copies ?? [])] as piece (piece.id)}
-			<PieceComponent
-				{piece}
-				animated={game.state === 'moving'}
-				dx={piece.dx}
-				dy={piece.dy}
-			/>
-		{/each}
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<div
+	class="piece-grid {game.state}"
+	bind:this={square_element}
+	bind:clientWidth={square_size}
+	onmousedown={start_dragging}
+	onmousemove={throttle(handle_dragging, 1000 / 60)}
+	onmouseup={stop_dragging}
+	onmouseleave={stop_dragging}
+	ontouchstart={start_dragging}
+	ontouchmove={throttle(handle_dragging, 1000 / 60)}
+	ontouchend={stop_dragging}
+>
+	{#each [...game.pieces, ...(current_move?.moving_copies ?? [])] as piece (piece.id)}
+		<PieceComponent
+			{piece}
+			animated={game.state === 'moving'}
+			dx={piece.dx}
+			dy={piece.dy}
+		/>
+	{/each}
 
-		{#each game.pieces as piece (piece.id)}
-			<PieceEditor
-				disabled={game.state !== 'editing'}
-				{piece}
-				toggle_bandage_down={() => game.toggle_bandage(piece, 'down')}
-				toggle_bandage_right={() => game.toggle_bandage(piece, 'right')}
-			></PieceEditor>
-		{/each}
-	</div>
-
-	<Connectors />
+	{#each game.pieces as piece (piece.id)}
+		<PieceEditor
+			disabled={game.state !== 'editing'}
+			{piece}
+			toggle_bandage_down={() => game.toggle_bandage(piece, 'down')}
+			toggle_bandage_right={() => game.toggle_bandage(piece, 'right')}
+		></PieceEditor>
+	{/each}
 </div>
 
 <style>
-	.game {
-		--u: calc(var(--size) / 9);
-		display: grid;
-		grid-template-columns: 1fr auto;
-		grid-template-rows: auto 1fr auto;
-	}
-
-	.square {
+	.piece-grid {
 		grid-column: 1;
 		position: relative;
 		width: 100%;
