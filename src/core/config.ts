@@ -1,5 +1,3 @@
-export const TRANSITION_DURATION = 80
-
 export const ROW_KEYS = [
 	'Digit1',
 	'Digit2',

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { TRANSITION_DURATION } from '../core/config'
 	import type { Piece as PieceType } from '../core/piece.svelte'
 
 	type Props = {
@@ -26,24 +25,26 @@
 	style:--y={piece.y}
 	style:--dx={dx}
 	style:--dy={dy}
-	style:--transition-duration={animated ? `${TRANSITION_DURATION}ms` : '0ms'}
 ></div>
 
 <style>
 	.piece {
+		--speed: 80ms;
 		position: absolute;
 		width: var(--u);
 		height: var(--u);
 		background-color: var(--color, gray);
 		transform: translateX(calc(var(--x) * var(--u) + var(--dx) * 1px))
 			translateY(calc(var(--y) * var(--u) + var(--dy) * 1px));
-		transition: transform var(--transition-duration, 0) ease-out;
-
 		border: var(--border) solid var(--bg-color);
 		border-radius: 15%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+
+		&.animated {
+			transition: transform var(--speed) ease-out;
+		}
 
 		&.bandaged_right {
 			border-right: none;

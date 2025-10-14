@@ -1,10 +1,5 @@
 <script lang="ts">
-	import {
-		AXES,
-		COL_KEYS,
-		ROW_KEYS,
-		TRANSITION_DURATION,
-	} from '../core/config'
+	import { AXES, COL_KEYS, ROW_KEYS } from '../core/config'
 	import { game } from '../core/game.svelte'
 	import { Move } from '../core/move'
 	import {
@@ -92,11 +87,15 @@
 	function animate_move(move: Move) {
 		game.update_offsets(move, move.delta * (square_size / 9))
 
-		setTimeout(() => {
-			game.execute_move(move)
-			reset_current_move()
-			if (move.delta != 0) check_solved()
-		}, TRANSITION_DURATION)
+		square_element?.addEventListener(
+			'transitionend',
+			() => {
+				game.execute_move(move)
+				reset_current_move()
+				if (move.delta != 0) check_solved()
+			},
+			{ once: true },
+		)
 	}
 
 	function reset_current_move() {
