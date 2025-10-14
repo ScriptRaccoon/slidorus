@@ -52,7 +52,7 @@ export class Game {
 		this.has_scrambled = false
 	}
 
-	check_solved(): boolean {
+	is_solved(): boolean {
 		for (let block_x = 0; block_x < 9; block_x += 3) {
 			for (let block_y = 0; block_y < 9; block_y += 3) {
 				const block_pieces = this.pieces.filter(

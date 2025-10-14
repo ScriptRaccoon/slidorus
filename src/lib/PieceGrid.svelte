@@ -95,7 +95,7 @@
 		setTimeout(() => {
 			game.execute_move(move)
 			reset_current_move()
-			if (move.delta != 0) finish_move()
+			if (move.delta != 0) check_solved()
 		}, TRANSITION_DURATION)
 	}
 
@@ -106,10 +106,8 @@
 		game.state = 'idle'
 	}
 
-	function finish_move() {
-		if (!game.has_scrambled) return
-
-		const is_solved = game.check_solved()
+	function check_solved() {
+		const is_solved = game.has_scrambled && game.is_solved()
 
 		if (is_solved) {
 			game.save_solve()
