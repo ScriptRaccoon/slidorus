@@ -6,7 +6,7 @@ export class Piece {
 	dy: number
 	original_x: number
 	original_y: number
-	type: number
+	color_id: number
 	fixed: boolean
 	bandaged_up: boolean
 	bandaged_right: boolean
@@ -16,7 +16,7 @@ export class Piece {
 	constructor(
 		x: number,
 		y: number,
-		type: number,
+		color_id: number,
 		original_x = x,
 		original_y = y,
 		fixed = false,
@@ -30,7 +30,7 @@ export class Piece {
 		this.y = $state(y)
 		this.dx = $state(0)
 		this.dy = $state(0)
-		this.type = type
+		this.color_id = color_id
 		this.original_x = original_x
 		this.original_y = original_y
 		this.fixed = $state(fixed)
@@ -48,7 +48,7 @@ export class Piece {
 		return new Piece(
 			this.x,
 			this.y,
-			this.type,
+			this.color_id,
 			this.original_x,
 			this.original_y,
 			this.fixed,

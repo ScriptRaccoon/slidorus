@@ -34,8 +34,8 @@ export class Game {
 			for (let y = 0; y < 9; y++) {
 				const block_x = Math.floor(x / 3)
 				const block_y = Math.floor(y / 3)
-				const type = 3 * block_y + block_x
-				const piece = new Piece(x, y, type)
+				const color_id = 3 * block_y + block_x
+				const piece = new Piece(x, y, color_id)
 				pieces.push(piece)
 			}
 		}
@@ -62,10 +62,10 @@ export class Game {
 						piece.y >= block_y &&
 						piece.y < block_y + 3,
 				)
-				const piece_types = new Set(
-					block_pieces.map((piece) => piece.type),
+				const color_ids = new Set(
+					block_pieces.map((piece) => piece.color_id),
 				)
-				if (piece_types.size > 1) return false
+				if (color_ids.size > 1) return false
 			}
 		}
 

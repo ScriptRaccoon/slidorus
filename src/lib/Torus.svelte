@@ -41,7 +41,7 @@
 						class:bandaged_right={piece.bandaged_right}
 						class:flipped={j >= 5}
 						style:--index={j}
-						data-type={piece.type}
+						data-color-id={piece.color_id}
 						data-index={j}
 					></div>
 				{/each}

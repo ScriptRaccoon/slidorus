@@ -14,7 +14,7 @@
 
 <div
 	class="piece"
-	data-type={piece.type}
+	data-color-id={piece.color_id}
 	data-original-x={piece.original_x}
 	data-original-y={piece.original_y}
 	class:bandaged_right={piece.bandaged_right}

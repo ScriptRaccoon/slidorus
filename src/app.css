@@ -95,31 +95,31 @@ button {
 }
 
 :is(.piece, .tile) {
-	&[data-type='0'] {
+	&[data-color-id='0'] {
 		--color: var(--color-0);
 	}
-	&[data-type='1'] {
+	&[data-color-id='1'] {
 		--color: var(--color-1);
 	}
-	&[data-type='2'] {
+	&[data-color-id='2'] {
 		--color: var(--color-2);
 	}
-	&[data-type='3'] {
+	&[data-color-id='3'] {
 		--color: var(--color-3);
 	}
-	&[data-type='4'] {
+	&[data-color-id='4'] {
 		--color: var(--color-4);
 	}
-	&[data-type='5'] {
+	&[data-color-id='5'] {
 		--color: var(--color-5);
 	}
-	&[data-type='6'] {
+	&[data-color-id='6'] {
 		--color: var(--color-6);
 	}
-	&[data-type='7'] {
+	&[data-color-id='7'] {
 		--color: var(--color-7);
 	}
-	&[data-type='8'] {
+	&[data-color-id='8'] {
 		--color: var(--color-8);
 	}
 }
