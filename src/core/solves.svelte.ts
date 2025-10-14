@@ -9,9 +9,25 @@ let solved_challenge_names = $derived([
 	...new Set(recorded_solves.map((solve) => solve.challenge_name)),
 ])
 
+function is_valid_solve(obj: unknown): obj is Solve {
+	if (typeof obj !== 'object' || obj === null) return false
+	const o = obj as Record<string, unknown>
+	return (
+		typeof o.challenge_name === 'string' &&
+		typeof o.date === 'string' &&
+		typeof o.moves === 'number'
+	)
+}
+
 function get_stored_solves(): Solve[] {
 	const solves_str = localStorage.getItem('solves') ?? '[]'
-	return JSON.parse(solves_str)
+	const parsed_solves = JSON.parse(solves_str) as unknown
+	if (Array.isArray(parsed_solves) && parsed_solves.every(is_valid_solve)) {
+		return parsed_solves
+	} else {
+		console.error(`Invalid solves array: ${solves_str}`)
+		return []
+	}
 }
 
 export function record_solve(solve: Solve) {
