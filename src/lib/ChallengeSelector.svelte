@@ -34,21 +34,28 @@
 
 <svelte:window onclick={detect_outside_click} />
 
-<dialog bind:this={dialog_element} onclose={() => (open = false)}>
+<dialog
+	bind:this={dialog_element}
+	onclose={() => (open = false)}
+	id="challenge-selector"
+	aria-modal="true"
+	aria-labelledby="challenge-selector-title"
+>
 	<header>
-		<h2>Challenges</h2>
+		<h2 id="challenge-selector-title">Challenges</h2>
 		<button class="close" aria-label="Close" onclick={handle_close}>
 			<X />
 		</button>
 	</header>
 
-	<div class="list">
+	<div class="list" role="radiogroup" aria-label="Select a challenge">
 		{#each CHALLENGES as challenge}
 			<button
 				class="challenge"
+				role="radio"
+				aria-checked={game.challenge?.name === challenge.name}
 				onclick={() => load_challenge(challenge)}
 				data-difficulty={challenge.difficulty}
-				class:selected={game.challenge?.name === challenge.name}
 			>
 				<span>{challenge.name}</span>
 				{#if solves_storage.has(challenge)}
@@ -129,7 +136,7 @@
 
 		&:hover,
 		&:focus-visible,
-		&.selected {
+		&[aria-checked='true'] {
 			border-color: var(--font-color);
 		}
 

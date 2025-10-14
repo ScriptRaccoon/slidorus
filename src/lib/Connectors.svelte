@@ -46,7 +46,7 @@
 	}
 </script>
 
-<div class="row_connectors">
+<div class="row_connectors" role="group" aria-label="Row connectors">
 	{#each { length: 9 } as _, row}
 		<Connector
 			type="row"
@@ -60,7 +60,7 @@
 	{/each}
 </div>
 
-<div class="col_connectors">
+<div class="col_connectors" role="group" aria-label="Column connectors">
 	{#each { length: 9 } as _, col}
 		<Connector
 			type="col"

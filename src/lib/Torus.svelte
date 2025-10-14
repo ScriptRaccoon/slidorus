@@ -15,7 +15,7 @@
 	}
 </script>
 
-<div class="scene">
+<aside class="scene">
 	<button
 		onclick={toggle_rotation}
 		aria-label={torus_rotating ? 'Pause' : 'Play'}
@@ -48,7 +48,7 @@
 			</div>
 		{/each}
 	</div>
-</div>
+</aside>
 
 <style>
 	.scene {

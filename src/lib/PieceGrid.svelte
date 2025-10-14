@@ -158,8 +158,10 @@
 
 <svelte:window onkeydown={handle_keydown} />
 
-<!-- svelte-ignore a11y_no_static_element_interactions -->
+<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <div
+	role="application"
+	aria-label="Piece grid"
 	class="piece-grid {game.state}"
 	bind:this={square_element}
 	bind:clientWidth={square_size}

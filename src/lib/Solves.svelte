@@ -12,46 +12,50 @@
 </script>
 
 {#if solves_storage.solves.length > 0}
-	<details>
-		<summary>
-			<ListCheck />
-			{#if show_best}
-				Your best solves
-			{:else}
-				Your solves
-			{/if}
-		</summary>
+	<section aria-label="Solves">
+		<details>
+			<summary>
+				<ListCheck />
+				{#if show_best}
+					Your best solves
+				{:else}
+					Your solves
+				{/if}
+			</summary>
 
-		<table>
-			<thead>
-				<tr>
-					<th>Challenge</th>
-					<th>Moves</th>
-					<th>Date</th>
-				</tr>
-			</thead>
-			<tbody>
-				{#each displayed_solves as solve}
+			<table>
+				<thead>
 					<tr>
-						<td>
-							{solve.challenge_name}
-						</td>
-						<td>
-							{solve.moves}
-						</td>
-						<td>
-							{new Date(solve.date).toLocaleDateString('en-CA')}
-						</td>
+						<th>Challenge</th>
+						<th>Moves</th>
+						<th>Date</th>
 					</tr>
-				{/each}
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					{#each displayed_solves as solve}
+						<tr>
+							<td>
+								{solve.challenge_name}
+							</td>
+							<td>
+								{solve.moves}
+							</td>
+							<td>
+								{new Date(solve.date).toLocaleDateString(
+									'en-CA',
+								)}
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
 
-		<label>
-			Show best solves per challenge
-			<input type="checkbox" bind:checked={show_best} />
-		</label>
-	</details>
+			<label>
+				Show best solves per challenge
+				<input type="checkbox" bind:checked={show_best} />
+			</label>
+		</details>
+	</section>
 {/if}
 
 <style>

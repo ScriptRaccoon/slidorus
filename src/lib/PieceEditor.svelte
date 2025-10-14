@@ -18,8 +18,7 @@
 	data-direction="right"
 	aria-label="bandage rightwards"
 	onclick={toggle_bandage_right}
-	role="switch"
-	aria-checked={piece.bandaged_right}
+	aria-pressed={piece.bandaged_right}
 	style:--x={piece.x}
 	style:--y={piece.y}
 >
@@ -31,8 +30,7 @@
 	data-direction="down"
 	aria-label="bandage downwards"
 	onclick={toggle_bandage_down}
-	role="switch"
-	aria-checked={piece.bandaged_down}
+	aria-pressed={piece.bandaged_down}
 	style:--x={piece.x}
 	style:--y={piece.y}
 >
@@ -43,8 +41,7 @@
 	class="fixer"
 	onclick={() => piece.toggle_fixed()}
 	aria-label="fix piece"
-	role="switch"
-	aria-checked={piece.fixed}
+	aria-pressed={piece.fixed}
 	style:--x={piece.x}
 	style:--y={piece.y}
 >
@@ -62,7 +59,7 @@
 		&:not(:disabled) {
 			opacity: 0.15;
 
-			&[aria-checked='true'] {
+			&[aria-pressed='true'] {
 				opacity: 1;
 			}
 		}

@@ -17,6 +17,7 @@
 	class="connector"
 	data-type={type}
 	{disabled}
+	aria-pressed={active}
 	class:active
 	aria-label="Connect {type} {index}"
 	style:--i={index}

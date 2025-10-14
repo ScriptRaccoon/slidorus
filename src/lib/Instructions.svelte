@@ -1,4 +1,4 @@
-<div>
+<section>
 	<h2>Editing Instructions</h2>
 	<ul>
 		<li>
@@ -23,20 +23,23 @@
 			current configuration.
 		</li>
 	</ul>
-</div>
+</section>
 
 <style>
-	div {
+	section {
 		color: var(--secondary-font-color);
 	}
+
 	h2 {
 		font-size: 1rem;
 		font-weight: bold;
 		margin-bottom: 0.75rem;
 	}
+
 	ul {
 		padding-left: 1.5rem;
 	}
+
 	li {
 		margin-bottom: 0.5rem;
 		line-height: 1.4;

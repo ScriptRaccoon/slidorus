@@ -60,7 +60,12 @@
 		>
 			<Undo />
 		</button>
-		<button class="btn" onclick={toggle_torus} aria-label="Toggle Torus">
+		<button
+			class="btn"
+			onclick={toggle_torus}
+			aria-label="Toggle Torus"
+			aria-pressed={show_torus}
+		>
 			{#if show_torus}
 				<EyeOff />
 			{:else}
@@ -77,7 +82,7 @@
 			<SquarePen />
 		</button>
 
-		<button class="btn" onclick={share_URL} aria-label="Share">
+		<button class="btn" onclick={share_URL} aria-label="Share URL">
 			<Link2 />
 		</button>
 	{:else}

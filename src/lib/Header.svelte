@@ -4,10 +4,15 @@
 
 	type Props = {
 		challenge_name: string
+		show_challenge_selector: boolean
 		open_challenge_selector: () => void
 	}
 
-	let { challenge_name, open_challenge_selector }: Props = $props()
+	let {
+		challenge_name,
+		show_challenge_selector,
+		open_challenge_selector,
+	}: Props = $props()
 </script>
 
 <header>
@@ -22,6 +27,9 @@
 				open_challenge_selector()
 			}}
 			aria-label="Open list of challenges challenge selector"
+			aria-haspopup="dialog"
+			aria-controls="challenge-selector"
+			aria-expanded={show_challenge_selector}
 		>
 			<List />
 		</button>

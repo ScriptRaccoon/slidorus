@@ -13,8 +13,8 @@
 	})
 </script>
 
-<div class="move_display">
-	<div class="move_count">
+<section class="move_display" aria-label="Moves">
+	<div class="move_count" aria-live="polite">
 		{game.move_count}
 		{#if game.move_count === 1}
 			move
@@ -24,13 +24,17 @@
 	</div>
 	<div class="move_history_container">
 		<div class="overlay"></div>
-		<ol class="move_history no-scrollbars" bind:this={move_history_element}>
+		<ol
+			class="move_history no-scrollbars"
+			bind:this={move_history_element}
+			aria-label="Move History"
+		>
 			{#each game.move_history as move}
 				<li class="move">{move.notation}</li>
 			{/each}
 		</ol>
 	</div>
-</div>
+</section>
 
 <style>
 	.move_display {

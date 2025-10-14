@@ -96,15 +96,16 @@
 
 <Header
 	challenge_name={game.challenge?.name ?? 'Custom Challenge'}
+	{show_challenge_selector}
 	{open_challenge_selector}
 />
 
 <div class="grid" class:show_torus>
-	<div class="game" style:--size="{square_size}px">
+	<main class="game" style:--size="{square_size}px">
 		<MoveHistory />
 		<PieceGrid bind:square_size />
 		<Connectors />
-	</div>
+	</main>
 
 	<Menu
 		scramble={() => game.scramble()}
