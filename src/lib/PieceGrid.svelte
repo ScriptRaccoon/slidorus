@@ -68,10 +68,14 @@
 
 		if (error) {
 			send_toast({ variant: 'error', title: error })
-			reset_dragging()
+			reset_move()
 			return
 		}
 
+		set_move(move)
+	}
+
+	function set_move(move: Move) {
 		game.state = 'moving'
 		current_move = move
 		move.create_copies()
@@ -89,19 +93,21 @@
 		const delta = clamp(delta_int, -10, 10)
 		current_move.delta = delta
 
-		game.update_offsets(current_move, delta * (square_size / 9))
+		animate_move(current_move)
+	}
+
+	function animate_move(move: Move) {
+		game.update_offsets(move, move.delta * (square_size / 9))
 
 		setTimeout(() => {
-			if (current_move) game.execute_move(current_move)
-			reset_dragging()
-			if (delta != 0) finish_move()
+			game.execute_move(move)
+			reset_move()
+			if (move.delta != 0) finish_move()
 		}, TRANSITION_DURATION)
 	}
 
-	function reset_dragging() {
-		if (current_move) {
-			game.update_offsets(current_move, 0)
-		}
+	function reset_move() {
+		if (current_move) game.update_offsets(current_move, 0)
 		current_move = null
 		move_pos = null
 		game.state = 'idle'
@@ -122,8 +128,10 @@
 
 	function handle_keydown(e: KeyboardEvent) {
 		if (e.key === 'Escape' && game.state === 'moving') {
-			reset_dragging()
+			reset_move()
 		}
+
+		if (current_move || game.state !== 'idle') return
 
 		const delta = e.shiftKey ? -1 : 1
 		const row = ROW_KEYS.findIndex((row) => row === e.code)
@@ -145,8 +153,11 @@
 			return
 		}
 
-		game.execute_move(move)
-		finish_move()
+		set_move(move)
+
+		setTimeout(() => {
+			animate_move(move)
+		}, 0)
 	}
 </script>
 
