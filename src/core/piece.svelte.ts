@@ -57,6 +57,15 @@ export class Piece {
 		return this.original_y * 9 + this.original_x
 	}
 
+	get is_bandaged() {
+		return (
+			this.bandaged_up ||
+			this.bandaged_right ||
+			this.bandaged_down ||
+			this.bandaged_left
+		)
+	}
+
 	get_copy(): Piece {
 		return new Piece(
 			this.x,
@@ -80,7 +89,9 @@ export class Piece {
 			this.fixed = true
 		} else if (this.fixed) {
 			this.fixed = false
-			this.rotating = true
+			if (!this.is_bandaged) {
+				this.rotating = true
+			}
 		} else {
 			this.fixed = false
 			this.rotating = false
