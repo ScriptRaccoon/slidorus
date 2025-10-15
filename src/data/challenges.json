@@ -399,6 +399,11 @@
 	{
 		"name": "Entropy",
 		"difficulty": 5,
-		"config": { "fixed": "e13wu1og", "rows": "dr", "cols": "dr" }
+		"config": {
+			"fixed": "e13wu1og",
+			"rotating": "711qppsemw5ibk",
+			"rows": "dr",
+			"cols": "dr"
+		}
 	}
 ]
