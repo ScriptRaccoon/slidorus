@@ -31,20 +31,25 @@
 			update_URL(game.get_config())
 			game.update_challenge()
 		} else if (game.state === 'idle') {
-			const has_shown_warning =
-				localStorage.getItem('warning_shown') === true.toString()
-			if (!has_shown_warning) {
-				send_toast({
-					variant: 'info',
-					title: 'Editing will reset the puzzle. If you are sure, click again.',
-					duration: 5000,
-				})
-				localStorage.setItem('warning_shown', true.toString())
-			} else {
-				game.reset()
-				game.state = 'editing'
+			if (game.move_count > 10) {
+				const confirmed = window.confirm(
+					'Editing will reset the puzzle. Are you sure?',
+				)
+				if (!confirmed) return
 			}
+			game.reset()
+			game.state = 'editing'
 		}
+	}
+
+	function reset() {
+		if (game.move_count > 10) {
+			const confirmed = window.confirm(
+				'This will reset the puzzle. Are you sure?',
+			)
+			if (!confirmed) return
+		}
+		game.reset()
 	}
 
 	async function share_URL() {
@@ -109,7 +114,7 @@
 
 	<Menu
 		scramble={() => game.scramble()}
-		reset={() => game.reset()}
+		{reset}
 		{toggle_torus}
 		{undo_move}
 		{toggle_editing}
