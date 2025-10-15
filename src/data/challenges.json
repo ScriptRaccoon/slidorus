@@ -12,6 +12,17 @@
 		}
 	},
 	{
+		"name": "Gear",
+		"difficulty": 1,
+		"config": {
+			"rotating": "e13wu1og",
+			"up": "axq3lamxhexp2tc0",
+			"right": "4oqmxyiw5jp7qhnf",
+			"down": "rom6ua1si7fjlr",
+			"left": "9dh9vx1sb3efgzau"
+		}
+	},
+	{
 		"name": "Five Dots",
 		"difficulty": 1,
 		"config": { "fixed": "711qbvay6k9se8" }
@@ -102,6 +113,28 @@
 		"config": { "rows": "14-75", "cols": "14-75" }
 	},
 	{
+		"name": "Home",
+		"difficulty": 2,
+		"config": {
+			"rotating": "jfse2fiu4g"
+		}
+	},
+	{
+		"name": "Sticky Notes",
+		"difficulty": 2,
+		"config": {
+			"rotating": "axq5j8k4e1uiyz27"
+		}
+	},
+	{
+		"name": "Bridge",
+		"difficulty": 2,
+		"config": {
+			"rotating": "2h4fhcf2whs",
+			"rows": "1k"
+		}
+	},
+	{
 		"name": "Port",
 		"difficulty": 3,
 		"config": {
@@ -167,6 +200,17 @@
 			"right": "272sa2o00",
 			"down": "fnt2xog",
 			"left": "4e5kk5c00"
+		}
+	},
+	{
+		"name": "Tetris",
+		"difficulty": 3,
+		"config": {
+			"rotating": "4zaosanlavyz5j7",
+			"up": "662djg5q80p4lq8",
+			"right": "4fybqnjwwr1h9t08",
+			"down": "fm3rius001rls",
+			"left": "8vwnhb3tti2yjm0g"
 		}
 	},
 	{
@@ -281,6 +325,17 @@
 		}
 	},
 	{
+		"name": "Precision",
+		"difficulty": 4,
+		"config": {
+			"rotating": "2s5ydoh4y62ph1tu",
+			"up": "85h4ws4bwc0mg000",
+			"right": "18s0gz66qyo",
+			"down": "kmv01z6gm7x2t9",
+			"left": "2hk0xycdhxc"
+		}
+	},
+	{
 		"name": "Christmas",
 		"difficulty": 4,
 		"config": { "rows": "4q-9h", "cols": "4q-9h" }
@@ -326,6 +381,19 @@
 			"right": "cf9wa5urzju4f7k",
 			"down": "2xubj78ybe1hxh",
 			"left": "oujskbpjz3o8uf4"
+		}
+	},
+	{
+		"name": "Resignation",
+		"difficulty": 5,
+		"config": {
+			"rotating": "9wix3dnrkmz3qat0",
+			"up": "adqdgumrzoqiv4",
+			"right": "ceetdl0zstvybnl",
+			"down": "qa0dua1elphn",
+			"left": "ostmr61zlnrwnb6",
+			"rows": "7",
+			"cols": "7"
 		}
 	},
 	{
