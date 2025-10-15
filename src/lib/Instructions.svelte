@@ -18,10 +18,6 @@
 			rows. Double-click a circle to remove a group.
 		</li>
 		<li>The same remarks apply to grouped columns.</li>
-		<li>
-			When finished, click the "Share" button to generate a link to your
-			current configuration.
-		</li>
 	</ul>
 </section>
 
