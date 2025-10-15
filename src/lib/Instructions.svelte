@@ -8,7 +8,9 @@
 		</li>
 		<li>
 			Click the center of a piece to make it <strong>fixed</strong>. Fixed
-			pieces can no longer move.
+			pieces can no longer move. Click again to make it a
+			<strong>rotating piece</strong>. With every step it then rotates by
+			40 degrees.
 		</li>
 		<li>
 			The circles next to each row show which rows are <strong

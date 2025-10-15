@@ -49,8 +49,14 @@
 		<ul class="edit-options">
 			<li>Pieces can be bandaged (so they always move together).</li>
 			<li>Pieces can be fixed (so they don't move anymore).</li>
+			<li>Pieces can be marked as rotating.</li>
 			<li>Rows and columns can be grouped with each other.</li>
 		</ul>
+
+		<p>
+			A rotating piece rotates by 40 degrees for every step of a move. The
+			puzzle is only solved when all rotating pieces have rotation 0.
+		</p>
 
 		<p>
 			Each configuration of pieces, rows and columns leads to a different
@@ -59,7 +65,7 @@
 		</p>
 
 		<p>
-			There is a selection of preconfigured challenges, sorted by
+			There is a selection of preconfigured challenges, grouped by
 			difficulty. Your solves for these are recorded in your browser (move
 			count and date).
 		</p>

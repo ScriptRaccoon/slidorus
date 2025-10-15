@@ -18,9 +18,13 @@ In editing mode, several options are available to make the puzzle more interesti
 
 -   Pieces can be bandaged (so they always move together).
 -   Pieces can be fixed (so they don't move anymore).
+-   Pieces can be marked as rotating.
 -   Rows and columns can be grouped with each other.
 
 <img src="/public/screenshot-bandaged.png" width="300" /> <img src="/public/screenshot-bandaged-scrambled.png" width="300" />
+
+A rotating piece rotates by 40 degrees for every step of a move. The
+puzzle is only solved when all rotating pieces have rotation 0.
 
 Each configuration of pieces, rows and columns leads to a different
 challenge and is reflected in the URL, which can be shared or
