@@ -7,6 +7,7 @@ export const CHALLENGES: Challenge[] = challenges.map((challenge) => {
 		difficulty: challenge.difficulty,
 		config: {
 			fixed: challenge.config.fixed ?? '',
+			rotating: challenge.config.rotating ?? '',
 			up: challenge.config.up ?? '',
 			right: challenge.config.right ?? '',
 			down: challenge.config.down ?? '',

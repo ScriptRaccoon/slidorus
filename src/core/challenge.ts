@@ -2,6 +2,7 @@ import { update_URL_param } from './utils'
 
 const CONFIG_KEYS = [
 	'fixed',
+	'rotating',
 	'up',
 	'right',
 	'down',

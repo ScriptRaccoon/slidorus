@@ -210,6 +210,7 @@ export class Game {
 	get_piece_coords_with_flag(
 		flag:
 			| 'fixed'
+			| 'rotating'
 			| 'bandaged_up'
 			| 'bandaged_right'
 			| 'bandaged_down'
@@ -220,8 +221,9 @@ export class Game {
 			.map((p) => p.coord_index)
 	}
 
-	get_config() {
+	get_config(): GameConfig {
 		const fixed_coords = this.get_piece_coords_with_flag('fixed')
+		const rotating_coords = this.get_piece_coords_with_flag('rotating')
 		const up_coords = this.get_piece_coords_with_flag('bandaged_up')
 		const right_coords = this.get_piece_coords_with_flag('bandaged_right')
 		const down_coords = this.get_piece_coords_with_flag('bandaged_down')
@@ -232,6 +234,7 @@ export class Game {
 
 		return {
 			fixed: Encoder.encode_subset(fixed_coords),
+			rotating: Encoder.encode_subset(rotating_coords),
 			up: Encoder.encode_subset(up_coords),
 			right: Encoder.encode_subset(right_coords),
 			down: Encoder.encode_subset(down_coords),
@@ -244,6 +247,7 @@ export class Game {
 	load_from_config(config: GameConfig) {
 		this.reset()
 		const fixed_coords = Encoder.decode_subset(config.fixed)
+		const rotating_cords = Encoder.decode_subset(config.rotating)
 		const up_coords = Encoder.decode_subset(config.up)
 		const right_coords = Encoder.decode_subset(config.right)
 		const down_coords = Encoder.decode_subset(config.down)
@@ -251,6 +255,7 @@ export class Game {
 
 		for (const piece of this.pieces) {
 			piece.fixed = fixed_coords.includes(piece.coord_index)
+			piece.rotating = rotating_cords.includes(piece.coord_index)
 			piece.bandaged_up = up_coords.includes(piece.coord_index)
 			piece.bandaged_right = right_coords.includes(piece.coord_index)
 			piece.bandaged_down = down_coords.includes(piece.coord_index)
