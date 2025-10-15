@@ -177,9 +177,12 @@ export class Game {
 		if (add_to_history) this.move_history.push(move)
 	}
 
-	update_offsets(move: Move, offset: number) {
+	update_offsets(move: Move, offset: number, scale: number) {
 		for (const piece of [...move.moving_copies, ...move.moving_pieces]) {
 			piece[move.axis.delta] = offset
+			if (piece.rotating) {
+				piece.dr = offset * scale * piece.rotation_step
+			}
 		}
 	}
 

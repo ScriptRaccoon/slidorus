@@ -28,6 +28,7 @@
 	style:--dx={dx}
 	style:--dy={dy}
 	style:--rotation={piece.rotation}
+	style:--dr={piece.dr}
 ></div>
 
 <style>
@@ -39,7 +40,8 @@
 		background-color: var(--color, gray);
 		transform: translateX(calc(var(--x) * var(--u) + var(--dx) * 1px))
 			translateY(calc(var(--y) * var(--u) + var(--dy) * 1px))
-			scale(var(--scale, 1)) rotate(calc(var(--rotation) * 1deg));
+			scale(var(--scale, 1))
+			rotate(calc(var(--rotation) * 1deg + var(--dr) * 1deg));
 		border: var(--border) solid var(--bg-color);
 		border-radius: 15%;
 		display: flex;

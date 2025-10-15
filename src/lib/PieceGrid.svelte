@@ -15,6 +15,8 @@
 
 	let { square_size = $bindable() }: { square_size: number } = $props()
 
+	let scale = $derived(9 / square_size)
+
 	let square_element = $state<HTMLDivElement | null>(null)
 
 	let move_pos: { x: number; y: number } | null = null
@@ -40,7 +42,11 @@
 		if (!current_move && is_far_enough) {
 			initialize_move(offset.x, offset.y)
 		} else if (current_move?.delta === 0) {
-			game.update_offsets(current_move, offset[current_move.axis.main])
+			game.update_offsets(
+				current_move,
+				offset[current_move.axis.main],
+				scale,
+			)
 		}
 	}
 
@@ -65,7 +71,7 @@
 			Math.abs(dx) > Math.abs(dy) ? AXES.HORIZONTAL : AXES.VERTICAL
 		const square_rect = square_element.getBoundingClientRect()
 		const moving_line = Math.floor(
-			(move_pos[axis.cross] - square_rect[axis.side]) * (9 / square_size),
+			(move_pos[axis.cross] - square_rect[axis.side]) * scale,
 		)
 		const line = clamp(moving_line, 0, 8)
 		return new Move(axis, line, 0)
@@ -80,12 +86,12 @@
 	function stop_dragging(e: MouseEvent | TouchEvent) {
 		if (game.state !== 'moving' || !move_pos || !current_move) return
 		const current_pos = get_changed_position(e)
-		current_move.compute_delta(move_pos, current_pos, 9 / square_size)
+		current_move.compute_delta(move_pos, current_pos, scale)
 		animate_move(current_move)
 	}
 
 	function animate_move(move: Move) {
-		game.update_offsets(move, move.delta * (square_size / 9))
+		game.update_offsets(move, move.delta / scale, scale)
 
 		square_element?.addEventListener(
 			'transitionend',
@@ -99,7 +105,7 @@
 	}
 
 	function reset_current_move() {
-		if (current_move) game.update_offsets(current_move, 0)
+		if (current_move) game.update_offsets(current_move, 0, scale)
 		current_move = null
 		move_pos = null
 		game.state = 'idle'

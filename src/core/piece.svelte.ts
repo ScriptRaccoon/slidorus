@@ -9,6 +9,7 @@ export class Piece {
 	original_x: number
 	original_y: number
 	rotation: number
+	dr: number
 	color_id: number
 	fixed: boolean
 	rotating: boolean
@@ -17,7 +18,7 @@ export class Piece {
 	bandaged_down: boolean
 	bandaged_left: boolean
 
-	static rotation_step = 40
+	rotation_step = 40
 
 	constructor(
 		x: number,
@@ -26,6 +27,7 @@ export class Piece {
 		original_x = x,
 		original_y = y,
 		rotation = 0,
+		dr = 0,
 		fixed = false,
 		rotating = false,
 		bandaged_up = false,
@@ -42,6 +44,7 @@ export class Piece {
 		this.original_x = original_x
 		this.original_y = original_y
 		this.rotation = $state(rotation)
+		this.dr = $state(dr)
 		this.fixed = $state(fixed)
 		this.rotating = $state(rotating)
 		this.bandaged_up = $state(bandaged_up)
@@ -62,6 +65,7 @@ export class Piece {
 			this.original_x,
 			this.original_y,
 			this.rotation,
+			this.dr,
 			this.fixed,
 			this.rotating,
 			this.bandaged_up,
@@ -87,6 +91,9 @@ export class Piece {
 		this.x = this.original_x
 		this.y = this.original_y
 		this.rotation = 0
+		this.dx = 0
+		this.dy = 0
+		this.dr = 0
 	}
 
 	revert_edits() {
@@ -112,6 +119,6 @@ export class Piece {
 	}
 
 	rotate(delta: number) {
-		this.rotation = mod(this.rotation + delta * Piece.rotation_step, 360)
+		this.rotation = mod(this.rotation + delta * this.rotation_step, 360)
 	}
 }
