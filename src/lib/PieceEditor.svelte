@@ -13,7 +13,7 @@
 </script>
 
 <button
-	{disabled}
+	disabled={disabled || piece.rotating}
 	class="bandager"
 	data-direction="right"
 	aria-label="bandage rightwards"
@@ -25,7 +25,7 @@
 </button>
 
 <button
-	{disabled}
+	disabled={disabled || piece.rotating}
 	class="bandager"
 	data-direction="down"
 	aria-label="bandage downwards"
@@ -38,10 +38,9 @@
 
 <button
 	{disabled}
-	class="fixer"
-	onclick={() => piece.toggle_fixed()}
-	aria-label="fix piece"
-	aria-pressed={piece.fixed}
+	class="toggler"
+	onclick={() => piece.toggle_behavior()}
+	aria-label="change behavior of piece"
 	style:--x={piece.x}
 	style:--y={piece.y}
 >
@@ -49,7 +48,7 @@
 
 <style>
 	.bandager,
-	.fixer {
+	.toggler {
 		position: absolute;
 		background-color: var(--bg-color);
 		transform: translate(-50%, -50%);
@@ -95,7 +94,7 @@
 		}
 	}
 
-	.fixer {
+	.toggler {
 		width: calc(0.2 * var(--u));
 		aspect-ratio: 1;
 		border-radius: 50%;

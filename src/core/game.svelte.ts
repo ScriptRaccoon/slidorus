@@ -46,7 +46,7 @@ export class Game {
 	reset() {
 		if (this.state !== 'idle') return
 		for (const piece of this.pieces) {
-			piece.reset_position()
+			piece.reset()
 		}
 		this.clear_move_history()
 		this.has_scrambled = false
@@ -69,7 +69,7 @@ export class Game {
 			}
 		}
 
-		return true
+		return this.pieces.every((piece) => piece.has_no_rotation())
 	}
 
 	save_solve() {
@@ -95,16 +95,19 @@ export class Game {
 	}
 
 	toggle_bandage(piece: Piece, direction: 'right' | 'down') {
+		if (piece.rotating) return
+
 		const other_direction = direction === 'right' ? 'left' : 'up'
 		const x = direction === 'right' ? 'x' : 'y'
 		const y = direction === 'right' ? 'y' : 'x'
 
-		piece[`bandaged_${direction}`] = !piece[`bandaged_${direction}`]
 		const adjacent_piece = this.pieces.find(
 			(p) => p[x] === mod(piece[x] + 1, 9) && p[y] === piece[y],
 		)
 
-		if (adjacent_piece) {
+		if (adjacent_piece && !adjacent_piece.rotating) {
+			piece[`bandaged_${direction}`] = !piece[`bandaged_${direction}`]
+
 			adjacent_piece[`bandaged_${other_direction}`] =
 				!adjacent_piece[`bandaged_${other_direction}`]
 		}
@@ -167,7 +170,8 @@ export class Game {
 		if (!move.is_relevant) return
 
 		for (const piece of move.moving_pieces) {
-			piece[move.axis.main] = mod(piece[move.axis.main] + move.delta, 9)
+			piece.move(move.axis.main, move.delta)
+			if (piece.rotating) piece.rotate(move.delta)
 		}
 
 		if (add_to_history) this.move_history.push(move)

@@ -6,10 +6,9 @@
 		animated: boolean
 		dx: number
 		dy: number
-		editing: boolean
 	}
 
-	let { piece, animated, dx, dy, editing }: Props = $props()
+	let { piece, animated, dx, dy }: Props = $props()
 </script>
 
 <div
@@ -21,12 +20,14 @@
 	class:bandaged_down={piece.bandaged_down}
 	class:bandaged_left={piece.bandaged_left}
 	class:bandaged_up={piece.bandaged_up}
-	class:fixed={piece.fixed && !editing}
+	class:fixed={piece.fixed}
+	class:rotating={piece.rotating}
 	class:animated
 	style:--x={piece.x}
 	style:--y={piece.y}
 	style:--dx={dx}
 	style:--dy={dy}
+	style:--rotation={piece.rotation}
 ></div>
 
 <style>
@@ -37,7 +38,8 @@
 		height: var(--u);
 		background-color: var(--color, gray);
 		transform: translateX(calc(var(--x) * var(--u) + var(--dx) * 1px))
-			translateY(calc(var(--y) * var(--u) + var(--dy) * 1px));
+			translateY(calc(var(--y) * var(--u) + var(--dy) * 1px))
+			scale(var(--scale, 1)) rotate(calc(var(--rotation) * 1deg));
 		border: var(--border) solid var(--bg-color);
 		border-radius: 15%;
 		display: flex;
@@ -54,6 +56,10 @@
 			aspect-ratio: 1;
 			border-radius: 50%;
 			background-color: var(--bg-color);
+		}
+
+		&.rotating {
+			--scale: 0.75;
 		}
 
 		&.bandaged_right {
