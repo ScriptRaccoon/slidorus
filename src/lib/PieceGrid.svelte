@@ -102,7 +102,7 @@
 		square_element?.addEventListener(
 			'transitionend',
 			() => {
-				game.execute_move(move)
+				game.execute_move(move, 'move')
 				reset_current_move()
 				if (move.delta != 0) check_solved()
 			},
@@ -118,7 +118,9 @@
 	}
 
 	function check_solved() {
-		if (!(game.has_scrambled && game.is_solved())) return
+		if (game.scramble_history.length === 0) return
+
+		if (!game.is_solved()) return
 
 		send_toast({
 			title: 'Puzzle solved!',
@@ -132,7 +134,7 @@
 		}
 		solves_storage.store(solve)
 
-		game.has_scrambled = false
+		game.scramble_history = []
 	}
 
 	function handle_keydown(e: KeyboardEvent) {

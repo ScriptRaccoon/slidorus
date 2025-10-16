@@ -11,7 +11,7 @@ export class Game {
 	row_grouping: Grouping<number>
 	col_grouping: Grouping<number>
 	move_history: string[]
-	has_scrambled: boolean
+	scramble_history: string[]
 
 	constructor() {
 		this.pieces = $state(this.get_initial_pieces())
@@ -19,7 +19,7 @@ export class Game {
 		this.row_grouping = $state(new Grouping())
 		this.col_grouping = $state(new Grouping())
 		this.move_history = $state([])
-		this.has_scrambled = $state(false)
+		this.scramble_history = []
 	}
 
 	get_initial_pieces(): Piece[] {
@@ -43,8 +43,12 @@ export class Game {
 		for (const piece of this.pieces) {
 			piece.reset()
 		}
-		this.clear_move_history()
-		this.has_scrambled = false
+		this.clear_history()
+	}
+
+	clear_history() {
+		this.move_history = []
+		this.scramble_history = []
 	}
 
 	is_solved(): boolean {
@@ -148,7 +152,7 @@ export class Game {
 		return { error: null }
 	}
 
-	execute_move(move: Move, add_to_history = true) {
+	execute_move(move: Move, type: 'forget' | 'move' | 'scramble') {
 		if (!move.is_relevant) return
 
 		for (const piece of move.moving_pieces) {
@@ -156,7 +160,11 @@ export class Game {
 			if (piece.rotating) piece.rotate(move.delta)
 		}
 
-		if (add_to_history) this.move_history.push(move.notation)
+		if (type === 'move') {
+			this.move_history.push(move.notation)
+		} else if (type == 'scramble') {
+			this.scramble_history.push(move.notation)
+		}
 	}
 
 	update_offsets(move: Move, offset: number, scale: number) {
@@ -170,6 +178,8 @@ export class Game {
 
 	execute_scramble(moves = 1000) {
 		if (this.state !== 'idle') return
+		this.reset()
+
 		this.state = 'scrambling'
 
 		let moves_made = 0
@@ -177,13 +187,11 @@ export class Game {
 			const move = Move.generate_random_move()
 			const { error } = this.prepare_move(move)
 			if (error) continue
-			this.execute_move(move, false)
+			this.execute_move(move, 'scramble')
 			moves_made++
 		}
 
 		this.state = 'idle'
-		this.clear_move_history()
-		this.has_scrambled = true
 	}
 
 	get_piece_coords_with_flag(
@@ -225,6 +233,7 @@ export class Game {
 
 	load_from_config(config: GameConfig) {
 		this.reset()
+
 		const fixed_coords = Encoder.decode_subset(config.fixed)
 		const rotating_cords = Encoder.decode_subset(config.rotating)
 		const up_coords = Encoder.decode_subset(config.up)
@@ -243,12 +252,6 @@ export class Game {
 
 		this.row_grouping.groups = Encoder.decode_subsets(config.rows)
 		this.col_grouping.groups = Encoder.decode_subsets(config.cols)
-
-		game.clear_move_history()
-	}
-
-	clear_move_history() {
-		this.move_history = []
 	}
 
 	get move_count() {
@@ -263,7 +266,7 @@ export class Game {
 			return { error: `Invalid move notation: ${last_move_str}` }
 		const opposite_move = last_move.get_opposite()
 		const { error } = this.prepare_move(opposite_move)
-		if (!error) this.execute_move(opposite_move, false)
+		if (!error) this.execute_move(opposite_move, 'forget')
 		this.move_history.pop()
 		return { error }
 	}
