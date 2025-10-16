@@ -397,6 +397,19 @@
 		}
 	},
 	{
+		"name": "Fish",
+		"difficulty": 5,
+		"config": {
+			"fixed": "e13wu1og",
+			"rotating": "3p9oy3xpvnwv0g",
+			"up": "8lwlzto7ovv5zeo0",
+			"right": "2re73sjb20zvkhvl",
+			"down": "lsg66azeyv5rir",
+			"left": "5ise7l2m41zr4zr6",
+			"rows": "dr"
+		}
+	},
+	{
 		"name": "Entropy",
 		"difficulty": 5,
 		"config": {
