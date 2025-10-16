@@ -44,3 +44,24 @@ export const AXES = {
 } as const
 
 export type AXIS = (typeof AXES)[keyof typeof AXES]
+
+export const CONFIG_KEYS = [
+	'fixed',
+	'rotating',
+	'up',
+	'right',
+	'down',
+	'left',
+	'rows',
+	'cols',
+] as const
+
+type CONFIG_KEY = (typeof CONFIG_KEYS)[number]
+
+export type GameConfig = Record<CONFIG_KEY, string>
+
+export type Challenge = {
+	name: string
+	difficulty: number
+	config: GameConfig
+}

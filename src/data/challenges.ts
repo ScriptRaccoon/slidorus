@@ -1,4 +1,4 @@
-import type { Challenge } from '../core/challenge'
+import type { Challenge } from '../core/config'
 import challenges from './challenges.json'
 
 export const CHALLENGES: Challenge[] = challenges.map((challenge) => {

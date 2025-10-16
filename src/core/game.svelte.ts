@@ -1,5 +1,4 @@
-import { type GameConfig } from './challenge'
-import { AXES, type AXIS } from './config'
+import { AXES, type AXIS, type GameConfig } from './config'
 import { Encoder } from './encoder'
 import { Grouping } from './grouping.svelte'
 import { Move } from './move'

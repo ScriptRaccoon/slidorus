@@ -49,18 +49,6 @@ export function sleep(delay: number): Promise<void> {
 	return new Promise((res) => setTimeout(res, delay))
 }
 
-export function update_URL_param(
-	url: URL,
-	key: string,
-	val: string | null | undefined,
-) {
-	if (val) {
-		url.searchParams.set(key, val)
-	} else {
-		url.searchParams.delete(key)
-	}
-}
-
 export function equal_objects(obj1: any, obj2: any) {
 	for (const key in obj1) {
 		if (obj1[key] !== obj2[key]) return false

@@ -1,4 +1,4 @@
-import type { Challenge } from './challenge'
+import type { Challenge } from './config'
 
 export type Solve = {
 	challenge_name: string

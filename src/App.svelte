@@ -8,12 +8,7 @@
 	import { game } from './core/game.svelte'
 	import type { Piece } from './core/piece.svelte'
 	import About from './lib/About.svelte'
-	import {
-		type Challenge,
-		type GameConfig,
-		get_config_from_URL,
-		update_URL,
-	} from './core/challenge'
+	import { type Challenge, type GameConfig, CONFIG_KEYS } from './core/config'
 	import Solves from './lib/Solves.svelte'
 	import ChallengeSelector from './lib/ChallengeSelector.svelte'
 	import MoveHistory from './lib/MoveHistory.svelte'
@@ -33,7 +28,10 @@
 	)
 
 	function load_config_from_URL() {
-		const config = get_config_from_URL()
+		const url = new URL(window.location.href)
+		const config = Object.fromEntries(
+			CONFIG_KEYS.map((key) => [key, url.searchParams.get(key) ?? '']),
+		) as GameConfig
 		game.load_from_config(config)
 		update_challenge(config)
 	}
@@ -68,6 +66,17 @@
 		const config = game.get_config()
 		update_URL(config)
 		update_challenge(config)
+	}
+
+	function update_URL(config: GameConfig) {
+		const url = new URL(window.location.origin)
+
+		for (const key of CONFIG_KEYS) {
+			const val = config[key]
+			val ? url.searchParams.set(key, val) : url.searchParams.delete(key)
+		}
+
+		window.history.replaceState({}, '', url)
 	}
 
 	function reset() {
@@ -152,6 +161,7 @@
 		<ChallengeSelector
 			bind:current_challenge
 			bind:open={show_challenge_selector}
+			{update_URL}
 		/>
 		<Solves />
 		<About />

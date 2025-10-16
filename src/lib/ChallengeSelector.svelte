@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { game } from '../core/game.svelte'
-	import { update_URL, type Challenge } from '../core/challenge'
+	import { type Challenge, type GameConfig } from '../core/config'
 	import { Check, X } from '@lucide/svelte'
 	import { CHALLENGES } from '../data/challenges'
 	import { solves_storage } from '../core/solves.svelte'
@@ -8,10 +8,14 @@
 	type Props = {
 		open: boolean
 		current_challenge: Challenge | undefined
+		update_URL: (config: GameConfig) => void
 	}
 
-	let { open = $bindable(), current_challenge = $bindable() }: Props =
-		$props()
+	let {
+		open = $bindable(),
+		current_challenge = $bindable(),
+		update_URL,
+	}: Props = $props()
 
 	function load_challenge(c: Challenge) {
 		game.load_from_config(c.config)
