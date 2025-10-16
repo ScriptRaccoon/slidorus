@@ -139,7 +139,7 @@
 	</main>
 
 	<Menu
-		scramble={() => game.scramble()}
+		scramble={() => game.execute_scramble()}
 		{reset}
 		{toggle_torus}
 		{undo_move}

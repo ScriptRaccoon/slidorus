@@ -168,7 +168,10 @@ export class Game {
 		}
 	}
 
-	scramble_pieces(moves: number) {
+	execute_scramble(moves = 1000) {
+		if (this.state !== 'idle') return
+		this.state = 'scrambling'
+
 		let moves_made = 0
 		while (moves_made < moves) {
 			const move = Move.generate_random_move()
@@ -177,12 +180,7 @@ export class Game {
 			this.execute_move(move, false)
 			moves_made++
 		}
-	}
 
-	scramble() {
-		if (this.state !== 'idle') return
-		this.state = 'scrambling'
-		this.scramble_pieces(1000)
 		this.state = 'idle'
 		this.clear_move_history()
 		this.has_scrambled = true
