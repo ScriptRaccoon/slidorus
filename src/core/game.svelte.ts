@@ -3,7 +3,7 @@ import { Encoder } from './encoder'
 import { Grouping } from './grouping.svelte'
 import { Move } from './move'
 import { Piece } from './piece.svelte'
-import { mod, sleep } from './utils'
+import { mod } from './utils'
 
 export class Game {
 	pieces: Piece[]
