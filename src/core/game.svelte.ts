@@ -168,7 +168,7 @@ export class Game {
 		}
 	}
 
-	async scramble_pieces(wait = 0, moves = 100) {
+	scramble_pieces(moves: number) {
 		let moves_made = 0
 		while (moves_made < moves) {
 			const move = Move.generate_random_move()
@@ -176,14 +176,13 @@ export class Game {
 			if (error) continue
 			this.execute_move(move, false)
 			moves_made++
-			await sleep(wait)
 		}
 	}
 
-	async scramble() {
+	scramble() {
 		if (this.state !== 'idle') return
 		this.state = 'scrambling'
-		await this.scramble_pieces(10, 100)
+		this.scramble_pieces(1000)
 		this.state = 'idle'
 		this.clear_move_history()
 		this.has_scrambled = true
