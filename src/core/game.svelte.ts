@@ -289,7 +289,7 @@ export class Game {
 	}
 
 	undo_move() {
-		const last_move_str = this.move_history.pop()
+		const last_move_str = this.move_history.at(-1)
 		if (!last_move_str) return { error: null }
 		const last_move = Move.generate_from_notation(last_move_str)
 		if (!last_move)
@@ -297,6 +297,7 @@ export class Game {
 		const opposite_move = last_move.get_opposite()
 		const { error } = this.prepare_move(opposite_move)
 		if (!error) this.execute_move(opposite_move, false)
+		this.move_history.pop()
 		return { error }
 	}
 }
