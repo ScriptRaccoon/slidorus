@@ -2,6 +2,7 @@
 	import { AXES, COL_KEYS, ROW_KEYS } from '../core/config'
 	import { game } from '../core/game.svelte'
 	import { Move } from '../core/move'
+	import { solves_storage } from '../core/solves.svelte'
 	import {
 		clamp,
 		get_changed_position,
@@ -13,7 +14,12 @@
 	import PieceEditor from './PieceEditor.svelte'
 	import { send_toast } from './Toast.svelte'
 
-	let { square_size = $bindable() }: { square_size: number } = $props()
+	type Props = {
+		square_size: number
+		challenge_name: string
+	}
+
+	let { square_size = $bindable(), challenge_name }: Props = $props()
 
 	let scale = $derived(9 / square_size)
 
@@ -112,15 +118,21 @@
 	}
 
 	function check_solved() {
-		const is_solved = game.has_scrambled && game.is_solved()
+		if (!(game.has_scrambled && game.is_solved())) return
 
-		if (is_solved) {
-			game.save_solve()
-			send_toast({
-				title: 'Puzzle solved!',
-				variant: 'success',
-			})
+		send_toast({
+			title: 'Puzzle solved!',
+			variant: 'success',
+		})
+
+		const solve = {
+			challenge_name: challenge_name,
+			moves: game.move_count,
+			date: new Date().toISOString(),
 		}
+		solves_storage.store(solve)
+
+		game.has_scrambled = false
 	}
 
 	function handle_keydown(e: KeyboardEvent) {

@@ -1,12 +1,10 @@
-import { type Challenge, type GameConfig } from './challenge'
+import { type GameConfig } from './challenge'
 import { AXES, type AXIS } from './config'
 import { Encoder } from './encoder'
 import { Grouping } from './grouping.svelte'
 import { Move } from './move'
 import { Piece } from './piece.svelte'
-import { equal_objects, mod, sleep } from './utils'
-import { CHALLENGES } from '../data/challenges'
-import { solves_storage } from './solves.svelte'
+import { mod, sleep } from './utils'
 
 export class Game {
 	pieces: Piece[]
@@ -14,7 +12,6 @@ export class Game {
 	row_grouping: Grouping<number>
 	col_grouping: Grouping<number>
 	move_history: string[]
-	challenge: Challenge | undefined
 	has_scrambled: boolean
 
 	constructor() {
@@ -23,7 +20,6 @@ export class Game {
 		this.row_grouping = $state(new Grouping())
 		this.col_grouping = $state(new Grouping())
 		this.move_history = $state([])
-		this.challenge = $state(undefined)
 		this.has_scrambled = $state(false)
 	}
 
@@ -70,19 +66,6 @@ export class Game {
 		}
 
 		return this.pieces.every((piece) => piece.has_no_rotation())
-	}
-
-	save_solve() {
-		if (this.challenge && this.has_scrambled) {
-			const solve = {
-				challenge_name: this.challenge.name,
-				moves: this.move_count,
-				date: new Date().toISOString(),
-			}
-			solves_storage.store(solve)
-		}
-
-		this.has_scrambled = false
 	}
 
 	revert_edits() {
@@ -266,18 +249,6 @@ export class Game {
 		this.col_grouping.groups = Encoder.decode_subsets(config.cols)
 
 		game.clear_move_history()
-	}
-
-	set_challenge(challenge: Challenge) {
-		this.load_from_config(challenge.config)
-		this.challenge = challenge
-	}
-
-	update_challenge() {
-		const config = this.get_config()
-		this.challenge = CHALLENGES.find((challenge) =>
-			equal_objects(challenge.config, config),
-		)
 	}
 
 	clear_move_history() {

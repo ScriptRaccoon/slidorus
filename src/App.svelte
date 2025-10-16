@@ -8,18 +8,29 @@
 	import { game } from './core/game.svelte'
 	import type { Piece } from './core/piece.svelte'
 	import About from './lib/About.svelte'
-	import { get_config_from_URL, update_URL } from './core/challenge'
+	import {
+		type Challenge,
+		type GameConfig,
+		get_config_from_URL,
+		update_URL,
+	} from './core/challenge'
 	import Solves from './lib/Solves.svelte'
 	import ChallengeSelector from './lib/ChallengeSelector.svelte'
 	import MoveHistory from './lib/MoveHistory.svelte'
 	import PieceGrid from './lib/PieceGrid.svelte'
 	import Connectors from './lib/Connectors.svelte'
+	import { CHALLENGES } from './data/challenges'
+	import { equal_objects } from './core/utils'
 
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
 	let torus_piece_grid = $state<Piece[][]>([])
-	let show_challenge_selector = $state(false)
 	let square_size = $state(0)
+	let show_challenge_selector = $state(false)
+	let current_challenge = $state<Challenge | undefined>(undefined)
+	let challenge_name = $derived(
+		current_challenge ? current_challenge.name : 'Custom Challenge',
+	)
 
 	function toggle_torus() {
 		show_torus = !show_torus
@@ -28,8 +39,9 @@
 	function toggle_editing() {
 		if (game.state === 'editing') {
 			game.state = 'idle'
-			update_URL(game.get_config())
-			game.update_challenge()
+			const config = game.get_config()
+			update_URL(config)
+			update_challenge(config)
 		} else if (game.state === 'idle') {
 			if (game.move_count > 10) {
 				const confirmed = window.confirm(
@@ -40,6 +52,12 @@
 			game.reset()
 			game.state = 'editing'
 		}
+	}
+
+	function update_challenge(config: GameConfig) {
+		current_challenge = CHALLENGES.find((challenge) =>
+			equal_objects(challenge.config, config),
+		)
 	}
 
 	function reset() {
@@ -64,7 +82,7 @@
 	function load_config_from_URL() {
 		const config = get_config_from_URL()
 		game.load_from_config(config)
-		game.update_challenge()
+		update_challenge(config)
 	}
 
 	onMount(() => {
@@ -99,16 +117,12 @@
 	}
 </script>
 
-<Header
-	challenge_name={game.challenge?.name ?? 'Custom Challenge'}
-	{show_challenge_selector}
-	{open_challenge_selector}
-/>
+<Header {challenge_name} {show_challenge_selector} {open_challenge_selector} />
 
 <div class="grid" class:show_torus>
 	<main class="game" style:--size="{square_size}px">
 		<MoveHistory />
-		<PieceGrid bind:square_size />
+		<PieceGrid bind:square_size {challenge_name} />
 		<Connectors />
 	</main>
 
@@ -132,7 +146,10 @@
 	{/if}
 
 	{#if game.state !== 'editing'}
-		<ChallengeSelector bind:open={show_challenge_selector} />
+		<ChallengeSelector
+			bind:current_challenge
+			bind:open={show_challenge_selector}
+		/>
 		<Solves />
 		<About />
 	{/if}

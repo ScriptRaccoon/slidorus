@@ -7,13 +7,16 @@
 
 	type Props = {
 		open: boolean
+		current_challenge: Challenge | undefined
 	}
 
-	let { open = $bindable() }: Props = $props()
+	let { open = $bindable(), current_challenge = $bindable() }: Props =
+		$props()
 
-	function load_challenge(challenge: Challenge) {
-		game.set_challenge(challenge)
-		update_URL(challenge.config)
+	function load_challenge(c: Challenge) {
+		game.load_from_config(c.config)
+		update_URL(c.config)
+		current_challenge = c
 	}
 
 	let dialog_element = $state<HTMLDialogElement | null>(null)
@@ -53,7 +56,7 @@
 			<button
 				class="challenge"
 				role="radio"
-				aria-checked={game.challenge?.name === challenge.name}
+				aria-checked={challenge.name === current_challenge?.name}
 				onclick={() => load_challenge(challenge)}
 				data-difficulty={challenge.difficulty}
 			>
