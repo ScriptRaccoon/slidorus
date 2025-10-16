@@ -146,17 +146,6 @@
 		}
 	},
 	{
-		"name": "Flower",
-		"difficulty": 3,
-		"config": {
-			"fixed": "e13wu1og",
-			"up": "89lof6trmb3iao00",
-			"right": "2re78q98lavm7n29",
-			"down": "kxazxy5ljcc96r",
-			"left": "5isehgih6lr8fa4i"
-		}
-	},
-	{
 		"name": "Elephant",
 		"difficulty": 3,
 		"config": {
@@ -176,6 +165,17 @@
 		"name": "Domino Housing",
 		"difficulty": 3,
 		"config": { "right": "3w5nw52fircsxt", "left": "7sbbsa4v1iplvm" }
+	},
+	{
+		"name": "Flower",
+		"difficulty": 3,
+		"config": {
+			"fixed": "e13wu1og",
+			"up": "89lof6trmb3iao00",
+			"right": "2re78q98lavm7n29",
+			"down": "kxazxy5ljcc96r",
+			"left": "5isehgih6lr8fa4i"
+		}
 	},
 	{
 		"name": "Secret",
@@ -200,17 +200,6 @@
 			"right": "272sa2o00",
 			"down": "fnt2xog",
 			"left": "4e5kk5c00"
-		}
-	},
-	{
-		"name": "Tetris",
-		"difficulty": 3,
-		"config": {
-			"rotating": "4zaosanlavyz5j7",
-			"up": "662djg5q80p4lq8",
-			"right": "4fybqnjwwr1h9t08",
-			"down": "fm3rius001rls",
-			"left": "8vwnhb3tti2yjm0g"
 		}
 	},
 	{
@@ -273,6 +262,17 @@
 			"right": "7cqn4lb26yz35s",
 			"down": "5b4h3lqfkddt7l",
 			"left": "epha96m4dxy6bk"
+		}
+	},
+	{
+		"name": "Tetris",
+		"difficulty": 4,
+		"config": {
+			"rotating": "4zaosanlavyz5j7",
+			"up": "662djg5q80p4lq8",
+			"right": "4fybqnjwwr1h9t08",
+			"down": "fm3rius001rls",
+			"left": "8vwnhb3tti2yjm0g"
 		}
 	},
 	{
