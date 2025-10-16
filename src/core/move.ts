@@ -31,12 +31,24 @@ export class Move {
 		return new Move(this.axis, this.line, -this.delta)
 	}
 
-	get notation() {
-		if (this.delta === 0) return ''
+	get notation(): string {
 		if (this.delta > 0)
 			return `${this.line + 1}${this.axis.notation}${this.delta}`
 		if (this.delta < 0)
 			return `${this.line + 1}${this.axis.notation}${-this.delta}'`
+		return ''
+	}
+
+	static generate_from_notation(notation: string): Move | null {
+		const pattern = /^[1-9][RC][1-9]'?$/
+		if (!pattern.test(notation)) return null
+		const line = parseInt(notation[0]) - 1
+		const axis_notation = notation[1]
+		const axis = axis_notation === 'R' ? AXES.HORIZONTAL : AXES.VERTICAL
+		const delta_absolute = parseInt(notation[2])
+		const sign = notation.length === 4 ? -1 : 1
+		const delta = sign * delta_absolute
+		return new Move(axis, line, delta)
 	}
 
 	static generate_random_move(): Move {

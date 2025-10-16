@@ -13,7 +13,7 @@ export class Game {
 	state: 'idle' | 'moving' | 'scrambling' | 'editing'
 	row_grouping: Grouping<number>
 	col_grouping: Grouping<number>
-	move_history: Move[]
+	move_history: string[]
 	challenge: Challenge | undefined
 	has_scrambled: boolean
 
@@ -174,7 +174,7 @@ export class Game {
 			if (piece.rotating) piece.rotate(move.delta)
 		}
 
-		if (add_to_history) this.move_history.push(move)
+		if (add_to_history) this.move_history.push(move.notation)
 	}
 
 	update_offsets(move: Move, offset: number, scale: number) {
@@ -289,8 +289,11 @@ export class Game {
 	}
 
 	undo_move() {
-		const last_move = this.move_history.pop()
-		if (!last_move) return { error: null }
+		const last_move_str = this.move_history.pop()
+		if (!last_move_str) return { error: null }
+		const last_move = Move.generate_from_notation(last_move_str)
+		if (!last_move)
+			return { error: `Invalid move notation: ${last_move_str}` }
 		const opposite_move = last_move.get_opposite()
 		const { error } = this.prepare_move(opposite_move)
 		if (!error) this.execute_move(opposite_move, false)

@@ -29,8 +29,8 @@
 			bind:this={move_history_element}
 			aria-label="Move History"
 		>
-			{#each game.move_history as move}
-				<li class="move">{move.notation}</li>
+			{#each game.move_history as move_notation}
+				<li class="move">{move_notation}</li>
 			{/each}
 		</ol>
 	</div>
