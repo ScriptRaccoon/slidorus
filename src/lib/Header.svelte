@@ -5,14 +5,10 @@
 	type Props = {
 		challenge_name: string
 		show_challenge_selector: boolean
-		open_challenge_selector: () => void
 	}
 
-	let {
-		challenge_name,
-		show_challenge_selector,
-		open_challenge_selector,
-	}: Props = $props()
+	let { challenge_name, show_challenge_selector = $bindable() }: Props =
+		$props()
 </script>
 
 <header>
@@ -24,7 +20,7 @@
 			disabled={game.state !== 'idle'}
 			onclick={(e) => {
 				e.stopPropagation()
-				open_challenge_selector()
+				show_challenge_selector = true
 			}}
 			aria-label="Open list of challenges challenge selector"
 			aria-haspopup="dialog"

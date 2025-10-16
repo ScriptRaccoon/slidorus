@@ -19,7 +19,7 @@
 		show_torus: boolean
 		toggle_editing: () => void
 		revert_edits: () => void
-		share_URL: () => void
+		copy_URL: () => void
 	}
 
 	let {
@@ -30,7 +30,7 @@
 		show_torus,
 		toggle_editing,
 		revert_edits,
-		share_URL,
+		copy_URL,
 	}: Props = $props()
 </script>
 
@@ -82,7 +82,7 @@
 			<SquarePen />
 		</button>
 
-		<button class="btn" onclick={share_URL} aria-label="Share URL">
+		<button class="btn" onclick={copy_URL} aria-label="Copy URL">
 			<Link2 />
 		</button>
 	{:else}

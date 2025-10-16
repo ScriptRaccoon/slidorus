@@ -32,32 +32,42 @@
 		current_challenge ? current_challenge.name : 'Custom Challenge',
 	)
 
-	function toggle_torus() {
-		show_torus = !show_torus
-	}
-
-	function toggle_editing() {
-		if (game.state === 'editing') {
-			game.state = 'idle'
-			const config = game.get_config()
-			update_URL(config)
-			update_challenge(config)
-		} else if (game.state === 'idle') {
-			if (game.move_count > 10) {
-				const confirmed = window.confirm(
-					'Editing will reset the puzzle. Are you sure?',
-				)
-				if (!confirmed) return
-			}
-			game.reset()
-			game.state = 'editing'
-		}
+	function load_config_from_URL() {
+		const config = get_config_from_URL()
+		game.load_from_config(config)
+		update_challenge(config)
 	}
 
 	function update_challenge(config: GameConfig) {
 		current_challenge = CHALLENGES.find((challenge) =>
 			equal_objects(challenge.config, config),
 		)
+	}
+
+	function toggle_editing() {
+		if (game.state === 'editing') {
+			finish_editing()
+		} else if (game.state === 'idle') {
+			start_editing()
+		}
+	}
+
+	function start_editing() {
+		if (game.move_count > 10) {
+			const confirmed = window.confirm(
+				'Editing will reset the puzzle. Are you sure?',
+			)
+			if (!confirmed) return
+		}
+		game.reset()
+		game.state = 'editing'
+	}
+
+	function finish_editing() {
+		game.state = 'idle'
+		const config = game.get_config()
+		update_URL(config)
+		update_challenge(config)
 	}
 
 	function reset() {
@@ -70,7 +80,11 @@
 		game.reset()
 	}
 
-	async function share_URL() {
+	function toggle_torus() {
+		show_torus = !show_torus
+	}
+
+	async function copy_URL() {
 		await navigator.clipboard.writeText(window.location.href)
 
 		send_toast({
@@ -79,17 +93,10 @@
 		})
 	}
 
-	function load_config_from_URL() {
-		const config = get_config_from_URL()
-		game.load_from_config(config)
-		update_challenge(config)
+	function undo_move() {
+		const { error } = game.undo_move()
+		if (error) send_toast({ variant: 'error', title: error })
 	}
-
-	onMount(() => {
-		load_config_from_URL()
-		document.addEventListener('dragover', (e) => e.preventDefault())
-		document.addEventListener('drop', (e) => e.preventDefault())
-	})
 
 	function update_torus_grid(pieces: Piece[]) {
 		const grid: Piece[][] = []
@@ -100,24 +107,20 @@
 		torus_piece_grid = grid
 	}
 
-	function open_challenge_selector() {
-		if (game.state !== 'idle') return
-		show_challenge_selector = true
-	}
-
 	$effect(() => {
 		if (game.state !== 'scrambling') {
 			update_torus_grid(game.pieces)
 		}
 	})
 
-	function undo_move() {
-		const { error } = game.undo_move()
-		if (error) send_toast({ variant: 'error', title: error })
-	}
+	onMount(() => {
+		load_config_from_URL()
+		document.addEventListener('dragover', (e) => e.preventDefault())
+		document.addEventListener('drop', (e) => e.preventDefault())
+	})
 </script>
 
-<Header {challenge_name} {show_challenge_selector} {open_challenge_selector} />
+<Header {challenge_name} bind:show_challenge_selector />
 
 <div class="grid" class:show_torus>
 	<main class="game" style:--size="{square_size}px">
@@ -134,7 +137,7 @@
 		{toggle_editing}
 		{show_torus}
 		revert_edits={() => game.revert_edits()}
-		{share_URL}
+		{copy_URL}
 	/>
 
 	{#if game.state === 'editing'}
