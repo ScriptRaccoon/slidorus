@@ -57,7 +57,7 @@
 			)
 			if (!confirmed) return
 		}
-		game.reset()
+		game.reset_pieces()
 		game.state = 'editing'
 	}
 
@@ -66,6 +66,7 @@
 		const config = game.get_config()
 		update_URL(config)
 		update_challenge(config)
+		game.load_progress()
 	}
 
 	function update_URL(config: GameConfig) {

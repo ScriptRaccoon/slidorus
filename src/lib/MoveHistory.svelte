@@ -13,7 +13,11 @@
 	})
 </script>
 
-<section class="move_display" aria-label="Moves">
+<section
+	class="move_display"
+	aria-label="Moves"
+	class:invisible={game.state === 'editing'}
+>
 	<div class="move_count" aria-live="polite">
 		{game.move_count}
 		{#if game.move_count === 1}
@@ -46,6 +50,10 @@
 
 		@media (max-width: 720px) {
 			padding-right: 1rem;
+		}
+
+		&.invisible {
+			visibility: hidden;
 		}
 	}
 
