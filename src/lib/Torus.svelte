@@ -160,7 +160,6 @@
 			content: '';
 			width: 90%;
 			height: 90%;
-			transition: background-color 140ms ease-in-out;
 			background-color: var(--color, gray);
 			clip-path: inherit;
 			box-shadow: 0rem 0rem 1rem inset #0005;
