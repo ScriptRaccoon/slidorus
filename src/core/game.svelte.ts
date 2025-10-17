@@ -3,7 +3,7 @@ import { Encoder } from './encoder'
 import { Grouping } from './grouping.svelte'
 import { Move } from './move'
 import { Piece } from './piece.svelte'
-import { hash_object, mod } from './utils'
+import { mod } from './utils'
 
 export class Game {
 	pieces: Piece[]
@@ -286,14 +286,14 @@ export class Game {
 		return { error: null }
 	}
 
-	async get_config_hash(): Promise<string> {
-		return await hash_object(this.get_config())
+	get_config_hash(): string {
+		return Object.values(this.get_config()).join('_')
 	}
 
-	async save_move_history() {
+	save_move_history() {
 		if (!this.has_scramble) return
 
-		const hash = await this.get_config_hash()
+		const hash = this.get_config_hash()
 		const key = `moves:${hash}`
 		if (this.move_history.length > 0) {
 			localStorage.setItem(key, this.move_history.join(','))
@@ -302,8 +302,8 @@ export class Game {
 		}
 	}
 
-	async save_scramble_history() {
-		const hash = await this.get_config_hash()
+	save_scramble_history() {
+		const hash = this.get_config_hash()
 		const key = `scramble:${hash}`
 		if (this.scramble_history.length > 0) {
 			localStorage.setItem(key, this.scramble_history.join(','))
@@ -312,8 +312,8 @@ export class Game {
 		}
 	}
 
-	async load_progress() {
-		const hash = await this.get_config_hash()
+	load_progress() {
+		const hash = this.get_config_hash()
 		const moves_key = `moves:${hash}`
 		const scramble_key = `scramble:${hash}`
 		const moves_str = localStorage.getItem(moves_key)

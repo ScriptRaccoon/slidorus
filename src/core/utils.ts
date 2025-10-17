@@ -45,10 +45,6 @@ export function clamp(value: number, min: number, max: number): number {
 	return Math.min(Math.max(value, min), max)
 }
 
-export function sleep(delay: number): Promise<void> {
-	return new Promise((res) => setTimeout(res, delay))
-}
-
 export function equal_objects(obj1: any, obj2: any) {
 	for (const key in obj1) {
 		if (obj1[key] !== obj2[key]) return false
@@ -63,20 +59,4 @@ export function equal_objects(obj1: any, obj2: any) {
 
 export function mod(x: number, n: number) {
 	return ((x % n) + n) % n
-}
-
-export async function hash_object(
-	obj: Record<string, unknown>,
-): Promise<string> {
-	const sorted_entries = Object.entries(obj).sort(([a], [b]) =>
-		a.localeCompare(b),
-	)
-	const sorted_object = Object.fromEntries(sorted_entries)
-	const str = JSON.stringify(sorted_object)
-	const data = new TextEncoder().encode(str)
-	const hash = await crypto.subtle.digest('SHA-256', data)
-	const bytes = new Uint8Array(hash)
-	return Array.from(bytes)
-		.map((b) => b.toString(16).padStart(2, '0'))
-		.join('')
 }
