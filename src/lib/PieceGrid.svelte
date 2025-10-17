@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { AXES, COL_KEYS, ROW_KEYS } from '../core/config'
+	import { AXES } from '../core/config'
 	import { game } from '../core/game.svelte'
 	import { Move } from '../core/move'
 	import { solves_storage } from '../core/solves.svelte'
@@ -144,7 +144,7 @@
 
 		if (current_move || game.state !== 'idle') return
 
-		const move = create_move_from_key(e)
+		const move = Move.create_move_from_key(e)
 		if (!move) return
 
 		const { error } = game.prepare_move(move)
@@ -162,17 +162,6 @@
 		setTimeout(() => {
 			animate_move(move)
 		}, 0)
-	}
-
-	function create_move_from_key(e: KeyboardEvent) {
-		const delta = e.shiftKey ? -1 : 1
-		const row = ROW_KEYS.findIndex((row) => row === e.code)
-		const col = COL_KEYS.findIndex((col) => col === e.code)
-		if (row < 0 && col < 0) return null
-
-		return row >= 0
-			? new Move(AXES.HORIZONTAL, row, delta)
-			: new Move(AXES.VERTICAL, col, delta)
 	}
 </script>
 
@@ -194,12 +183,7 @@
 	ontouchend={stop_dragging}
 >
 	{#each [...game.pieces, ...(current_move?.moving_copies ?? [])] as piece (piece.id)}
-		<PieceComponent
-			{piece}
-			animated={game.state === 'moving'}
-			dx={piece.dx}
-			dy={piece.dy}
-		/>
+		<PieceComponent {piece} animated={game.state === 'moving'} />
 	{/each}
 
 	{#each game.pieces as piece (piece.id)}

@@ -1,4 +1,4 @@
-import { AXES, type AXIS } from './config'
+import { AXES, COL_KEYS, ROW_KEYS, type AXIS } from './config'
 import type { Piece } from './piece.svelte'
 import { clamp, mod } from './utils'
 
@@ -65,6 +65,17 @@ export class Move {
 		let delta = Math.floor(Math.random() * 17) - 8
 		if (delta === 0) delta = 1
 		return new Move(axis, line, delta)
+	}
+
+	static create_move_from_key(e: KeyboardEvent): Move | null {
+		const delta = e.shiftKey ? -1 : 1
+		const row = ROW_KEYS.findIndex((row) => row === e.code)
+		const col = COL_KEYS.findIndex((col) => col === e.code)
+		if (row < 0 && col < 0) return null
+
+		return row >= 0
+			? new Move(AXES.HORIZONTAL, row, delta)
+			: new Move(AXES.VERTICAL, col, delta)
 	}
 
 	create_copies() {

@@ -4,12 +4,12 @@ export class Piece {
 	id: string
 	x: number
 	y: number
+	r: number
 	dx: number
 	dy: number
+	dr: number
 	original_x: number
 	original_y: number
-	rotation: number
-	dr: number
 	color_id: number
 	fixed: boolean
 	rotating: boolean
@@ -26,7 +26,7 @@ export class Piece {
 		color_id: number,
 		original_x = x,
 		original_y = y,
-		rotation = 0,
+		r = 0,
 		dr = 0,
 		fixed = false,
 		rotating = false,
@@ -36,15 +36,15 @@ export class Piece {
 		bandaged_left = false,
 	) {
 		this.id = crypto.randomUUID()
+		this.color_id = color_id
 		this.x = $state(x)
 		this.y = $state(y)
+		this.r = $state(r)
 		this.dx = $state(0)
 		this.dy = $state(0)
-		this.color_id = color_id
+		this.dr = $state(dr)
 		this.original_x = original_x
 		this.original_y = original_y
-		this.rotation = $state(rotation)
-		this.dr = $state(dr)
 		this.fixed = $state(fixed)
 		this.rotating = $state(rotating)
 		this.bandaged_up = $state(bandaged_up)
@@ -73,7 +73,7 @@ export class Piece {
 			this.color_id,
 			this.original_x,
 			this.original_y,
-			this.rotation,
+			this.r,
 			this.dr,
 			this.fixed,
 			this.rotating,
@@ -101,7 +101,7 @@ export class Piece {
 	reset() {
 		this.x = this.original_x
 		this.y = this.original_y
-		this.rotation = 0
+		this.r = 0
 		this.dx = 0
 		this.dy = 0
 		this.dr = 0
@@ -114,15 +114,15 @@ export class Piece {
 		this.bandaged_up = false
 		this.fixed = false
 		this.rotating = false
-		this.rotation = 0
+		this.r = 0
 	}
 
 	get is_visible() {
 		return this.x >= 0 && this.x < 9 && this.y >= 0 && this.y < 9
 	}
 
-	has_no_rotation() {
-		return !this.rotating || this.rotation === 0
+	get has_rotation() {
+		return this.rotating && this.r != 0
 	}
 
 	move(coord: 'x' | 'y', delta: number) {
@@ -130,6 +130,6 @@ export class Piece {
 	}
 
 	rotate(delta: number) {
-		this.rotation = mod(this.rotation + delta * this.rotation_step, 360)
+		this.r = mod(this.r + delta * this.rotation_step, 360)
 	}
 }

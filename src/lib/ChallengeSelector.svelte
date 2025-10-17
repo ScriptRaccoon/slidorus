@@ -17,10 +17,10 @@
 		update_URL,
 	}: Props = $props()
 
-	function load_challenge(c: Challenge) {
-		game.load_from_config(c.config)
-		update_URL(c.config)
-		current_challenge = c
+	function load_challenge(challenge: Challenge) {
+		game.load_from_config(challenge.config)
+		update_URL(challenge.config)
+		current_challenge = challenge
 	}
 
 	let dialog_element = $state<HTMLDialogElement | null>(null)

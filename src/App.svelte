@@ -36,6 +36,17 @@
 		update_challenge(config)
 	}
 
+	function update_URL(config: GameConfig) {
+		const url = new URL(window.location.origin)
+
+		for (const key of CONFIG_KEYS) {
+			const val = config[key]
+			val ? url.searchParams.set(key, val) : url.searchParams.delete(key)
+		}
+
+		window.history.replaceState({}, '', url)
+	}
+
 	function update_challenge(config: GameConfig) {
 		current_challenge = CHALLENGES.find((challenge) =>
 			equal_objects(challenge.config, config),
@@ -69,17 +80,6 @@
 		game.load_progress()
 	}
 
-	function update_URL(config: GameConfig) {
-		const url = new URL(window.location.origin)
-
-		for (const key of CONFIG_KEYS) {
-			const val = config[key]
-			val ? url.searchParams.set(key, val) : url.searchParams.delete(key)
-		}
-
-		window.history.replaceState({}, '', url)
-	}
-
 	function reset() {
 		if (game.move_count > 10) {
 			const confirmed = window.confirm(
@@ -96,11 +96,7 @@
 
 	async function copy_URL() {
 		await navigator.clipboard.writeText(window.location.href)
-
-		send_toast({
-			variant: 'info',
-			title: 'URL copied to clipboard',
-		})
+		send_toast({ variant: 'info', title: 'URL copied to clipboard' })
 	}
 
 	function undo_move() {
@@ -118,9 +114,7 @@
 	}
 
 	$effect(() => {
-		if (game.state !== 'scrambling') {
-			update_torus_grid(game.pieces)
-		}
+		if (game.state === 'idle') update_torus_grid(game.pieces)
 	})
 
 	onMount(() => {

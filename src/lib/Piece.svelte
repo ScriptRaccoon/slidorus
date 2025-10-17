@@ -4,11 +4,9 @@
 	type Props = {
 		piece: PieceType
 		animated: boolean
-		dx: number
-		dy: number
 	}
 
-	let { piece, animated, dx, dy }: Props = $props()
+	let { piece, animated }: Props = $props()
 </script>
 
 <div
@@ -25,9 +23,9 @@
 	class:animated
 	style:--x={piece.x}
 	style:--y={piece.y}
-	style:--dx={dx}
-	style:--dy={dy}
-	style:--rotation={piece.rotation}
+	style:--r={piece.r}
+	style:--dx={piece.dx}
+	style:--dy={piece.dy}
 	style:--dr={piece.dr}
 ></div>
 
@@ -41,7 +39,7 @@
 		transform: translateX(calc(var(--x) * var(--u) + var(--dx) * 1px))
 			translateY(calc(var(--y) * var(--u) + var(--dy) * 1px))
 			scale(var(--scale, 1))
-			rotate(calc(var(--rotation) * 1deg + var(--dr) * 1deg));
+			rotate(calc(var(--r) * 1deg + var(--dr) * 1deg));
 		border: var(--border) solid var(--bg-color);
 		border-radius: 15%;
 		display: flex;
