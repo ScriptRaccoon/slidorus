@@ -41,7 +41,7 @@
 			scale(var(--scale, 1))
 			rotate(calc(var(--r) * 1deg + var(--dr) * 1deg));
 		border: var(--border) solid var(--bg-color);
-		border-radius: 15%;
+		border-radius: 20%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
