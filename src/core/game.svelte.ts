@@ -251,8 +251,6 @@ export class Game {
 	}
 
 	load_from_config(config: GameConfig) {
-		if (!this.has_scramble) this.clear_move_history()
-
 		const fixed_coords = Encoder.decode_subset(config.fixed)
 		const rotating_cords = Encoder.decode_subset(config.rotating)
 		const up_coords = Encoder.decode_subset(config.up)
@@ -309,6 +307,7 @@ export class Game {
 	}
 
 	async save_move_history() {
+		if (!this.has_scramble) return
 		const hash = await this.get_config_hash()
 		const key = `moves:${hash}`
 		if (this.move_history.length > 0) {
