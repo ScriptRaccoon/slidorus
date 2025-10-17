@@ -1,24 +1,24 @@
 import { mod } from './utils'
 
 export class Piece {
-	id: string
-	x: number
-	y: number
-	r: number
-	dx: number
-	dy: number
-	dr: number
-	original_x: number
-	original_y: number
-	color_id: number
-	fixed: boolean
-	rotating: boolean
-	bandaged_up: boolean
-	bandaged_right: boolean
-	bandaged_down: boolean
-	bandaged_left: boolean
+	public readonly id: string
+	public x: number
+	public y: number
+	public r: number
+	public dx: number
+	public dy: number
+	public dr: number
+	public readonly original_x: number
+	public readonly original_y: number
+	public readonly color_id: number
+	public fixed: boolean
+	public rotating: boolean
+	public bandaged_up: boolean
+	public bandaged_right: boolean
+	public bandaged_down: boolean
+	public bandaged_left: boolean
 
-	rotation_step = 40
+	public readonly rotation_step = 40
 
 	constructor(
 		x: number,
@@ -53,11 +53,11 @@ export class Piece {
 		this.bandaged_left = $state(bandaged_left)
 	}
 
-	get coord_index() {
+	public get coord_index() {
 		return this.original_y * 9 + this.original_x
 	}
 
-	get is_bandaged() {
+	public get is_bandaged() {
 		return (
 			this.bandaged_up ||
 			this.bandaged_right ||
@@ -66,7 +66,15 @@ export class Piece {
 		)
 	}
 
-	get_copy(): Piece {
+	public get is_visible() {
+		return this.x >= 0 && this.x < 9 && this.y >= 0 && this.y < 9
+	}
+
+	public get has_rotation() {
+		return this.rotating && this.r != 0
+	}
+
+	public get_copy(): Piece {
 		return new Piece(
 			this.x,
 			this.y,
@@ -84,7 +92,7 @@ export class Piece {
 		)
 	}
 
-	toggle_behavior() {
+	public toggle_behavior() {
 		if (!this.fixed && !this.rotating) {
 			this.fixed = true
 		} else if (this.fixed) {
@@ -98,7 +106,7 @@ export class Piece {
 		}
 	}
 
-	reset() {
+	public reset() {
 		this.x = this.original_x
 		this.y = this.original_y
 		this.r = 0
@@ -107,7 +115,7 @@ export class Piece {
 		this.dr = 0
 	}
 
-	revert_edits() {
+	public revert_edits() {
 		this.bandaged_right = false
 		this.bandaged_down = false
 		this.bandaged_left = false
@@ -117,19 +125,11 @@ export class Piece {
 		this.r = 0
 	}
 
-	get is_visible() {
-		return this.x >= 0 && this.x < 9 && this.y >= 0 && this.y < 9
-	}
-
-	get has_rotation() {
-		return this.rotating && this.r != 0
-	}
-
-	move(coord: 'x' | 'y', delta: number) {
+	public move(coord: 'x' | 'y', delta: number) {
 		this[coord] = mod(this[coord] + delta, 9)
 	}
 
-	rotate(delta: number) {
+	public rotate(delta: number) {
 		this.r = mod(this.r + delta * this.rotation_step, 360)
 	}
 }

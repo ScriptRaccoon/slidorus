@@ -5,13 +5,13 @@ import { Move } from './move'
 import { Piece } from './piece.svelte'
 import { mod } from './utils'
 
-export class Game {
-	pieces: Piece[]
-	state: 'idle' | 'moving' | 'scrambling' | 'editing'
-	row_grouping: Grouping<number>
-	col_grouping: Grouping<number>
-	move_history: string[]
-	scramble_history: string[]
+class Game {
+	public pieces: Piece[]
+	public state: 'idle' | 'moving' | 'scrambling' | 'editing'
+	public row_grouping: Grouping<number>
+	public col_grouping: Grouping<number>
+	public move_history: string[]
+	private scramble_history: string[]
 
 	constructor() {
 		this.pieces = $state(this.get_initial_pieces())
@@ -22,7 +22,7 @@ export class Game {
 		this.scramble_history = []
 	}
 
-	get_initial_pieces(): Piece[] {
+	private get_initial_pieces(): Piece[] {
 		const pieces: Piece[] = []
 
 		for (let x = 0; x < 9; x++) {
@@ -38,42 +38,42 @@ export class Game {
 		return pieces
 	}
 
-	reset() {
+	public reset() {
 		if (this.state !== 'idle') return
 		this.reset_pieces()
 		this.clear_history()
 	}
 
-	reset_pieces() {
+	public reset_pieces() {
 		for (const piece of this.pieces) {
 			piece.reset()
 		}
 	}
 
-	clear_history() {
+	public clear_history() {
 		this.clear_move_history()
 		this.clear_scramble_history()
 	}
 
-	clear_move_history() {
+	public clear_move_history() {
 		this.move_history = []
 		this.save_move_history()
 	}
 
-	clear_scramble_history() {
+	public clear_scramble_history() {
 		this.scramble_history = []
 		this.save_scramble_history()
 	}
 
-	get has_scramble(): boolean {
+	public get has_scramble(): boolean {
 		return this.scramble_history.length > 0
 	}
 
-	get move_count(): number {
+	public get move_count(): number {
 		return this.move_history.length
 	}
 
-	is_solved(): boolean {
+	public is_solved(): boolean {
 		for (let block_x = 0; block_x < 9; block_x += 3) {
 			for (let block_y = 0; block_y < 9; block_y += 3) {
 				const block_pieces = this.pieces.filter(
@@ -93,7 +93,7 @@ export class Game {
 		return this.pieces.every((piece) => !piece.has_rotation)
 	}
 
-	revert_edits() {
+	public revert_edits() {
 		if (this.state !== 'editing') return
 		for (const piece of this.pieces) {
 			piece.revert_edits()
@@ -102,7 +102,7 @@ export class Game {
 		this.col_grouping.reset()
 	}
 
-	toggle_bandage(piece: Piece, direction: 'right' | 'down') {
+	public toggle_bandage(piece: Piece, direction: 'right' | 'down') {
 		if (piece.rotating) return
 
 		const other_direction = direction === 'right' ? 'left' : 'up'
@@ -121,7 +121,7 @@ export class Game {
 		}
 	}
 
-	prepare_move(move: Move): { error: string | null } {
+	public prepare_move(move: Move): { error: string | null } {
 		const lines = new Set([move.line])
 		let line_count = 1
 
@@ -146,7 +146,7 @@ export class Game {
 		return { error: null }
 	}
 
-	close_lines_under_bandaging(
+	private close_lines_under_bandaging(
 		lines: Set<number>,
 		direction: 'up' | 'right' | 'down' | 'left',
 	) {
@@ -161,7 +161,7 @@ export class Game {
 		if (piece) lines.add(mod(piece[coord] + delta, 9))
 	}
 
-	close_lines_under_groupings(lines: Set<number>, axis: AXIS) {
+	private close_lines_under_groupings(lines: Set<number>, axis: AXIS) {
 		if (axis === AXES.HORIZONTAL) {
 			this.row_grouping.close(lines)
 		} else {
@@ -169,7 +169,7 @@ export class Game {
 		}
 	}
 
-	execute_move(move: Move, type: 'forget' | 'move' | 'scramble') {
+	public execute_move(move: Move, type: 'forget' | 'move' | 'scramble') {
 		if (!move.is_relevant) return
 
 		if (type === 'move' && this.get_last_move()?.is_opposite_to(move)) {
@@ -190,13 +190,13 @@ export class Game {
 		}
 	}
 
-	get_last_move(): Move | null {
+	private get_last_move(): Move | null {
 		const notation = this.move_history.at(-1)
 		if (!notation) return null
 		return Move.generate_from_notation(notation)
 	}
 
-	update_offsets(move: Move, offset: number, scale: number) {
+	public update_offsets(move: Move, offset: number, scale: number) {
 		for (const piece of [...move.moving_copies, ...move.moving_pieces]) {
 			piece[move.axis.delta] = offset
 			if (piece.rotating) {
@@ -205,7 +205,7 @@ export class Game {
 		}
 	}
 
-	execute_scramble(moves = 1000) {
+	public execute_scramble(moves = 1000) {
 		if (this.state !== 'idle') return
 		this.reset()
 		this.state = 'scrambling'
@@ -223,7 +223,7 @@ export class Game {
 		this.state = 'idle'
 	}
 
-	get_config(): GameConfig {
+	public get_config(): GameConfig {
 		const fixed_coords = this.get_flagged_coords('fixed')
 		const rotating_coords = this.get_flagged_coords('rotating')
 		const up_coords = this.get_flagged_coords('bandaged_up')
@@ -243,13 +243,13 @@ export class Game {
 		}
 	}
 
-	get_flagged_coords(flag: keyof Piece): number[] {
+	private get_flagged_coords(flag: keyof Piece): number[] {
 		return this.pieces
 			.filter((piece) => piece[flag])
 			.map((p) => p.coord_index)
 	}
 
-	load_from_config(config: GameConfig) {
+	public load_from_config(config: GameConfig) {
 		const fixed_coords = Encoder.decode_subset(config.fixed)
 		const rotating_cords = Encoder.decode_subset(config.rotating)
 		const up_coords = Encoder.decode_subset(config.up)
@@ -274,7 +274,7 @@ export class Game {
 		this.load_progress()
 	}
 
-	undo_move(): { error: string | null } {
+	public undo_move(): { error: string | null } {
 		const last_move = this.get_last_move()
 		if (!last_move) return { error: null }
 		const opposite_move = last_move.get_opposite()
@@ -286,11 +286,11 @@ export class Game {
 		return { error: null }
 	}
 
-	get_config_hash(): string {
+	private get_config_hash(): string {
 		return Object.values(this.get_config()).join('_')
 	}
 
-	save_move_history() {
+	private save_move_history() {
 		if (!this.has_scramble) return
 
 		const hash = this.get_config_hash()
@@ -302,7 +302,7 @@ export class Game {
 		}
 	}
 
-	save_scramble_history() {
+	private save_scramble_history() {
 		const hash = this.get_config_hash()
 		const key = `scramble:${hash}`
 		if (this.scramble_history.length > 0) {
@@ -312,7 +312,7 @@ export class Game {
 		}
 	}
 
-	load_progress() {
+	public load_progress() {
 		const hash = this.get_config_hash()
 		const moves_key = `moves:${hash}`
 		const scramble_key = `scramble:${hash}`

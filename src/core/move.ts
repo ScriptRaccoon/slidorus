@@ -3,12 +3,12 @@ import type { Piece } from './piece.svelte'
 import { clamp, mod } from './utils'
 
 export class Move {
-	axis: AXIS
-	line: number
-	delta: number
-	moving_lines: number[]
-	moving_pieces: Piece[]
-	moving_copies: Piece[]
+	public readonly axis: AXIS
+	public readonly line: number
+	public delta: number
+	public moving_lines: number[]
+	public moving_pieces: Piece[]
+	public moving_copies: Piece[]
 
 	constructor(axis: AXIS, line: number, delta: number) {
 		this.axis = axis
@@ -19,27 +19,11 @@ export class Move {
 		this.moving_copies = []
 	}
 
-	get name() {
+	public get name() {
 		return `${this.axis.name} ${this.line + 1}`
 	}
 
-	get is_relevant() {
-		return this.delta != 0 && this.delta == Math.floor(this.delta)
-	}
-
-	get_opposite(): Move {
-		return new Move(this.axis, this.line, -this.delta)
-	}
-
-	is_opposite_to(move: Move): boolean {
-		return (
-			this.axis == move.axis &&
-			this.line === move.line &&
-			mod(this.delta + move.delta, 9) === 0
-		)
-	}
-
-	get notation(): string {
+	public get notation(): string {
 		if (this.delta > 0)
 			return `${this.line + 1}${this.axis.notation}${this.delta}`
 		if (this.delta < 0)
@@ -47,7 +31,23 @@ export class Move {
 		return ''
 	}
 
-	static generate_from_notation(notation: string): Move | null {
+	public get is_relevant() {
+		return this.delta != 0 && this.delta == Math.floor(this.delta)
+	}
+
+	public get_opposite(): Move {
+		return new Move(this.axis, this.line, -this.delta)
+	}
+
+	public is_opposite_to(move: Move): boolean {
+		return (
+			this.axis == move.axis &&
+			this.line === move.line &&
+			mod(this.delta + move.delta, 9) === 0
+		)
+	}
+
+	public static generate_from_notation(notation: string): Move | null {
 		const pattern = /^[1-9][RC][1-9]'?$/
 		if (!pattern.test(notation)) return null
 		const line = parseInt(notation[0]) - 1
@@ -59,7 +59,7 @@ export class Move {
 		return new Move(axis, line, delta)
 	}
 
-	static generate_random_move(): Move {
+	public static generate_random_move(): Move {
 		const axis = Math.random() < 0.5 ? AXES.HORIZONTAL : AXES.VERTICAL
 		const line = Math.floor(Math.random() * 9)
 		let delta = Math.floor(Math.random() * 17) - 8
@@ -67,7 +67,7 @@ export class Move {
 		return new Move(axis, line, delta)
 	}
 
-	static create_move_from_key(e: KeyboardEvent): Move | null {
+	public static create_move_from_key(e: KeyboardEvent): Move | null {
 		const delta = e.shiftKey ? -1 : 1
 		const row = ROW_KEYS.findIndex((row) => row === e.code)
 		const col = COL_KEYS.findIndex((col) => col === e.code)
@@ -78,7 +78,7 @@ export class Move {
 			: new Move(AXES.VERTICAL, col, delta)
 	}
 
-	create_copies() {
+	public create_copies() {
 		const copies: Piece[] = []
 		const offsets = [1, 2, -1, -2]
 
@@ -93,7 +93,7 @@ export class Move {
 		this.moving_copies = copies
 	}
 
-	compute_delta(
+	public compute_delta(
 		start: { x: number; y: number },
 		end: { x: number; y: number },
 		scale: number,

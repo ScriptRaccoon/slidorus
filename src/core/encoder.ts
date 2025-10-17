@@ -1,5 +1,5 @@
 export class Encoder {
-	static encode_subset(subset: number[]): string {
+	public static encode_subset(subset: number[]): string {
 		if (!subset.length) return ''
 
 		let bitfield = 0n
@@ -11,7 +11,7 @@ export class Encoder {
 		return bitfield.toString(36)
 	}
 
-	static decode_subset(str: string): number[] {
+	public static decode_subset(str: string): number[] {
 		if (!str) return []
 
 		let bitfield = 0n
@@ -31,14 +31,14 @@ export class Encoder {
 		return subset
 	}
 
-	static encode_subsets(subsets: number[][]): string {
+	public static encode_subsets(subsets: number[][]): string {
 		return subsets
 			.map((subset) => Encoder.encode_subset(subset))
 			.sort()
 			.join('-')
 	}
 
-	static decode_subsets(subsets_str: string): number[][] {
+	public static decode_subsets(subsets_str: string): number[][] {
 		return subsets_str.split('-').map((str) => Encoder.decode_subset(str))
 	}
 }

@@ -7,28 +7,28 @@ export type Solve = {
 }
 
 class SolvesStorage {
-	solves: Solve[]
+	public solves: Solve[]
 
 	constructor() {
 		this.solves = $state(SolvesStorage.get_stored_solves())
 	}
 
-	get solved_challenge_names(): string[] {
+	public get solved_challenge_names(): string[] {
 		return [...new Set(this.solves.map((solve) => solve.challenge_name))]
 	}
 
-	has(challenge: Challenge): boolean {
+	public has(challenge: Challenge): boolean {
 		return this.solves.some(
 			(solve) => solve.challenge_name === challenge.name,
 		)
 	}
 
-	store(solve: Solve) {
+	public store(solve: Solve) {
 		this.solves.push(solve)
 		localStorage.setItem('solves', JSON.stringify(this.solves))
 	}
 
-	get_best_solves(): Solve[] {
+	public get_best_solves(): Solve[] {
 		const best_solves: Record<string, Solve> = {}
 
 		for (const solve of this.solves) {

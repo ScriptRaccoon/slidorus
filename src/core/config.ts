@@ -8,7 +8,7 @@ export const ROW_KEYS = [
 	'Digit7',
 	'Digit8',
 	'Digit9',
-]
+] as const
 
 export const COL_KEYS = [
 	'KeyQ',
@@ -20,7 +20,7 @@ export const COL_KEYS = [
 	'KeyU',
 	'KeyI',
 	'KeyO',
-]
+] as const
 
 export const AXES = {
 	HORIZONTAL: {

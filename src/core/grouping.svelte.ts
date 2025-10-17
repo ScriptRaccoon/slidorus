@@ -1,15 +1,15 @@
 export class Grouping<T> {
-	groups: T[][]
+	public groups: T[][]
 
 	constructor() {
 		this.groups = $state([])
 	}
 
-	reset() {
+	public reset() {
 		this.groups = []
 	}
 
-	merge(a: T, b: T) {
+	public merge(a: T, b: T) {
 		const group_a = this.groups.find((c) => c.includes(a))
 		const group_b = this.groups.find((c) => c.includes(b))
 
@@ -25,16 +25,16 @@ export class Grouping<T> {
 		}
 	}
 
-	remove_group(a: T) {
+	public remove_group(a: T) {
 		const group = this.groups.find((group) => group.includes(a))
 		if (group) this.groups = this.groups.filter((_group) => group != _group)
 	}
 
-	get_group_index(a: T) {
+	public get_group_index(a: T) {
 		return this.groups.findIndex((group) => group.includes(a))
 	}
 
-	close(set: Set<T>) {
+	public close(set: Set<T>) {
 		for (const group of this.groups) {
 			const has_intersection = group.some((a) => set.has(a))
 			if (!has_intersection) continue
