@@ -45,6 +45,11 @@ class SolvesStorage {
 		return Object.values(best_solves)
 	}
 
+	clear() {
+		this.solves = []
+		localStorage.removeItem('solves')
+	}
+
 	private static is_valid_solve(obj: unknown): obj is Solve {
 		if (typeof obj !== 'object' || obj === null) return false
 		const o = obj as Record<string, unknown>

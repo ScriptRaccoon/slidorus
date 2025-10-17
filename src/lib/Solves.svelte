@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ListCheck } from '@lucide/svelte'
+	import { ListCheck, Trash } from '@lucide/svelte'
 	import { solves_storage } from '../core/solves.svelte'
 
 	let show_best = $state(false)
@@ -9,6 +9,15 @@
 			? [...solves_storage.get_best_solves()].reverse()
 			: [...solves_storage.solves].reverse(),
 	)
+
+	function delete_solves() {
+		const confirmed = window.confirm(
+			'This will remove all solves saved in your browser. This action cannot be undone. Are you sure?',
+		)
+		if (confirmed) {
+			solves_storage.clear()
+		}
+	}
 </script>
 
 {#if solves_storage.solves.length > 0}
@@ -54,6 +63,13 @@
 				Show best solves per challenge
 				<input type="checkbox" bind:checked={show_best} />
 			</label>
+
+			<menu>
+				<button class="btn icon" onclick={delete_solves}>
+					<Trash />
+					Delete solves
+				</button>
+			</menu>
 		</details>
 	</section>
 {/if}
@@ -89,5 +105,9 @@
 		display: inline-flex;
 		gap: 0.5rem;
 		align-items: center;
+	}
+
+	menu {
+		margin-top: 1rem;
 	}
 </style>
