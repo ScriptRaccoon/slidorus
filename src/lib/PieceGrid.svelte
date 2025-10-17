@@ -118,7 +118,7 @@
 	}
 
 	function check_solved() {
-		if (game.scramble_history.length === 0) return
+		if (!game.has_scramble) return
 
 		if (!game.is_solved()) return
 
@@ -134,7 +134,7 @@
 		}
 		solves_storage.store(solve)
 
-		game.scramble_history = []
+		game.clear_scramble_history()
 	}
 
 	function handle_keydown(e: KeyboardEvent) {

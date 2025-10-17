@@ -3,7 +3,7 @@ import { Encoder } from './encoder'
 import { Grouping } from './grouping.svelte'
 import { Move } from './move'
 import { Piece } from './piece.svelte'
-import { mod } from './utils'
+import { hash_object, mod } from './utils'
 
 export class Game {
 	pieces: Piece[]
@@ -40,15 +40,33 @@ export class Game {
 
 	reset() {
 		if (this.state !== 'idle') return
-		for (const piece of this.pieces) {
-			piece.reset()
-		}
+		this.reset_pieces()
 		this.clear_history()
 	}
 
+	reset_pieces() {
+		for (const piece of this.pieces) {
+			piece.reset()
+		}
+	}
+
 	clear_history() {
-		this.move_history = []
+		this.clear_move_history()
+		this.clear_scramble_history()
+	}
+
+	clear_scramble_history() {
 		this.scramble_history = []
+		this.save_scramble_history()
+	}
+
+	clear_move_history() {
+		this.move_history = []
+		this.save_move_history()
+	}
+
+	get has_scramble() {
+		return this.scramble_history.length > 0
 	}
 
 	is_solved(): boolean {
@@ -162,6 +180,7 @@ export class Game {
 
 		if (type === 'move') {
 			this.move_history.push(move.notation)
+			this.save_move_history()
 		} else if (type == 'scramble') {
 			this.scramble_history.push(move.notation)
 		}
@@ -179,7 +198,6 @@ export class Game {
 	execute_scramble(moves = 1000) {
 		if (this.state !== 'idle') return
 		this.reset()
-
 		this.state = 'scrambling'
 
 		let moves_made = 0
@@ -191,6 +209,7 @@ export class Game {
 			moves_made++
 		}
 
+		this.save_scramble_history()
 		this.state = 'idle'
 	}
 
@@ -232,7 +251,7 @@ export class Game {
 	}
 
 	load_from_config(config: GameConfig) {
-		this.reset()
+		if (!this.has_scramble) this.clear_move_history()
 
 		const fixed_coords = Encoder.decode_subset(config.fixed)
 		const rotating_cords = Encoder.decode_subset(config.rotating)
@@ -252,6 +271,9 @@ export class Game {
 
 		this.row_grouping.groups = Encoder.decode_subsets(config.rows)
 		this.col_grouping.groups = Encoder.decode_subsets(config.cols)
+
+		this.reset_pieces()
+		this.load_progress()
 	}
 
 	get move_count() {
@@ -268,7 +290,81 @@ export class Game {
 		const { error } = this.prepare_move(opposite_move)
 		if (!error) this.execute_move(opposite_move, 'forget')
 		this.move_history.pop()
+		this.save_move_history()
 		return { error }
+	}
+
+	async get_config_hash(): Promise<string> {
+		return await hash_object(this.get_config())
+	}
+
+	async save_scramble_history() {
+		const hash = await this.get_config_hash()
+		const key = `scramble:${hash}`
+		if (this.scramble_history.length > 0) {
+			localStorage.setItem(key, this.scramble_history.join(','))
+		} else {
+			localStorage.removeItem(key)
+		}
+	}
+
+	async save_move_history() {
+		const hash = await this.get_config_hash()
+		const key = `moves:${hash}`
+		if (this.move_history.length > 0) {
+			localStorage.setItem(key, this.move_history.join(','))
+		} else {
+			localStorage.removeItem(key)
+		}
+	}
+
+	async load_progress() {
+		const hash = await this.get_config_hash()
+		const moves_key = `moves:${hash}`
+		const scramble_key = `scramble:${hash}`
+		const moves_str = localStorage.getItem(moves_key)
+		const scramble_str = localStorage.getItem(scramble_key)
+		if (!moves_str || !scramble_str) return this.reset()
+
+		const confirmed = window.confirm(
+			'Do you want to restore your progress for this game?',
+		)
+		if (!confirmed) return this.clear_history()
+
+		const moves = moves_str.split(',')
+		const scramble = scramble_str.split(',')
+
+		this.scramble_history = []
+
+		for (const notation of scramble) {
+			const move = Move.generate_from_notation(notation)
+			if (!move) {
+				console.error(`Illegal move found: ${notation}`)
+				return this.reset()
+			}
+			const { error } = this.prepare_move(move)
+			if (error) {
+				console.error(`Move ${notation} cannot be executed: ${error}`)
+				return this.reset()
+			}
+			this.execute_move(move, 'scramble')
+		}
+
+		this.move_history = []
+
+		for (const notation of moves) {
+			const move = Move.generate_from_notation(notation)
+			if (!move) {
+				console.error(`Illegal move found: ${notation}`)
+				return this.reset()
+			}
+			const { error } = this.prepare_move(move)
+			if (error) {
+				console.error(`Move ${notation} cannot be executed: ${error}`)
+				return this.reset()
+			}
+			this.execute_move(move, 'move')
+		}
 	}
 }
 
