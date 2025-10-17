@@ -39,8 +39,10 @@
 						class:bandaged_down={piece.bandaged_down}
 						class:bandaged_left={piece.bandaged_left}
 						class:bandaged_right={piece.bandaged_right}
+						class:rotating={piece.rotating}
 						class:flipped={j >= 5}
 						style:--index={j}
+						style:--r={piece.r}
 						data-color-id={piece.color_id}
 						data-index={j}
 					></div>
@@ -121,7 +123,8 @@
 		height: calc(2.64 / 3 * var(--unit));
 		width: calc(var(--scaler, 1) * var(--unit));
 		transform: rotateX(calc(var(--index, 0) * 360deg / 9))
-			translateZ(var(--slice-radius));
+			translateZ(var(--slice-radius)) scale(var(--scale, 1))
+			rotateZ(calc(var(--r, 0) * 1deg)) translateZ(var(--offset, 0));
 
 		background: black;
 		display: inline-flex;
@@ -146,6 +149,11 @@
 				calc(100% - var(--cut, 0%)) 100%,
 				var(--cut, 0%) 100%
 			);
+		}
+
+		&.rotating {
+			--scale: 0.825;
+			--offset: calc(0.1 * var(--unit));
 		}
 
 		&::before {
