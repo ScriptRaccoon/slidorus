@@ -170,8 +170,19 @@ export class Game {
 		return { error: null }
 	}
 
+	get_last_move(): Move | null {
+		const notation = this.move_history.at(-1)
+		if (!notation) return null
+		return Move.generate_from_notation(notation)
+	}
+
 	execute_move(move: Move, type: 'forget' | 'move' | 'scramble') {
 		if (!move.is_relevant) return
+
+		if (type === 'move' && this.get_last_move()?.is_opposite_to(move)) {
+			const { error } = this.undo_move()
+			if (!error) return
+		}
 
 		for (const piece of move.moving_pieces) {
 			piece.move(move.axis.main, move.delta)
@@ -279,11 +290,8 @@ export class Game {
 	}
 
 	undo_move() {
-		const last_move_str = this.move_history.at(-1)
-		if (!last_move_str) return { error: null }
-		const last_move = Move.generate_from_notation(last_move_str)
-		if (!last_move)
-			return { error: `Invalid move notation: ${last_move_str}` }
+		const last_move = this.get_last_move()
+		if (!last_move) return { error: null }
 		const opposite_move = last_move.get_opposite()
 		const { error } = this.prepare_move(opposite_move)
 		if (!error) this.execute_move(opposite_move, 'forget')

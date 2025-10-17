@@ -1,6 +1,6 @@
 import { AXES, type AXIS } from './config'
 import type { Piece } from './piece.svelte'
-import { clamp } from './utils'
+import { clamp, mod } from './utils'
 
 export class Move {
 	axis: AXIS
@@ -29,6 +29,14 @@ export class Move {
 
 	get_opposite(): Move {
 		return new Move(this.axis, this.line, -this.delta)
+	}
+
+	is_opposite_to(move: Move): boolean {
+		return (
+			this.axis == move.axis &&
+			this.line === move.line &&
+			mod(this.delta + move.delta, 9) === 0
+		)
 	}
 
 	get notation(): string {
