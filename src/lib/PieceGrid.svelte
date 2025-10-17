@@ -208,7 +208,7 @@
 		touch-action: none;
 
 		&:not(.editing) {
-			clip-path: inset(var(--border));
+			clip-path: 0;
 			overflow: hidden;
 		}
 
