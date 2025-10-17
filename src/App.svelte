@@ -16,6 +16,8 @@
 	import Connectors from './lib/Connectors.svelte'
 	import { CHALLENGES } from './data/challenges'
 	import { equal_objects } from './core/utils'
+	import Modal from './lib/Modal.svelte'
+	import { open_modal } from './core/modal.svelte'
 
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
@@ -62,14 +64,19 @@
 	}
 
 	function start_editing() {
-		if (game.move_count > 10) {
-			const confirmed = window.confirm(
-				'Editing will reset the puzzle. Are you sure?',
-			)
-			if (!confirmed) return
+		const edit_action = () => {
+			game.reset_pieces()
+			game.state = 'editing'
 		}
-		game.reset_pieces()
-		game.state = 'editing'
+
+		if (game.move_count <= 10) {
+			edit_action()
+		} else {
+			open_modal(
+				'Editing will reset the puzzle. Are you sure?',
+				edit_action,
+			)
+		}
 	}
 
 	function finish_editing() {
@@ -81,13 +88,13 @@
 	}
 
 	function reset() {
-		if (game.move_count > 10) {
-			const confirmed = window.confirm(
-				'This will reset the puzzle. Are you sure?',
+		if (game.move_count <= 10) {
+			game.reset()
+		} else {
+			open_modal('This will reset the puzzle. Are you sure?', () =>
+				game.reset(),
 			)
-			if (!confirmed) return
 		}
-		game.reset()
 	}
 
 	function toggle_torus() {
@@ -164,6 +171,8 @@
 </div>
 
 <Toast position="bottom-center" />
+
+<Modal />
 
 <style>
 	.grid {

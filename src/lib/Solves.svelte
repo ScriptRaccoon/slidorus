@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ListCheck, Trash } from '@lucide/svelte'
 	import { solves_storage } from '../core/solves.svelte'
+	import { open_modal } from '../core/modal.svelte'
 
 	let show_best = $state(false)
 
@@ -11,12 +12,12 @@
 	)
 
 	function delete_solves() {
-		const confirmed = window.confirm(
-			'This will remove all solves saved in your browser. This action cannot be undone. Are you sure?',
+		open_modal(
+			'This will remove all solves saved in this browser. This action cannot be undone. Are you sure?',
+			() => {
+				solves_storage.clear()
+			},
 		)
-		if (confirmed) {
-			solves_storage.clear()
-		}
 	}
 </script>
 
