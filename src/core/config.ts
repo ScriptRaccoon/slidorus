@@ -65,3 +65,12 @@ export type Challenge = {
 	difficulty: number
 	config: GameConfig
 }
+
+export const FLAGS_MAP = [
+	['fixed', 'fixed'],
+	['rotating', 'rotating'],
+	['up', 'bandaged_up'],
+	['right', 'bandaged_right'],
+	['down', 'bandaged_down'],
+	['left', 'bandaged_left'],
+] as const

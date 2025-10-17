@@ -1,4 +1,4 @@
-import { AXES, type AXIS, type GameConfig } from './config'
+import { AXES, FLAGS_MAP, type AXIS, type GameConfig } from './config'
 import { Encoder } from './encoder'
 import { Grouping } from './grouping.svelte'
 import { Move } from './move'
@@ -224,23 +224,17 @@ class Game {
 	}
 
 	public get_config(): GameConfig {
-		const fixed_coords = this.get_flagged_coords('fixed')
-		const rotating_coords = this.get_flagged_coords('rotating')
-		const up_coords = this.get_flagged_coords('bandaged_up')
-		const right_coords = this.get_flagged_coords('bandaged_right')
-		const down_coords = this.get_flagged_coords('bandaged_down')
-		const left_coords = this.get_flagged_coords('bandaged_left')
+		const config = {} as GameConfig
 
-		return {
-			fixed: Encoder.encode_subset(fixed_coords),
-			rotating: Encoder.encode_subset(rotating_coords),
-			up: Encoder.encode_subset(up_coords),
-			right: Encoder.encode_subset(right_coords),
-			down: Encoder.encode_subset(down_coords),
-			left: Encoder.encode_subset(left_coords),
-			rows: Encoder.encode_subsets(this.row_grouping.groups),
-			cols: Encoder.encode_subsets(this.col_grouping.groups),
+		for (const [key, val] of FLAGS_MAP) {
+			const coords = this.get_flagged_coords(val)
+			config[key as keyof GameConfig] = Encoder.encode_subset(coords)
 		}
+
+		config.rows = Encoder.encode_subsets(this.row_grouping.groups)
+		config.cols = Encoder.encode_subsets(this.col_grouping.groups)
+
+		return config
 	}
 
 	private get_flagged_coords(flag: keyof Piece): number[] {
@@ -250,21 +244,17 @@ class Game {
 	}
 
 	public load_from_config(config: GameConfig) {
-		const fixed_coords = Encoder.decode_subset(config.fixed)
-		const rotating_cords = Encoder.decode_subset(config.rotating)
-		const up_coords = Encoder.decode_subset(config.up)
-		const right_coords = Encoder.decode_subset(config.right)
-		const down_coords = Encoder.decode_subset(config.down)
-		const left_coords = Encoder.decode_subset(config.left)
+		const decoded_coords: Partial<Record<keyof GameConfig, number[]>> = {}
+
+		for (const [key, _] of FLAGS_MAP) {
+			decoded_coords[key] = Encoder.decode_subset(config[key])
+		}
 
 		for (const piece of this.pieces) {
-			const coord = piece.coord_index
-			piece.fixed = fixed_coords.includes(coord)
-			piece.rotating = rotating_cords.includes(coord)
-			piece.bandaged_up = up_coords.includes(coord)
-			piece.bandaged_right = right_coords.includes(coord)
-			piece.bandaged_down = down_coords.includes(coord)
-			piece.bandaged_left = left_coords.includes(coord)
+			for (const [key, val] of FLAGS_MAP) {
+				const coords = decoded_coords[key]!
+				piece[val] = coords.includes(piece.coord_index)
+			}
 		}
 
 		this.row_grouping.groups = Encoder.decode_subsets(config.rows)
