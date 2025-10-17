@@ -67,7 +67,7 @@
 		<p>
 			There is a selection of preconfigured challenges, grouped by
 			difficulty. Your solves for these are recorded in your browser (move
-			count and date).
+			count and date). The progress is also saved.
 		</p>
 
 		<ul class="button-explanation">

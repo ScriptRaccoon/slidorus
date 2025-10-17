@@ -35,7 +35,7 @@ There is a selection of preconfigured challenges, sorted by difficulty.
 <img src="/public/screenshot-challenge-selector.png"/>
 
 Your solves for these challenges are recorded in your browser (move count and
-date).
+date). The progress is also saved.
 
 <img src="/public/screenshot-solves.png"/>
 
