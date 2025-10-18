@@ -1,7 +1,7 @@
+import { send_toast } from '../lib/Toast.svelte'
 import { AXES, FLAGS_MAP, type AXIS, type GameConfig } from './config'
 import { Encoder } from './encoder'
 import { Grouping } from './grouping.svelte'
-import { open_modal } from './modal.svelte'
 import { Move } from './move'
 import { Piece } from './piece.svelte'
 import { mod } from './utils'
@@ -312,18 +312,11 @@ class Game {
 
 		if (!moves_str || !scramble_str) return this.reset()
 
-		open_modal(
-			'Do you want to restore your progress for this game?',
-			() => {
-				this.load_progress_from(moves_str, scramble_str)
-			},
-			() => {
-				this.clear_history()
-			},
-		)
-	}
+		send_toast({
+			variant: 'info',
+			title: 'Progress has been restored.',
+		})
 
-	private load_progress_from(moves_str: string, scramble_str: string) {
 		const moves = moves_str.split(',')
 		const scramble = scramble_str.split(',')
 

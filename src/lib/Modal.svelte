@@ -1,9 +1,8 @@
 <script lang="ts">
 	import {
-		cancel_modal,
 		confirm_modal,
 		modal_data,
-		reset_modal,
+		close_modal,
 	} from '../core/modal.svelte'
 
 	let modal_element = $state<HTMLDialogElement | null>(null)
@@ -23,7 +22,7 @@
 	class="modal"
 	aria-modal="true"
 	bind:this={modal_element}
-	onclose={reset_modal}
+	onclose={close_modal}
 	open={modal_data.open}
 >
 	<div class="question">
@@ -31,7 +30,7 @@
 	</div>
 
 	<menu>
-		<button class="btn" onclick={cancel_modal}>Cancel</button>
+		<button class="btn" onclick={close_modal}>Cancel</button>
 		<button class="btn" onclick={confirm_modal}>Ok</button>
 	</menu>
 </dialog>
