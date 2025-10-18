@@ -2,6 +2,7 @@
 	import { ListCheck, Trash } from '@lucide/svelte'
 	import { solves_storage } from '../core/solves.svelte'
 	import { open_modal } from '../core/modal.svelte'
+	import { game } from '../core/game.svelte'
 
 	let show_best = $state(false)
 
@@ -18,6 +19,10 @@
 				solves_storage.clear()
 			},
 		)
+	}
+
+	function delete_progress() {
+		game.delete_progress()
 	}
 </script>
 
@@ -70,6 +75,10 @@
 					<Trash />
 					Delete solves
 				</button>
+
+				<button class="btn icon" onclick={delete_progress}>
+					<Trash /> Delete progress
+				</button>
 			</menu>
 		</details>
 	</section>
@@ -110,5 +119,8 @@
 
 	menu {
 		margin-top: 1rem;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
 	}
 </style>

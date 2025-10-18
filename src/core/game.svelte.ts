@@ -2,6 +2,7 @@ import { send_toast } from '../lib/Toast.svelte'
 import { AXES, FLAGS_MAP, type AXIS, type GameConfig } from './config'
 import { Encoder } from './encoder'
 import { Grouping } from './grouping.svelte'
+import { open_modal } from './modal.svelte'
 import { Move } from './move'
 import { Piece } from './piece.svelte'
 import { mod } from './utils'
@@ -365,6 +366,36 @@ class Game {
 			handle_move(notation, 'move')
 			if (has_error) return
 		}
+	}
+
+	delete_progress() {
+		const hashes: string[] = []
+		const items_count = localStorage.length
+
+		for (let i = 0; i < items_count; i++) {
+			const key = localStorage.key(i)
+			const prefix = 'scramble:'
+			if (key?.startsWith(prefix)) {
+				hashes.push(key.replace(prefix, ''))
+			}
+		}
+
+		open_modal(
+			`This will remove the progress for ${hashes.length} games. ` +
+				'This action cannot be undone. Are you sure?',
+			() => {
+				game.reset()
+				for (const hash of hashes) {
+					localStorage.removeItem(`scramble:${hash}`)
+					localStorage.removeItem(`moves:${hash}`)
+				}
+
+				send_toast({
+					variant: 'info',
+					title: 'Progress has been deleted.',
+				})
+			},
+		)
 	}
 }
 
