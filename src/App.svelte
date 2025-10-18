@@ -120,6 +120,19 @@
 		torus_piece_grid = grid
 	}
 
+	function scramble() {
+		if (game.move_count <= 10 || !game.has_scramble) {
+			game.execute_scramble()
+		} else {
+			open_modal(
+				'This will scramble the puzzle. You will loose your progress. Are you sure?',
+				() => {
+					game.execute_scramble()
+				},
+			)
+		}
+	}
+
 	$effect(() => {
 		if (game.state === 'idle') update_torus_grid(game.pieces)
 	})
@@ -141,7 +154,7 @@
 	</main>
 
 	<Menu
-		scramble={() => game.execute_scramble()}
+		{scramble}
 		{reset}
 		{toggle_torus}
 		{undo_move}
