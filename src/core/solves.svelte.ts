@@ -1,3 +1,4 @@
+import { send_toast } from '../lib/Toast.svelte'
 import type { Challenge } from './config'
 
 export type Solve = {
@@ -67,7 +68,10 @@ class SolvesStorage {
 			Array.isArray(parsed_solves) &&
 			parsed_solves.every(SolvesStorage.is_valid_solve)
 		if (is_valid) return parsed_solves
-		console.error(`Invalid solves array: ${solves_str}`)
+		send_toast({
+			variant: 'error',
+			title: `Invalid solves array`,
+		})
 		return []
 	}
 }

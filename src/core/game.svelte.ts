@@ -325,12 +325,18 @@ class Game {
 		for (const notation of scramble) {
 			const move = Move.generate_from_notation(notation)
 			if (!move) {
-				console.error(`Illegal move found: ${notation}`)
+				send_toast({
+					variant: 'error',
+					title: `Illegal move found: ${notation}`,
+				})
 				return this.reset()
 			}
 			const { error } = this.prepare_move(move)
 			if (error) {
-				console.error(`Move ${notation} cannot be executed: ${error}`)
+				send_toast({
+					variant: 'error',
+					title: `Move ${notation} cannot be executed: ${error}`,
+				})
 				return this.reset()
 			}
 			this.execute_move(move, 'scramble')
@@ -341,12 +347,18 @@ class Game {
 		for (const notation of moves) {
 			const move = Move.generate_from_notation(notation)
 			if (!move) {
-				console.error(`Illegal move found: ${notation}`)
+				send_toast({
+					variant: 'error',
+					title: `Illegal move found: ${notation}`,
+				})
 				return this.reset()
 			}
 			const { error } = this.prepare_move(move)
 			if (error) {
-				console.error(`Move ${notation} cannot be executed: ${error}`)
+				send_toast({
+					variant: 'error',
+					title: `Move ${notation} cannot be executed: ${error}`,
+				})
 				return this.reset()
 			}
 			this.execute_move(move, 'move')
