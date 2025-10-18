@@ -37,6 +37,7 @@
 
 <style>
 	.modal {
+		width: min(90vw, 28rem);
 		background: var(--bg-color);
 		color: inherit;
 		font: inherit;
