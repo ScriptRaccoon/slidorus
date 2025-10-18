@@ -135,6 +135,25 @@
 		}
 	},
 	{
+		"name": "Star",
+		"difficulty": 2,
+		"config": {
+			"fixed": "vei5yn3l23h8g",
+			"rotating": "cay4wq0mugamlg0"
+		}
+	},
+	{
+		"name": "Waves",
+		"difficulty": 2,
+		"config": {
+			"rotating": "34pwx9gwj3e6x7ki",
+			"up": "v57i42z8d8g00",
+			"right": "8cxkidrsw0",
+			"down": "26u24831fk00",
+			"left": "gpv50rjls0"
+		}
+	},
+	{
 		"name": "Port",
 		"difficulty": 3,
 		"config": {
