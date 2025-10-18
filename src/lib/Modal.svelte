@@ -4,14 +4,6 @@
 		modal_data,
 		close_modal,
 	} from '../core/modal.svelte'
-
-	let modal_element = $state<HTMLDialogElement | null>(null)
-
-	$effect(() => {
-		if (modal_data.open && modal_element) {
-			modal_element.showModal()
-		}
-	})
 </script>
 
 {#if modal_data.open}
@@ -21,7 +13,6 @@
 <dialog
 	class="modal"
 	aria-modal="true"
-	bind:this={modal_element}
 	onclose={close_modal}
 	open={modal_data.open}
 >

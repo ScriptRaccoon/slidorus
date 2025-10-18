@@ -25,10 +25,6 @@
 
 	let dialog_element = $state<HTMLDialogElement | null>(null)
 
-	$effect(() => {
-		if (open) dialog_element?.show()
-	})
-
 	function handle_close() {
 		dialog_element?.close()
 	}
@@ -43,6 +39,7 @@
 
 <dialog
 	bind:this={dialog_element}
+	{open}
 	onclose={() => (open = false)}
 	id="challenge-selector"
 	aria-labelledby="challenge-selector-title"
