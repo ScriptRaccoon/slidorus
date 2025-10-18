@@ -14,7 +14,7 @@
 
 	function delete_solves() {
 		open_modal(
-			'This will remove all solves saved in this browser. This action cannot be undone. Are you sure?',
+			'This will remove all recorded solves. This action cannot be undone. Are you sure?',
 			() => {
 				solves_storage.clear()
 			},
@@ -26,18 +26,18 @@
 	}
 </script>
 
-{#if solves_storage.solves.length > 0}
-	<section aria-label="Solves">
-		<details>
-			<summary>
-				<ListCheck />
-				{#if show_best}
-					Your best solves
-				{:else}
-					Your solves
-				{/if}
-			</summary>
+<section aria-label="Solves">
+	<details>
+		<summary>
+			<ListCheck />
+			{#if show_best}
+				Your best solves
+			{:else}
+				Your solves
+			{/if}
+		</summary>
 
+		{#if solves_storage.solves.length > 0}
 			<table>
 				<thead>
 					<tr>
@@ -69,20 +69,24 @@
 				Show best solves per challenge
 				<input type="checkbox" bind:checked={show_best} />
 			</label>
+		{:else}
+			<p>No solves recorded yet.</p>
+		{/if}
 
-			<menu>
+		<menu>
+			{#if solves_storage.solves.length > 0}
 				<button class="btn icon" onclick={delete_solves}>
 					<Trash />
 					Delete solves
 				</button>
+			{/if}
 
-				<button class="btn icon" onclick={delete_progress}>
-					<Trash /> Delete progress
-				</button>
-			</menu>
-		</details>
-	</section>
-{/if}
+			<button class="btn icon" onclick={delete_progress}>
+				<Trash /> Delete progress
+			</button>
+		</menu>
+	</details>
+</section>
 
 <style>
 	table {
