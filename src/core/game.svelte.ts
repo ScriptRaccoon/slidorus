@@ -94,6 +94,12 @@ class Game {
 		return this.pieces.every((piece) => !piece.has_rotation)
 	}
 
+	public finish_after_solve() {
+		this.clear_scramble_history()
+		const hash = this.get_config_hash()
+		localStorage.removeItem(`moves:${hash}`)
+	}
+
 	public revert_edits() {
 		if (this.state !== 'editing') return
 		for (const piece of this.pieces) {

@@ -134,7 +134,7 @@
 		}
 		solves_storage.store(solve)
 
-		game.clear_scramble_history()
+		game.finish_after_solve()
 	}
 
 	function handle_keydown(e: KeyboardEvent) {
