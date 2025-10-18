@@ -320,48 +320,44 @@ class Game {
 		const moves = moves_str.split(',')
 		const scramble = scramble_str.split(',')
 
+		let has_error = false
 		this.scramble_history = []
 
-		for (const notation of scramble) {
+		const handle_move = (notation: string, type: 'move' | 'scramble') => {
 			const move = Move.generate_from_notation(notation)
 			if (!move) {
 				send_toast({
 					variant: 'error',
 					title: `Illegal move found: ${notation}`,
 				})
+				has_error = true
 				return this.reset()
 			}
+
 			const { error } = this.prepare_move(move)
+
 			if (error) {
 				send_toast({
 					variant: 'error',
 					title: `Move ${notation} cannot be executed: ${error}`,
 				})
+				has_error = true
 				return this.reset()
 			}
-			this.execute_move(move, 'scramble')
+
+			this.execute_move(move, type)
+		}
+
+		for (const notation of scramble) {
+			handle_move(notation, 'scramble')
+			if (has_error) return
 		}
 
 		this.move_history = []
 
 		for (const notation of moves) {
-			const move = Move.generate_from_notation(notation)
-			if (!move) {
-				send_toast({
-					variant: 'error',
-					title: `Illegal move found: ${notation}`,
-				})
-				return this.reset()
-			}
-			const { error } = this.prepare_move(move)
-			if (error) {
-				send_toast({
-					variant: 'error',
-					title: `Move ${notation} cannot be executed: ${error}`,
-				})
-				return this.reset()
-			}
-			this.execute_move(move, 'move')
+			handle_move(notation, 'move')
+			if (has_error) return
 		}
 	}
 }
