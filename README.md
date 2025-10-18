@@ -23,21 +23,16 @@ In editing mode, several options are available to make the puzzle more interesti
 
 <img src="/public/screenshot-bandaged.png" width="300" /> <img src="/public/screenshot-bandaged-scrambled.png" width="300" />
 
-A rotating piece rotates by 40 degrees for every step of a move. The
-puzzle is only solved when all rotating pieces have rotation 0.
+A rotating piece rotates by 40 degrees for every step of a move. The puzzle is only solved when all rotating pieces have no rotation left.
 
-Each configuration of pieces, rows and columns leads to a different
-challenge and is reflected in the URL, which can be shared or
-bookmarked.
+Each configuration of pieces, rows and columns leads to a different challenge and is reflected in the URL, which can be shared or bookmarked. There is a selection of preconfigured challenges, grouped by difficulty.
 
-There is a selection of preconfigured challenges, grouped by difficulty.
-
-<img src="/public/screenshot-challenge-selector.png"/>
+![screenshot](/public/screenshot-challenge-selector.png)
 
 Your solves for these challenges are recorded in your browser (move count and
-date). The progress is also saved.
+date), as well as the progress for every game.
 
-<img src="/public/screenshot-solves.png"/>
+![screenshot](/public/screenshot-solves.png)
 
 The app works on both desktop and mobile. Contributions and feedback are welcome!
 

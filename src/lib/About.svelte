@@ -55,19 +55,16 @@
 
 		<p>
 			A rotating piece rotates by 40 degrees for every step of a move. The
-			puzzle is only solved when all rotating pieces have rotation 0.
+			puzzle is only solved when all rotating pieces have no rotation
+			left.
 		</p>
 
 		<p>
 			Each configuration of pieces, rows and columns leads to a different
 			challenge and is reflected in the URL, which can be shared or
-			bookmarked.
-		</p>
-
-		<p>
-			There is a selection of preconfigured challenges, grouped by
-			difficulty. Your solves for these are recorded in your browser (move
-			count and date). The progress is also saved.
+			bookmarked. There is a selection of preconfigured challenges,
+			grouped by difficulty. Your solves for these are saved in your
+			browser (move count and date), as well as the progress for any game.
 		</p>
 
 		<ul class="button-explanation">
