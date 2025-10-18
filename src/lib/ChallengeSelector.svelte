@@ -26,7 +26,7 @@
 	let dialog_element = $state<HTMLDialogElement | null>(null)
 
 	$effect(() => {
-		if (open) dialog_element?.showModal()
+		if (open) dialog_element?.show()
 	})
 
 	function handle_close() {
@@ -45,7 +45,6 @@
 	bind:this={dialog_element}
 	onclose={() => (open = false)}
 	id="challenge-selector"
-	aria-modal="true"
 	aria-labelledby="challenge-selector-title"
 >
 	<header>
@@ -75,6 +74,7 @@
 
 <style>
 	dialog {
+		z-index: 10;
 		border: none;
 		color: var(--font-color);
 		background-color: var(--secondary-bg-color);
@@ -86,11 +86,6 @@
 		right: 0;
 		overflow-y: scroll;
 		border-bottom-left-radius: 0.5rem;
-
-		&::backdrop {
-			pointer-events: none;
-			background: none;
-		}
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
