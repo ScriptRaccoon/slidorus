@@ -30,7 +30,7 @@ Each configuration of pieces, rows and columns leads to a different
 challenge and is reflected in the URL, which can be shared or
 bookmarked.
 
-There is a selection of preconfigured challenges, sorted by difficulty.
+There is a selection of preconfigured challenges, grouped by difficulty.
 
 <img src="/public/screenshot-challenge-selector.png"/>
 
