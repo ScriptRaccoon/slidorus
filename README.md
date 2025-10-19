@@ -1,5 +1,7 @@
 # Slidorus
 
+_The torus-shaped twisty puzzle_
+
 [👉 Play here](https://slidorus.xyz)
 
 ## About this puzzle
@@ -26,11 +28,11 @@ In editing mode, several options are available to make the puzzle more interesti
 A rotating piece rotates by 40 degrees for every step of a move. The puzzle is only solved when all rotating pieces have no rotation left.
 
 Each configuration of pieces, rows and columns leads to a different challenge and is reflected in the URL, which can be shared or bookmarked. There is a selection of preconfigured challenges, grouped by difficulty.
- 
-<img alt="challenge selector" src="https://github.com/user-attachments/assets/cdf4f99d-d102-4c33-b152-a9d56ae9b6a1" />
+
+<img alt="challenge selector" src="https://github.com/user-attachments/assets/cdf4f99d-d102-4c33-b152-a9d56ae9b6a1" /><br />
 
 Your solves for these challenges are recorded in your browser (move count and date), as well as the progress for every game.
- 
+
 <img alt="list of solves" src="https://github.com/user-attachments/assets/72c0a15f-7998-41d0-86f4-dc6926dcfc9d" />
   
 The app works on both desktop and mobile. Contributions and feedback are welcome!
