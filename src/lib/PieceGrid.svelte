@@ -27,9 +27,10 @@
 
 	let move_pos: { x: number; y: number } | null = null
 	let current_move = $state<Move | null>(null)
+	let move_is_animated = false
 
 	function start_dragging(e: MouseEvent | TouchEvent) {
-		if (game.state !== 'idle' || current_move) return
+		if (game.state !== 'idle' || current_move || move_pos) return
 		move_pos = get_position(e)
 	}
 
@@ -47,7 +48,9 @@
 
 		if (!current_move && is_far_enough) {
 			initialize_move(offset.x, offset.y)
-		} else if (current_move?.delta === 0) {
+		}
+
+		if (current_move && !move_is_animated) {
 			game.update_offsets(
 				current_move,
 				offset[current_move.axis.main],
@@ -97,11 +100,13 @@
 	}
 
 	function animate_move(move: Move) {
+		move_is_animated = true
 		game.update_offsets(move, move.delta / scale, scale)
 
 		square_element?.addEventListener(
 			'transitionend',
 			() => {
+				move_is_animated = false
 				game.execute_move(move, 'move')
 				reset_current_move()
 				if (move.delta != 0) check_solved()
@@ -114,12 +119,12 @@
 		if (current_move) game.update_offsets(current_move, 0, scale)
 		current_move = null
 		move_pos = null
+		move_is_animated = false
 		game.state = 'idle'
 	}
 
 	function check_solved() {
 		if (!game.has_scramble) return
-
 		if (!game.is_solved()) return
 
 		send_toast({
@@ -142,7 +147,7 @@
 			reset_current_move()
 		}
 
-		if (current_move || game.state !== 'idle') return
+		if (game.state !== 'idle' || current_move) return
 
 		const move = Move.create_move_from_key(e)
 		if (!move) return
