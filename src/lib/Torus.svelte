@@ -4,11 +4,11 @@
 	import { mod } from '../core/utils'
 
 	type Props = {
-		torus_piece_grid: Piece[][]
+		pieces: Piece[]
 		torus_rotating: boolean
 	}
 
-	let { torus_piece_grid, torus_rotating = $bindable() }: Props = $props()
+	let { pieces, torus_rotating = $bindable() }: Props = $props()
 
 	function toggle_rotation() {
 		torus_rotating = !torus_rotating
@@ -28,26 +28,24 @@
 	</button>
 
 	<div class="torus" class:paused={!torus_rotating}>
-		{#each { length: 9 } as _, i}
-			<div class="slice" style:--num={mod(i + 7, 9)}>
-				{#each { length: 9 } as _, j}
-					{@const piece = torus_piece_grid[mod(4 - j, 9)][i]}
-					<div
-						class="tile"
-						class:fixed={piece.fixed}
-						class:bandaged_up={piece.bandaged_up}
-						class:bandaged_down={piece.bandaged_down}
-						class:bandaged_left={piece.bandaged_left}
-						class:bandaged_right={piece.bandaged_right}
-						class:rotating={piece.rotating}
-						class:flipped={j >= 5}
-						style:--index={j}
-						style:--r={piece.r}
-						data-color-id={piece.color_id}
-						data-index={j}
-					></div>
-				{/each}
-			</div>
+		{#each pieces as piece}
+			{@const long = mod(piece.x + 7, 9)}
+			{@const lat = mod(4 - piece.y, 9)}
+			<div
+				class="tile"
+				class:fixed={piece.fixed}
+				class:bandaged_up={piece.bandaged_up}
+				class:bandaged_down={piece.bandaged_down}
+				class:bandaged_left={piece.bandaged_left}
+				class:bandaged_right={piece.bandaged_right}
+				class:rotating={piece.rotating}
+				class:flipped={lat >= 5}
+				style:--long={long}
+				style:--lat={lat}
+				style:--r={piece.r}
+				data-color-id={piece.color_id}
+				data-index={lat}
+			></div>
 		{/each}
 	</div>
 </aside>
@@ -61,7 +59,6 @@
 			transparent 70%,
 			transparent 100%
 		);
-		border-radius: 0.5rem;
 		overflow: hidden;
 
 		display: flex;
@@ -101,6 +98,9 @@
 		--outer-radius: calc(2.65 * var(--unit));
 		transform: rotateX(var(--tilt)) rotateY(0deg);
 		animation: rotatearound 180s linear infinite;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 
 		&.paused {
 			animation-play-state: paused;
@@ -122,7 +122,9 @@
 	.tile {
 		height: calc(2.64 / 3 * var(--unit));
 		width: calc(var(--scaler, 1) * var(--unit));
-		transform: rotateX(calc(var(--index, 0) * 360deg / 9))
+		transform: rotateY(calc(var(--long, 0) * 360deg / 9))
+			translateZ(var(--outer-radius))
+			rotateX(calc(var(--lat, 0) * 360deg / 9))
 			translateZ(var(--slice-radius)) scale(var(--scale, 1))
 			rotateZ(calc(var(--r, 0) * 1deg)) translateZ(var(--offset, 0));
 
@@ -239,13 +241,5 @@
 		&.bandaged_left.bandaged_right::before {
 			width: 100%;
 		}
-	}
-
-	.slice {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		transform: rotateY(calc(var(--num, 0) * 360deg / 9))
-			translateZ(var(--outer-radius));
 	}
 </style>

@@ -21,7 +21,6 @@
 
 	let show_torus = $state(false)
 	let torus_rotating = $state(true)
-	let torus_piece_grid = $state<Piece[][]>([])
 	let square_size = $state(0)
 	let show_challenge_selector = $state(false)
 	let current_challenge = $state<Challenge | undefined>(undefined)
@@ -111,15 +110,6 @@
 		if (error) send_toast({ variant: 'error', title: error })
 	}
 
-	function update_torus_grid(pieces: Piece[]) {
-		const grid: Piece[][] = []
-		for (const piece of pieces) {
-			if (!grid[piece.y]) grid[piece.y] = []
-			grid[piece.y][piece.x] = piece
-		}
-		torus_piece_grid = grid
-	}
-
 	function scramble() {
 		if (game.move_count <= 10 || !game.has_scramble) {
 			game.execute_scramble()
@@ -132,10 +122,6 @@
 			)
 		}
 	}
-
-	$effect(() => {
-		if (game.state === 'idle') update_torus_grid(game.pieces)
-	})
 
 	onMount(() => {
 		load_config_from_URL()
@@ -169,7 +155,7 @@
 	{/if}
 
 	{#if show_torus}
-		<Torus {torus_piece_grid} bind:torus_rotating />
+		<Torus pieces={game.pieces} bind:torus_rotating />
 	{/if}
 
 	{#if game.state !== 'editing'}
