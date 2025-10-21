@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Pause, Play } from '@lucide/svelte'
+	import { Pause, Play, ScanEye } from '@lucide/svelte'
 	import type { Piece } from '../core/piece.svelte'
 	import { mod } from '../core/utils'
 
@@ -10,47 +10,93 @@
 
 	let { pieces, torus_rotating = $bindable() }: Props = $props()
 
+	let opacity = $state(1)
+
 	function toggle_rotation() {
 		torus_rotating = !torus_rotating
 	}
+
+	function toggle_opacity() {
+		opacity = opacity == 1 ? 0.75 : 1
+	}
 </script>
 
-<aside class="scene">
-	<button
-		onclick={toggle_rotation}
-		aria-label={torus_rotating ? 'Pause' : 'Play'}
-	>
-		{#if torus_rotating}
-			<Pause />
-		{:else}
-			<Play />
-		{/if}
-	</button>
+<aside>
+	<menu>
+		<button
+			onclick={toggle_rotation}
+			aria-label={torus_rotating ? 'Pause' : 'Play'}
+		>
+			{#if torus_rotating}
+				<Pause />
+			{:else}
+				<Play />
+			{/if}
+		</button>
 
-	<div class="torus" class:paused={!torus_rotating}>
-		{#each pieces as piece}
-			{@const long = mod(piece.x + 7, 9)}
-			{@const lat = mod(4 - piece.y, 9)}
-			<div
-				class="tile"
-				class:fixed={piece.fixed}
-				class:bandaged_up={piece.bandaged_up}
-				class:bandaged_down={piece.bandaged_down}
-				class:bandaged_left={piece.bandaged_left}
-				class:bandaged_right={piece.bandaged_right}
-				class:rotating={piece.rotating}
-				class:flipped={lat >= 5}
-				style:--long={long}
-				style:--lat={lat}
-				style:--rotation={piece.r}
-				data-color-id={piece.color_id}
-				data-lat={lat}
-			></div>
-		{/each}
+		<button onclick={toggle_opacity} aria-label="Toggle opacity">
+			<ScanEye />
+		</button>
+	</menu>
+	<div class="scene">
+		<div
+			class="torus"
+			class:paused={!torus_rotating}
+			style:--opacity={opacity}
+		>
+			{#each pieces as piece}
+				{@const long = mod(piece.x + 7, 9)}
+				{@const lat = mod(4 - piece.y, 9)}
+				<div
+					class="tile"
+					class:fixed={piece.fixed}
+					class:bandaged_up={piece.bandaged_up}
+					class:bandaged_down={piece.bandaged_down}
+					class:bandaged_left={piece.bandaged_left}
+					class:bandaged_right={piece.bandaged_right}
+					class:rotating={piece.rotating}
+					class:flipped={lat >= 5}
+					style:--long={long}
+					style:--lat={lat}
+					style:--rotation={piece.r}
+					data-color-id={piece.color_id}
+					data-lat={lat}
+				></div>
+			{/each}
+		</div>
 	</div>
 </aside>
 
 <style>
+	aside {
+		position: relative;
+	}
+
+	menu {
+		position: absolute;
+		right: 0.25rem;
+		top: 0.25rem;
+		display: flex;
+		gap: 1rem;
+
+		button {
+			color: var(--secondary-font-color);
+			padding: 0.5rem;
+			border-radius: 50%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			scale: 0.9;
+			transition: scale 120ms;
+
+			&:hover,
+			&:focus-visible {
+				scale: 1;
+				outline: 1px solid var(--outline-color);
+			}
+		}
+	}
+
 	.scene {
 		aspect-ratio: 1;
 		perspective: 1200px;
@@ -60,34 +106,18 @@
 			transparent 100%
 		);
 		overflow: hidden;
+		pointer-events: none;
 
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		align-self: center;
 
+		position: relative;
+
 		* {
 			position: absolute;
 			transform-style: preserve-3d;
-		}
-	}
-
-	button {
-		top: 0.25rem;
-		right: 0.25rem;
-		color: var(--secondary-font-color);
-		padding: 0.5rem;
-		border-radius: 50%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		scale: 0.9;
-		transition: scale 120ms;
-
-		&:hover,
-		&:focus-visible {
-			scale: 1;
-			outline: 1px solid var(--outline-color);
 		}
 	}
 
@@ -136,7 +166,8 @@
 		justify-content: center;
 		align-items: center;
 
-		opacity: 0.94;
+		opacity: var(--opacity, 1);
+		transition: opacity 500ms ease-in;
 
 		&:not(.flipped) {
 			clip-path: polygon(
