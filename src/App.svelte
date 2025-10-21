@@ -6,7 +6,6 @@
 	import { onMount } from 'svelte'
 	import Instructions from './lib/Instructions.svelte'
 	import { game } from './core/game.svelte'
-	import type { Piece } from './core/piece.svelte'
 	import About from './lib/About.svelte'
 	import { type Challenge, type GameConfig, CONFIG_KEYS } from './core/config'
 	import Solves from './lib/Solves.svelte'
@@ -181,7 +180,7 @@
 		grid-auto-flow: dense;
 		row-gap: 1rem;
 
-		> :global(:not(.scene)) {
+		> :global(:not(aside)) {
 			grid-column: 1;
 		}
 
@@ -194,10 +193,6 @@
 				max-width: 1220px;
 				column-gap: 20px;
 				grid-template-columns: 1fr 1fr;
-
-				> :global(:not(.scene)) {
-					grid-column: 1;
-				}
 			}
 		}
 	}
