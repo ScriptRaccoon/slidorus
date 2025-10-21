@@ -42,9 +42,9 @@
 				class:flipped={lat >= 5}
 				style:--long={long}
 				style:--lat={lat}
-				style:--r={piece.r}
+				style:--rotation={piece.r}
 				data-color-id={piece.color_id}
-				data-index={lat}
+				data-lat={lat}
 			></div>
 		{/each}
 	</div>
@@ -93,11 +93,13 @@
 
 	.torus {
 		--unit: min(10vw, 4rem);
+		--tube-radius: calc(1.2 * var(--unit));
+		--torus-radius: calc(2.65 * var(--unit));
+
 		--tilt: -60deg;
-		--slice-radius: calc(1.2 * var(--unit));
-		--outer-radius: calc(2.65 * var(--unit));
 		transform: rotateX(var(--tilt)) rotateY(0deg);
 		animation: rotatearound 180s linear infinite;
+
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -120,13 +122,14 @@
 	}
 
 	.tile {
-		height: calc(2.64 / 3 * var(--unit));
+		height: calc(0.88 * var(--unit));
 		width: calc(var(--scaler, 1) * var(--unit));
 		transform: rotateY(calc(var(--long, 0) * 360deg / 9))
-			translateZ(var(--outer-radius))
+			translateZ(var(--torus-radius))
 			rotateX(calc(var(--lat, 0) * 360deg / 9))
-			translateZ(var(--slice-radius)) scale(var(--scale, 1))
-			rotateZ(calc(var(--r, 0) * 1deg)) translateZ(var(--offset, 0));
+			translateZ(var(--tube-radius)) scale(var(--scale, 1))
+			rotateZ(calc(var(--rotation, 0) * 1deg))
+			translateZ(var(--offset, 0));
 
 		background: black;
 		display: inline-flex;
@@ -167,31 +170,31 @@
 			box-shadow: 0rem 0rem 1rem inset #0005;
 		}
 
-		&[data-index='0'] {
+		&[data-lat='0'] {
 			--scaler: 2.81;
 			--cut: 0%;
 		}
 
-		&[data-index='1'],
-		&[data-index='8'] {
+		&[data-lat='1'],
+		&[data-lat='8'] {
 			--scaler: 2.81;
 			--cut: 7.3%;
 		}
 
-		&[data-index='2'],
-		&[data-index='7'] {
+		&[data-lat='2'],
+		&[data-lat='7'] {
 			--scaler: 2.4;
 			--cut: 13%;
 		}
 
-		&[data-index='3'],
-		&[data-index='6'] {
+		&[data-lat='3'],
+		&[data-lat='6'] {
 			--scaler: 1.77;
 			--cut: 15.5%;
 		}
 
-		&[data-index='4'],
-		&[data-index='5'] {
+		&[data-lat='4'],
+		&[data-lat='5'] {
 			--scaler: 1.22;
 			--cut: 9%;
 		}
