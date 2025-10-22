@@ -63,10 +63,12 @@
 			}
 		}
 
-		&:hover,
-		&:focus-visible {
-			opacity: 1;
-			outline: 1px solid var(--font-color);
+		@media (hover: hover) {
+			&:hover,
+			&:focus-visible {
+				opacity: 1;
+				outline: 1px solid var(--font-color);
+			}
 		}
 
 		&::before {
