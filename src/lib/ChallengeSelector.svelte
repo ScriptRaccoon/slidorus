@@ -46,7 +46,7 @@
 >
 	<header>
 		<h2 id="challenge-selector-title">Challenges</h2>
-		<button class="close" aria-label="Close" onclick={handle_close}>
+		<button class="btn close" aria-label="Close" onclick={handle_close}>
 			<X />
 		</button>
 	</header>
@@ -118,6 +118,28 @@
 		}
 	}
 
+	header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1.25rem;
+		padding: 1rem;
+		position: sticky;
+		top: 0;
+		background-color: inherit;
+	}
+
+	h2 {
+		font-weight: 500;
+		font-size: 1rem;
+	}
+
+	button.close {
+		aspect-ratio: 1;
+		border-radius: 50%;
+		padding: 0.25rem;
+	}
+
 	.list {
 		display: grid;
 	}
@@ -158,27 +180,5 @@
 		&[data-difficulty='5'] {
 			--color: var(--difficulty-color-5);
 		}
-	}
-
-	header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding-block: 1rem;
-		padding-inline: 1rem;
-	}
-
-	h2 {
-		font-weight: 500;
-		font-size: 1rem;
-	}
-
-	button.close {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		border-radius: 50%;
-		width: 1.5rem;
-		aspect-ratio: 1;
 	}
 </style>
